@@ -1,0 +1,6 @@
+*.un~
+.netrwhist
+tmp
+bundle
+spell
+thesaurus
