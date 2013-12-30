@@ -2,7 +2,8 @@
 "
 " Author: created by reede on 16-Feb-2013
 " Updated: continuously
-" URL: https://reedes@bitbucket.org/reedes/vim-config.git
+" URL: https://reedes@bitbucket.org/reedes/vim-config.git (old)
+" URL: https://github.com/reedes/vim-config
 "
 " Guidelines:
 " - experiment freely, but disable unused configuration
