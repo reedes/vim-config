@@ -57,6 +57,9 @@ Bundle 'nelstrom/vim-markdown-folding'
 Bundle 'tpope/vim-markdown'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'chriskempson/base16-vim'
+Bundle 'baskerville/bubblegum'
+Bundle 'nanotech/jellybeans.vim'
+" }}}1
 " # LOCAL {{{1
 " # First things first {{{2
 
@@ -331,6 +334,9 @@ augroup writer
   autocmd FileType textile call writer#init()
 augroup END
 
+nmap <silent> <leader>W :WriterToggle<cr>
+nmap <silent> <leader>A :WriterFormatToggle<cr>
+
 " }}}2
 " # Thematic (colors, fonts, etc.) {{{2
 nmap <silent> <D-9> <Plug>ThematicNarrow
@@ -339,17 +345,61 @@ nmap <silent> <D-0> <Plug>ThematicWiden
 nmap <Leader>y <Plug>ThematicNext
 nmap <Leader>Y <Plug>ThematicRandom
 
+" needed by base16
+let base16colorspace=256
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+
 " use jellybeans as default airline theme as it maps from
 " existing colors
 let g:thematic#defaults = {
+\ 'airline-theme': 'jellybeans',
+\ 'laststatus': 2,
+\ 'ruler': 0,
+\ }
+
+let g:thematic#themes = {
+\ 'bubblegum'          : { 
+\                        },
+\ 'jellybeans'         : { 
+\                        },
+\ 'solar_dark'         : { 'colorscheme': 'solarized',
+\                          'background': 'dark',
+\                          'laststatus': 0,
+\                          'ruler': 1,
+\                        },
+\ 'base16-greenscreen' : {
+\                        },
+\ }
+"\ 'base16-chalk'       : {
+"\                        },
+"\ 'base16-default'     : {
+"\                        },
+"\ 'base16-eighties'    : {
+"\                        },
+"\ 'base16-mocha'       : {
+"\                        },
+"\ 'base16-monokai'     : {
+"\                        },
+"\ 'base16-ocean'       : {
+"\                        },
+"\ 'base16-pop'         : {
+"\                        },
+"\ 'base16-railscasts'  : {
+"\                        },
+"\ 'base16-solarized'   : {
+"\                        },
+"\ 'base16-tomorrow'    : {
+"\                        },
+
+let g:thematic#defaults2 = {
 \ 'airline-theme': 'jellybeans',
 \ 'fullscreen-background-color-fix': 1,
 \ 'laststatus': 2,
 \ 'font-size': 20,
 \ 'transparency': 0,
 \ }
-
-let g:thematic#themes = {
+let g:thematic#themes2 = {
 \ 'desert'     : { 'sign-column-color-fix': 1,
 \                  'columns': 80,
 \                  'lines': 30,
