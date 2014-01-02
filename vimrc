@@ -1,3 +1,4 @@
+
 " File: vimrc
 "
 " Author: created by reede on 16-Feb-2013
@@ -36,29 +37,41 @@ call vundle#rc()
 " let vundle manage itself
 Bundle 'gmarik/vundle'
 
-" # Active Bundles
+" # Authored Bundles {{{2
+Bundle 'reedes/vim-lexical'
 Bundle 'reedes/vim-litecorrect'
 Bundle 'reedes/vim-quotable'
-Bundle 'reedes/vim-writer'
 Bundle 'reedes/vim-thematic'
-Bundle 'reedes/vim-thematic-gui'
+Bundle 'reedes/vim-writer'
+" }}}2
+" # Non-color Bundles {{{2
 Bundle 'bling/vim-airline'
 Bundle 'justinmk/vim-sneak'
+Bundle 'kana/vim-textobj-user'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mhinz/vim-signify'
 Bundle 'mileszs/ack.vim'
 Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
+Bundle 'nelstrom/vim-markdown-folding'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'sophacles/vim-bundle-python'
-Bundle 'tpope/vim-repeat'
-Bundle 'nelstrom/vim-markdown-folding'
 Bundle 'tpope/vim-markdown'
+Bundle 'tpope/vim-repeat'
+" }}}2
+" # Color Bundles {{{2
+Bundle 'Lokaltog/vim-distinguished'
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'chriskempson/base16-vim'
 Bundle 'baskerville/bubblegum'
+Bundle 'chriskempson/base16-vim'
+Bundle 'endel/vim-github-colorscheme'
 Bundle 'nanotech/jellybeans.vim'
+Bundle 'therubymug/vim-pyte'
+Bundle 'twerth/ir_black'
+Bundle 'vim-scripts/summerfruit256.vim'
+Bundle 'zeis/vim-kolor'
+" }}}2
 " }}}1
 " # LOCAL {{{1
 " # First things first {{{2
@@ -300,10 +313,18 @@ augroup litecorrect
 augroup END
 
 " }}}2
+" # Lexical {{{2
+augroup lexical
+  autocmd!
+  autocmd FileType markdown call lexical#init()
+  autocmd FileType textile call lexical#init()
+  autocmd FileType text call lexical#init({ 'spell': 0 })
+augroup END
+let g:lexical#thesaurus_key = '<leader>j'
+let g:lexical#dictionary_key = '<leader>k'
+" }}}2
 " # Quotable {{{2
-
 let g:quotable#educateLevel = 2
-
 augroup quotable
   autocmd!
   autocmd FileType markdown call quotable#init()
@@ -344,113 +365,101 @@ nmap <silent> <D-0> <Plug>ThematicWiden
 
 nmap <Leader>y <Plug>ThematicNext
 nmap <Leader>Y <Plug>ThematicRandom
+nmap <Leader>I :Thematic iawriter<CR>
 
-" needed by base16
-let base16colorspace=256
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
+set background=dark
+colorscheme bubblegum
 
-" use jellybeans as default airline theme as it maps from
-" existing colors
-let g:thematic#defaults = {
-\ 'airline-theme': 'jellybeans',
-\ 'laststatus': 2,
-\ 'ruler': 0,
-\ }
-
-let g:thematic#themes = {
-\ 'bubblegum'          : { 
-\                        },
-\ 'jellybeans'         : { 
-\                        },
-\ 'solar_dark'         : { 'colorscheme': 'solarized',
-\                          'background': 'dark',
-\                          'laststatus': 0,
-\                          'ruler': 1,
-\                        },
-\ 'base16-greenscreen' : {
-\                        },
-\ }
-"\ 'base16-chalk'       : {
-"\                        },
-"\ 'base16-default'     : {
-"\                        },
-"\ 'base16-eighties'    : {
-"\                        },
-"\ 'base16-mocha'       : {
-"\                        },
-"\ 'base16-monokai'     : {
-"\                        },
-"\ 'base16-ocean'       : {
-"\                        },
-"\ 'base16-pop'         : {
-"\                        },
-"\ 'base16-railscasts'  : {
-"\                        },
-"\ 'base16-solarized'   : {
-"\                        },
-"\ 'base16-tomorrow'    : {
-"\                        },
-
-let g:thematic#defaults2 = {
-\ 'airline-theme': 'jellybeans',
-\ 'fullscreen-background-color-fix': 1,
-\ 'laststatus': 2,
-\ 'font-size': 20,
-\ 'transparency': 0,
-\ }
-let g:thematic#themes2 = {
-\ 'desert'     : { 'sign-column-color-fix': 1,
-\                  'columns': 80,
-\                  'lines': 30,
-\                  'linespace': 9,
-\                  'sign-column': 1,
-\                  'fold-column-color-mute': 1,
-\                  'typeface': 'Cutive Mono',
-\                },
-\ 'iawriter'   : { 'colorscheme': 'reede_light',
-\                  'background': 'light',
-\                  'columns': 75,
-\                  'font-size': 20,
-\                  'fullscreen': 1,
-\                  'laststatus': 0,
-\                  'linespace': 8,
-\                  'sign-column-color-fix': 1,
-\                  'typeface': 'Menlo',
-\                },
-\ 'hemi_dark'  : { 'colorscheme': 'hemisu',
-\                  'background': 'dark',
-\                  'font-size': 24,
-\                  'typeface': 'Consolas for Powerline',
-\                },
-\ 'hemi_lite'  : { 'colorscheme': 'hemisu',
-\                  'background': 'light',
-\                  'columns': 75,
-\                  'typeface': 'CosmicSansNeueMono',
-\                },
-\ 'matrix'     : { 'colorscheme': 'base16-greenscreen',
-\                  'font-size': 24,
-\                  'linespace': 9,
-\                  'typeface': 'Dot Matrix',
-\                },
-\ 'reede_dark' : { 'airline-theme': 'badwolf',
-\                  'sign-column': 1,
-\                  'typeface': 'Source Code Pro ExtraLight',
-\                },
-\ 'solar_dark' : { 'colorscheme': 'solarized',
-\                  'background': 'dark',
-\                  'diff-color-fix': 1,
-\                  'sign-column': 1,
-\                  'sign-column-color-fix': 1,
-\                  'typeface': 'Source Code Pro Light',
-\                },
-\ 'solar_lite' : { 'colorscheme': 'solarized',
-\                  'background': 'light',
-\                  'font-size': 20,
-\                  'sign-column-color-fix': 1,
-\                  'typeface': 'Source Code Pro Medium',
-\                },
-\ }
+if has('gui_running')
+  " use jellybeans as default airline theme as it maps from
+  " existing colors
+  let g:thematic#defaults = {
+  \ 'airline-theme': 'jellybeans',
+  \ 'fullscreen-background-color-fix': 1,
+  \ 'laststatus': 2,
+  \ 'background': 'dark',
+  \ 'font-size': 20,
+  \ 'transparency': 0,
+  \ 'fold-column-color-mute': 1,
+  \ }
+  let g:thematic#themes = {
+  \ 'desert'     : { 'sign-column-color-fix': 1,
+  \                  'columns': 80,
+  \                  'lines': 30,
+  \                  'linespace': 9,
+  \                  'sign-column': 1,
+  \                  'fold-column-color-mute': 1,
+  \                  'typeface': 'Cutive Mono',
+  \                },
+  \ 'iawriter'   : { 'colorscheme': 'reede_light',
+  \                  'background': 'light',
+  \                  'columns': 75,
+  \                  'font-size': 20,
+  \                  'fullscreen': 1,
+  \                  'laststatus': 0,
+  \                  'linespace': 8,
+  \                  'sign-column-color-fix': 1,
+  \                  'typeface': 'Menlo',
+  \                },
+  \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
+  \                  'font-size': 24,
+  \                  'typeface': 'Consolas for Powerline',
+  \                },
+  \ 'hemi_lite'  : { 'colorscheme': 'hemisu',
+  \                  'background': 'light',
+  \                  'columns': 75,
+  \                  'typeface': 'CosmicSansNeueMono',
+  \                },
+  \ 'matrix'     : { 'colorscheme': 'base16-greenscreen',
+  \                  'font-size': 24,
+  \                  'linespace': 9,
+  \                  'typeface': 'Dot Matrix',
+  \                },
+  \ 'reede_dark' : { 'airline-theme': 'badwolf',
+  \                  'sign-column': 1,
+  \                  'typeface': 'Source Code Pro ExtraLight',
+  \                },
+  \ 'solar_dark' : { 'colorscheme': 'solarized',
+  \                  'diff-color-fix': 1,
+  \                  'sign-column': 1,
+  \                  'sign-column-color-fix': 1,
+  \                  'typeface': 'Source Code Pro Light',
+  \                },
+  \ 'solar_lite' : { 'colorscheme': 'solarized',
+  \                  'background': 'light',
+  \                  'font-size': 20,
+  \                  'sign-column-color-fix': 1,
+  \                  'typeface': 'Source Code Pro Medium',
+  \                },
+  \ 'distinguished'  : { },
+  \ 'ir_black'   : { },
+  \ 'kolor'      : { },
+  \ 'pyte'       : { 'background': 'light' },
+  \ 'ir_blue'    : { },
+  \ 'ir_dark'    : { },
+  \ 'github'     : { 'background': 'light' },
+  \ }
+else
+  let g:jellybeans_use_lowcolor_black = 1
+  let g:thematic#defaults = {
+  \ 'airline-theme': 'jellybeans',
+  \ 'background': 'dark',
+  \ 'fold-column-color-mute': 1,
+  \ 'laststatus': 0,
+  \ 'ruler': 0,
+  \ 'sign-column': 0,
+  \ 'sign-column-color-fix': 1,
+  \ }
+  let g:thematic#themes = {
+  \ 'bubblegum'      : { 'laststatus': 1,
+  \                      'ruler': 1,
+  \                      'sign-column': 0,
+  \                    },
+  \ 'distinguished'  : { },
+  \ 'jellybeans'     : { 'laststatus': 2 },
+  \ 'summerfruit256' : { 'background': 'light' },
+  \ }
+endif
 
 " }}}2
 " # Ack (grep){{{2
