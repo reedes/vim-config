@@ -11,6 +11,9 @@ if has("gui_macvim")
   set guioptions-=L   "kill left scrollbar with multiple buffers
   set guioptions-=T   "kill toolbar
 
+  set guioptions-=m   "don't source menus
+  set guioptions+=M
+
   set guifont=Source\ Code\ Pro\:h18
   set linespace=2     "extra space between lines
 endif
