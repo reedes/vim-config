@@ -413,8 +413,7 @@ augroup pencil
   autocmd FileType textile call pencil#init()
 augroup END
 
-nmap <silent> <leader>W :PencilToggle<cr>
-nmap <silent> <leader>A :PencilFormatToggle<cr>
+nmap <silent> <leader>A :ShiftPencil<cr>
 
 " }}}2
 " # Thematic (colors, fonts, etc.) {{{2
