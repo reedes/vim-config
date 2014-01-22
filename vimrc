@@ -33,6 +33,7 @@ Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-sensible'
+Bundle 'tpope/vim-unimpaired'
 
 " # Color Bundles
 Bundle 'hmaarrfk/vim-colors-solarized'
@@ -218,9 +219,6 @@ nmap <Leader>y <Plug>ThematicNext
 nmap <Leader>Y <Plug>ThematicRandom
 nmap <Leader>I :Thematic pencil_dark<CR>
 
-set background=dark
-colorscheme pencil
-
 " use jellybeans as default airline theme as it maps from
 " existing colors
 let g:thematic#defaults = {
@@ -255,7 +253,6 @@ let g:thematic#themes = {
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
 \                  'background': 'dark',
-\                  'columns': 75,
 \                  'font-size': 20,
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
@@ -292,6 +289,10 @@ let g:thematic#themes = {
 \                },
 \ 'github'     : { 'background': 'light' },
 \ }
+
+
+let g:thematic#theme_name = 'pencil_dark'
+
 
 " Motions to Ack for things.  Works with pretty much everything, including:
 "   w, W, e, E, b, B, t*, f*, i*, a*, and custom text objects
@@ -385,5 +386,16 @@ let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
+" ===============================================================
+"
+
+" This is the first day of the rest of your life.
+"nnoremap <C-j> :m .+1<CR>==
+"nnoremap <C-k> :m .-2<CR>==
+"inoremap <C-j> <Esc>:m .+1<CR>==gi
+"inoremap <C-k> <Esc>:m .-2<CR>==gi
+"vnoremap <C-j> :m '>+1<CR>gv=gv
+"vnoremap <C-k> :m '<-2<CR>gv=gv
+
 
 " vim:set ft=vim et sw=2:
