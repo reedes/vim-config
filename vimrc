@@ -105,6 +105,14 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " cursor movement synced with scroll - cursor maintains viewport position
 nnoremap <C-j> gj<C-e>
 nnoremap <C-k> gk<C-y>
+vnoremap <C-j> gj<C-e>
+vnoremap <C-k> gk<C-y>
+
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
 
 "nnoremap <silent> Q gwip
 "nnoremap <silent> K vipJ
