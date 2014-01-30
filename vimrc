@@ -15,6 +15,7 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " # Authored Bundles
+Bundle 'reedes/vim-bubbler'
 Bundle 'reedes/vim-lexical'
 Bundle 'reedes/vim-litecorrect'
 Bundle 'reedes/vim-quotable'
@@ -22,6 +23,7 @@ Bundle 'reedes/vim-thematic'
 Bundle 'reedes/vim-pencil'
 Bundle 'reedes/vim-colors-pencil'
 Bundle 'reedes/vim-wordy'
+Bundle 'reedes/vim-textobj-sentence'
 
 " # Non-color Bundles
 Bundle 'airblade/vim-gitgutter'
@@ -34,6 +36,8 @@ Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-sensible'
 Bundle 'tpope/vim-unimpaired'
+"Bundle 'kana/vim-vspec'
+Bundle 'junegunn/vader.vim'
 
 " # Color Bundles
 Bundle 'hmaarrfk/vim-colors-solarized'
@@ -77,23 +81,33 @@ set wildignore+=.svn/**
 set wildignore+=log/**
 set wildignore+=tmp/**
 
+" get rid of cmd-t for tab
+"if has('gui_macvim')
+"  macmenu File.New\ Tab key=<nop>
+"endif
+
 iab mdy <c-r>=strftime("%B %d, %Y")<CR>
 iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
 iab isodate <c-r>=strftime("%FT%T%z")<CR>
 
 let mapleader = ","             " <Leader> key instead of backslash (options '\_,;')
 
+" join, maintaining cursor position
 "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
-nnoremap J mzJ`z
+"nnoremap J mzJ`z
 "nnoremap <silent> K :nohlsearch<CR>
 
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
-nnoremap <silent> Q gwip
-nnoremap <silent> K vipJ
-nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
-nnoremap <silent> <leader>K :%norm vipJ<cr>
+" cursor movement synced with scroll - cursor maintains viewport position
+nnoremap <C-j> gj<C-e>
+nnoremap <C-k> gk<C-y>
+
+"nnoremap <silent> Q gwip
+"nnoremap <silent> K vipJ
+"nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
+"nnoremap <silent> <leader>K :%norm vipJ<cr>
 
 " For quick recordings just type qq to start recording, then q to stop. You
 " don't have to worry about the name this way (you just named the recording
@@ -184,20 +198,28 @@ set splitright
 "highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 "match OverLength /\%81v.\+/
 "call matchadd('ColorColumn', '\%81v', 100)
+"let g:force_reload_quotable = 1
+"let g:textobj#sentence#select = 'x'
 
+"set nomodeline
+"set modelines=0
 augroup various
   autocmd!
   autocmd FileType markdown
     \ call litecorrect#init()           |
     \ call lexical#init()               |
+    \ call textobj#sentence#init()      |
     \ call quotable#init()              |
+    \ call bubbler#init()              |
     \ call pencil#init()
   autocmd FileType text
     \ call litecorrect#init()           |
     \ call lexical#init({ 'spell': 0 }) |
+    \ call textobj#sentence#init()      |
     \ call quotable#init()              |
     \ call pencil#init()
-  autocmd FileType python call quotable#init({ 'educate': 0 })
+  autocmd FileType python
+    \ call quotable#init({ 'educate': 0 })
 augroup END
 
 let g:lexical#spelllang = ['en_us',]
@@ -213,8 +235,8 @@ let g:pencil#wrapModeDefault = 'hard'
 map <silent> <leader>c <Plug>QuotableReplaceWithCurly
 map <silent> <leader>s <Plug>QuotableReplaceWithStraight
 nmap <silent> <leader>A :ShiftPencil<cr>
-nmap <silent> <D-9> <Plug>ThematicNarrow
-nmap <silent> <D-0> <Plug>ThematicWiden
+"nmap <silent> <D-9> <Plug>ThematicNarrow
+"nmap <silent> <D-0> <Plug>ThematicWiden
 nmap <Leader>y <Plug>ThematicNext
 nmap <Leader>Y <Plug>ThematicRandom
 nmap <Leader>I :Thematic pencil_dark<CR>
@@ -388,14 +410,5 @@ let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " ===============================================================
 "
-
-" This is the first day of the rest of your life.
-"nnoremap <C-j> :m .+1<CR>==
-"nnoremap <C-k> :m .-2<CR>==
-"inoremap <C-j> <Esc>:m .+1<CR>==gi
-"inoremap <C-k> <Esc>:m .-2<CR>==gi
-"vnoremap <C-j> :m '>+1<CR>gv=gv
-"vnoremap <C-k> :m '<-2<CR>gv=gv
-
 
 " vim:set ft=vim et sw=2:
