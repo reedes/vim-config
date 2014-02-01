@@ -24,6 +24,7 @@ Bundle 'reedes/vim-pencil'
 Bundle 'reedes/vim-colors-pencil'
 Bundle 'reedes/vim-wordy'
 Bundle 'reedes/vim-textobj-sentence'
+Bundle 'reedes/vim-wheel'
 
 " # Non-color Bundles
 Bundle 'airblade/vim-gitgutter'
@@ -101,12 +102,6 @@ let mapleader = ","             " <Leader> key instead of backslash (options '\_
 
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
-
-" cursor movement synced with scroll - cursor maintains viewport position
-nnoremap <C-j> gj<C-e>
-nnoremap <C-k> gk<C-y>
-vnoremap <C-j> gj<C-e>
-vnoremap <C-k> gk<C-y>
 
 augroup CursorLine
   au!
@@ -211,6 +206,8 @@ set splitright
 "let g:force_reload_quotable = 1
 "let g:textobj#sentence#select = 'x'
 
+let g:force_reload_textobj_sentence = 1
+
 "set nomodeline
 "set modelines=0
 augroup various
@@ -220,7 +217,7 @@ augroup various
     \ call lexical#init()               |
     \ call textobj#sentence#init()      |
     \ call quotable#init()              |
-    \ call bubbler#init()              |
+    \ call bubbler#init()               |
     \ call pencil#init()
   autocmd FileType text
     \ call litecorrect#init()           |
@@ -231,6 +228,8 @@ augroup various
   autocmd FileType python
     \ call quotable#init({ 'educate': 0 })
 augroup END
+
+"let g:wheel#map#mouse = -1
 
 let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
