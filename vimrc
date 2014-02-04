@@ -15,7 +15,6 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " # Authored Bundles
-Bundle 'reedes/vim-bubbler'
 Bundle 'reedes/vim-lexical'
 Bundle 'reedes/vim-litecorrect'
 Bundle 'reedes/vim-quotable'
@@ -217,7 +216,6 @@ augroup various
     \ call lexical#init()               |
     \ call textobj#sentence#init()      |
     \ call quotable#init()              |
-    \ call bubbler#init()               |
     \ call pencil#init()
   autocmd FileType text
     \ call litecorrect#init()           |
@@ -229,8 +227,10 @@ augroup various
     \ call quotable#init({ 'educate': 0 })
 augroup END
 
-"let g:wheel#map#mouse = -1
+" Avoid loading of MatchParen, per pi_paren.txt
+let loaded_matchparen = 1
 
+"let g:wheel#map#mouse = -1
 let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
 let g:lexical#thesaurus_key = '<leader>j'
