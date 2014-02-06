@@ -26,6 +26,7 @@ Bundle 'reedes/vim-textobj-sentence'
 Bundle 'reedes/vim-wheel'
 
 " # Non-color Bundles
+Bundle 'tommcdo/vim-exchange'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'bling/vim-airline'
 Bundle 'kana/vim-textobj-user'
@@ -38,7 +39,6 @@ Bundle 'tpope/vim-sensible'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-unimpaired'
-"Bundle 'kana/vim-vspec'
 Bundle 'junegunn/vader.vim'
 
 " # Color Bundles
@@ -133,7 +133,7 @@ endfunction
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
 nnoremap <silent> <leader>e :edit ~/.vim/vimrc<cr>
-nnoremap <silent> <leader>E :wall<cr>:source ~/.vim/vimrc<cr>
+nnoremap <silent> <leader>E :wall<cr>:source %<cr>
 
 " Make sure Vim returns to the same line when you reopen a file.
 " see :help last-position-jump
@@ -207,6 +207,11 @@ set splitright
 
 let g:force_reload_textobj_sentence = 1
 
+let g:litecorrect#typographic = 0
+
+nmap <silent> <leader>v :wall<CR>:Vader<CR>
+
+
 "set nomodeline
 "set modelines=0
 augroup various
@@ -228,14 +233,15 @@ augroup various
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
-let loaded_matchparen = 1
+"let loaded_matchparen = 1
 
 "let g:wheel#map#mouse = -1
 let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
 let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
-let g:pencil#softDetectSample = 15
+let g:pencil#softDetectSample = 40
+let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'hard'
 "nmap <leader>u <Plug>LexicalSpell
 "nmap <leader>j <Plug>LexicalThesaurus
@@ -289,7 +295,7 @@ let g:thematic#themes = {
 \                  'laststatus': 0,
 \                  'linespace': 8,
 \                  'airline-theme': 'badwolf',
-\                  'typeface': 'Anonymous Pro',
+\                  'typeface': 'Cousine',
 \                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
 \                  'font-size': 8,
