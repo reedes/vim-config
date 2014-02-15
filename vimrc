@@ -15,27 +15,31 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " # Authored Bundles
+Bundle 'reedes/vim-colors-pencil'
 Bundle 'reedes/vim-lexical'
 Bundle 'reedes/vim-litecorrect'
-Bundle 'reedes/vim-quotable'
-Bundle 'reedes/vim-thematic'
 Bundle 'reedes/vim-pencil'
-Bundle 'reedes/vim-colors-pencil'
-Bundle 'reedes/vim-wordy'
+Bundle 'reedes/vim-textobj-quote'
 Bundle 'reedes/vim-textobj-sentence'
+Bundle 'reedes/vim-thematic'
 Bundle 'reedes/vim-wheel'
+Bundle 'reedes/vim-wordy'
 
 " # Non-color Bundles
+Bundle 'ervandew/supertab'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'tommcdo/vim-exchange'
 Bundle 'airblade/vim-gitgutter'
-Bundle 'bling/vim-airline'
 Bundle 'kana/vim-textobj-user'
+Bundle 'kana/vim-operator-user'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-sensible'
+Bundle 'tpope/vim-markdown'
+Bundle 'rhysd/vim-operator-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-unimpaired'
@@ -51,6 +55,29 @@ Bundle 'noahfrederick/vim-hemisu'
 
 syntax on
 filetype plugin indent on
+
+imap ,fn <c-r>=expand('%:t:r')<cr>
+
+" Make the 'cw' and like commands put a $ at the end
+" instead of just deleting the text and replacing it.
+set cpoptions+=$
+
+" Don't update the display while executing macros
+set lazyredraw
+
+" Don't show the current command int he lower right corner.
+" In OSX, if this is set and lazyredraw is set then it's
+" slow as molasses, so we unset this
+set noshowcmd
+
+" Various characters are "wider" than normal fixed width
+" characters, but the default setting of ambiwidth (single)
+" squeezes them into "normal" width, which sucks.
+"set ambiwidth=double
+
+" Add the unnamed register to the clipboard
+set clipboard+=unnamed
+
 
 set expandtab                   " use spaces, not tabs (optional)
 set hlsearch                    " highlight matches
@@ -68,6 +95,9 @@ set hidden                      " allow unwritten background buffers
 if has('unix')
   set shell=/bin/bash\ -i       " make Vim’s :! shell behave like your command prompt
 endif
+
+" Make the current file executable
+nmap ,x :w<cr>:!chmod 755 %<cr>:e<cr>
 
 " command-t, ctrlp config and expanding wildcards
 set wildignore+=*.*~
@@ -107,11 +137,13 @@ augroup CursorLine
   au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
   au WinLeave * setlocal nocursorline
 augroup END
+"set nocursorline
+"set nocursorcolumn
 
 "nnoremap <silent> Q gwip
 "nnoremap <silent> K vipJ
-"nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
-"nnoremap <silent> <leader>K :%norm vipJ<cr>
+"nnoremap <silent> ,Q :g/^/norm gqq<cr>
+"nnoremap <silent> ,K :%norm vipJ<cr>
 
 " For quick recordings just type qq to start recording, then q to stop. You
 " don't have to worry about the name this way (you just named the recording
@@ -119,9 +151,13 @@ augroup END
 "nnoremap Q @q
 "noremap <Space> @q
 
+"make <c-l> clear the highlight as well as redraw
+noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
+inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
+
 " Clean trailing whitespace and save
-"nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
-nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
+"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
+nnoremap <silent> ,w :call TrimAndWrite()<cr>
 function! TrimAndWrite()
   let l:p = getpos('.')
   silent! %s/\s\+$//e
@@ -132,17 +168,17 @@ endfunction
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
-nnoremap <silent> <leader>e :edit ~/.vim/vimrc<cr>
-nnoremap <silent> <leader>E :wall<cr>:source %<cr>
+nnoremap <silent> ,E :edit $MYVIMRC<cr>
+"nnoremap <silent> ,es :wall<cr>:so $MYVIMRC<cr>
 
-" Make sure Vim returns to the same line when you reopen a file.
+" Remember last location in file, but not for commit messages.
 " see :help last-position-jump
 augroup line_return
     au!
     au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     execute 'normal! g`"zvzz' |
-        \ endif
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") | 
+      \   execute 'normal! g`"zvzz' |
+      \ endif
 augroup END
 
 " automatically save all buffers when focus is lost
@@ -156,16 +192,16 @@ nmap <C-p> :bprevious<CR>
 nmap <C-n> :bnext<CR>
 
 " switch buffers via quickfix ([q and ]q in unimpaired)
-nmap <silent> <leader>p :cprevious<cr>zvzz
-nmap <silent> <leader>n :cnext<cr>zvzz
-nmap <silent> <leader>P :crewind<cr>zvzz
-nmap <silent> <leader>N :clast<cr>zvzz
+nmap <silent> ,p :cprevious<cr>zvzz
+nmap <silent> ,n :cnext<cr>zvzz
+nmap <silent> ,P :crewind<cr>zvzz
+nmap <silent> ,N :clast<cr>zvzz
 
 " switch buffers via location ([l and ]l in unimpaired)
-"nmap <silent> <leader>k :lprevious<cr>zvzz
-"nmap <silent> <leader>j :lnext<cr>zvzz
-"nmap <silent> <leader>K :lrewind<cr>zvzz
-"nmap <silent> <leader>J :llast<cr>zvzz
+"nmap <silent> ,k :lprevious<cr>zvzz
+"nmap <silent> ,j :lnext<cr>zvzz
+"nmap <silent> ,K :lrewind<cr>zvzz
+"nmap <silent> ,J :llast<cr>zvzz
 
 " # Backup, Undo and NoSwap
 set backup                        " enable backups
@@ -193,43 +229,45 @@ nnoremap z1 zMzvzz
 " matter where the cursor happens to be, and center.
 nnoremap zO zCzOzz
 
+" Make horizontal scrolling easier
+"nmap <silent> <C-o> 10zl
+"nmap <silent> <C-i> 10zh
+
 " set styling on vertical splits (hard space)
 set fillchars=vert: 
 
 set splitbelow
 set splitright
 
+"let g:SuperTabDefaultCompletionType = "context"
+
 "highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 "match OverLength /\%81v.\+/
 "call matchadd('ColorColumn', '\%81v', 100)
-"let g:force_reload_quotable = 1
-"let g:textobj#sentence#select = 'x'
+
+"key mapping for Gundo
+"nnoremap <F4> :GundoToggle<CR>
+"
+"map ,e <Plug>(easymotion-prefix)
+
+nmap <silent> ,v :wall<CR>:Vader<CR>
 
 let g:force_reload_textobj_sentence = 1
-
 let g:litecorrect#typographic = 0
-
-nmap <silent> <leader>v :wall<CR>:Vader<CR>
-
-
-"set nomodeline
-"set modelines=0
 augroup various
   autocmd!
   autocmd FileType markdown
     \ call litecorrect#init()           |
     \ call lexical#init()               |
     \ call textobj#sentence#init()      |
-    \ call quotable#init()              |
+    \ call textobj#quote#init()         |
     \ call pencil#init()
   autocmd FileType text
     \ call litecorrect#init()           |
     \ call lexical#init({ 'spell': 0 }) |
     \ call textobj#sentence#init()      |
-    \ call quotable#init()              |
+    \ call textobj#quote#init()         |
     \ call pencil#init()
-  autocmd FileType python
-    \ call quotable#init({ 'educate': 0 })
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -243,18 +281,42 @@ let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'hard'
-"nmap <leader>u <Plug>LexicalSpell
-"nmap <leader>j <Plug>LexicalThesaurus
-"nmap <leader>k <Plug>LexicalDictionary
+"nmap ,u <Plug>LexicalSpell
+"nmap ,j <Plug>LexicalThesaurus
+"nmap ,k <Plug>LexicalDictionary
 
-map <silent> <leader>c <Plug>QuotableReplaceWithCurly
-map <silent> <leader>s <Plug>QuotableReplaceWithStraight
-nmap <silent> <leader>A :ShiftPencil<cr>
-"nmap <silent> <D-9> <Plug>ThematicNarrow
-"nmap <silent> <D-0> <Plug>ThematicWiden
-nmap <Leader>y <Plug>ThematicNext
-nmap <Leader>Y <Plug>ThematicRandom
-nmap <Leader>I :Thematic pencil_dark<CR>
+let g:online_thesaurus_map_keys = 0
+nnoremap ,r :OnlineThesaurusCurrentWord<CR>
+
+map <silent> ,c <Plug>ReplaceWithCurly
+map <silent> ,s <Plug>ReplaceWithStraight
+map <silent> ,2 <Plug>SurroundWithDouble
+map <silent> ,1 <Plug>SurroundWithSingle
+
+" operator mappings for rhysd/vim-operator-surround
+map <silent>sa <Plug>(operator-surround-append)
+map <silent>sd <Plug>(operator-surround-delete)
+map <silent>sr <Plug>(operator-surround-replace)
+
+" delete or replace most inner surround
+
+"" if you use vim-textobj-quote
+"nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-quote-a)
+"nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-quote-a)
+"
+"" if you use vim-textobj-sentence
+"nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
+"nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
+
+
+
+
+nmap <silent> ,A :ShiftPencil<cr>
+nmap <silent> <D-9> <Plug>ThematicNarrow
+nmap <silent> <D-0> <Plug>ThematicWiden
+nmap ,y <Plug>ThematicNext
+nmap ,Y <Plug>ThematicRandom
+nmap ,I :Thematic pencil_dark<CR>
 
 " use jellybeans as default airline theme as it maps from
 " existing colors
@@ -297,6 +359,13 @@ let g:thematic#themes = {
 \                  'airline-theme': 'badwolf',
 \                  'typeface': 'Cousine',
 \                },
+\ 'traditional': { 'colorscheme': 'pencil',
+\                  'background': 'light',
+\                  'font-size': 20,
+\                  'laststatus': 0,
+\                  'linespace': 8,
+\                  'typeface': 'Linux Libertine Mono O',
+\                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
 \                  'font-size': 8,
 \                  'linespace': 0,
@@ -336,8 +405,8 @@ let g:thematic#theme_name = 'pencil_dark'
 " Note: If the text covered by a motion contains a newline it won't work.  Ack
 " searches line-by-line.
 
-nnoremap <silent> <leader>a :set opfunc=<SID>AckMotion<CR>g@
-xnoremap <silent> <leader>a :<C-U>call <SID>AckMotion(visualmode())<CR>
+nnoremap <silent> ,a :set opfunc=<SID>AckMotion<CR>g@
+xnoremap <silent> ,a :<C-U>call <SID>AckMotion(visualmode())<CR>
 
 function! s:CopyMotionForType(type)
     if a:type ==# 'v'
@@ -356,8 +425,8 @@ endfunction
 
 " # CtrlP (navigation)
 " http://kien.github.com/ctrlp.vim/
-nmap <Leader>b :CtrlPBuffer<CR>
-nmap <Leader>m :CtrlPMRU<CR>
+nmap ,b :CtrlPBuffer<CR>
+nmap ,m :CtrlPMRU<CR>
 "let g:ctrlp_map = '<c-p>'
 let g:ctrlp_map = '<Leader>f'
 let g:ctrlp_working_path_mode = 0      " don't manage
@@ -392,8 +461,8 @@ func! s:DeleteBuffer()
 endfunc
 
 " # NERD Tree (directory browser)
-nmap <silent> <leader>t :set columns=999<CR>:NERDTreeToggle<CR>
-nmap <silent> <leader>T :set columns=999<CR>:NERDTreeFind<CR>
+nmap <silent> ,t :set columns=999<CR>:NERDTreeToggle<CR>
+nmap <silent> ,T :set columns=999<CR>:NERDTreeFind<CR>
 let NERDChristmasTree=1
 let NERDTreeChDirMode=2
 let NERDTreeDirArrows=1
@@ -425,5 +494,45 @@ let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " ===============================================================
 "
+
+"function! ToggleMinimap()
+"  if exists("s:isMini") && s:isMini == 0
+"    let s:isMini = 1
+"  else
+"    let s:isMini = 0
+"  end
+"
+"  if (s:isMini == 0)
+"    " save current visible lines
+"    let s:firstLine = line("w0")
+"    let s:lastLine = line("w$")
+"
+"    " make font small
+"    exe "set guifont=" . g:small_font
+"    " highlight lines which were visible
+"    let s:lines = ""
+"    for i in range(s:firstLine, s:lastLine)
+"      let s:lines = s:lines . "\\%" . i . "l"
+"
+"      if i < s:lastLine
+"        let s:lines = s:lines . "\\|"
+"      endif
+"    endfor
+"
+"    exe 'match Visible /' . s:lines . '/'
+"    hi Visible guibg=lightblue guifg=black term=bold
+"    nmap <s-j> 10j
+"    nmap <s-k> 10k
+"  else
+"    exe "set guifont=" . g:main_font
+"    hi clear Visible
+"    nunmap <s-j>
+"    nunmap <s-k>
+"  endif
+"endfunction
+"
+"let g:main_font = "Anonymous\\ Pro:h18"
+"let g:small_font = "Anonymous\\ Pro:h2"
+"command! ToggleMinimap call ToggleMinimap()
 
 " vim:set ft=vim et sw=2:
