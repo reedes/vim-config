@@ -34,19 +34,12 @@ VIM_SERVER=$( mvim --serverlist | head -n1 )
 
 if [ -n "$1" ] ; then
   if [ -n "$VIM_SERVER" ]; then
-    opts=--server-name=$VIM_SERVER \
-         --remote-send ":call foreground()<CR><C-\><C-n>:split $@<CR>"
+    exec "$binary" -g --server-name=$VIM_SERVER --remote-send ":call foreground()<CR><C-\><C-n>:split $@<CR>"
   else
-    opts=--remote-silent "$@"
+    exec "$binary" -g --remote-silent "$@"
   fi
 elif [ -n "$VIM_SERVER" ] ; then
-  opts=--server-name=$VIM_SERVER \
-       --remote-send ":call foreground()<CR>:enew<CR>:<BS>"
+  exec "$binary" -g --server-name=$VIM_SERVER --remote-send ":call foreground()<CR>:enew<CR>:<BS>"
 else
-  opts=
+  exec "$binary" -g
 fi
-
-#exec "$binary" -g $opts ${1:+"$@"}
-exec "$binary" $opts ${1:+"$@"}
-
-

@@ -26,6 +26,7 @@ Bundle 'reedes/vim-wheel'
 Bundle 'reedes/vim-wordy'
 
 " # Non-color Bundles
+Bundle 'roman/golden-ratio'
 "Bundle 'ervandew/supertab'
 "Bundle 'Lokaltog/vim-easymotion'
 "Bundle 'tommcdo/vim-exchange'
