@@ -1,0 +1,19 @@
+#/bin/bash
+
+VIM_SERVER=$( mvim --serverlist | head -n1 )
+
+if [ -n "$1" ] ; then
+  if [ -n "$VIM_SERVER" ]; then
+    mvim --server-name=$VIM_SERVER \
+         --remote-send ":call foreground()<CR><C-\><C-n>:split $@<CR>"
+  else
+    mvim --remote-silent "$@"
+  fi
+elif [ -n "$VIM_SERVER" ] ; then
+  mvim --server-name=$VIM_SERVER \
+       --remote-send ":call foreground()<CR>:enew<CR>:<BS>"
+else
+  mvim
+fi
+
+

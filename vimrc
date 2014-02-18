@@ -26,12 +26,12 @@ Bundle 'reedes/vim-wheel'
 Bundle 'reedes/vim-wordy'
 
 " # Non-color Bundles
-Bundle 'ervandew/supertab'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'tommcdo/vim-exchange'
+"Bundle 'ervandew/supertab'
+"Bundle 'Lokaltog/vim-easymotion'
+"Bundle 'tommcdo/vim-exchange'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'kana/vim-textobj-user'
-Bundle 'kana/vim-operator-user'
+"Bundle 'kana/vim-operator-user'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'milkypostman/vim-togglelist'
@@ -39,10 +39,11 @@ Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-sensible'
 Bundle 'tpope/vim-markdown'
-Bundle 'rhysd/vim-operator-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-unimpaired'
+Bundle 'bling/vim-airline'
+"Bundle 'rhysd/vim-operator-surround'
+"Bundle 'tpope/vim-repeat'
+"Bundle 'tpope/vim-abolish'
+"Bundle 'tpope/vim-unimpaired'
 Bundle 'junegunn/vader.vim'
 
 " # Color Bundles
@@ -275,28 +276,25 @@ augroup END
 
 "let g:wheel#map#mouse = -1
 let g:lexical#spelllang = ['en_us',]
-let g:lexical#spell_key = '<leader>u'
-let g:lexical#thesaurus_key = '<leader>j'
-let g:lexical#dictionary_key = '<leader>k'
+let g:lexical#spell_key = ',u'
+let g:lexical#thesaurus_key = ',j'
+let g:lexical#dictionary_key = ',k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'hard'
-"nmap ,u <Plug>LexicalSpell
-"nmap ,j <Plug>LexicalThesaurus
-"nmap ,k <Plug>LexicalDictionary
 
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
-map <silent> ,c <Plug>ReplaceWithCurly
-map <silent> ,s <Plug>ReplaceWithStraight
-map <silent> ,2 <Plug>SurroundWithDouble
-map <silent> ,1 <Plug>SurroundWithSingle
+map <silent> ,c <Plug>(ReplaceWithCurly)
+map <silent> ,s <Plug>(ReplaceWithStraight)
+map <silent> ,2 <Plug>(SurroundWithDouble)
+map <silent> ,1 <Plug>(SurroundWithSingle)
 
 " operator mappings for rhysd/vim-operator-surround
-map <silent>sa <Plug>(operator-surround-append)
-map <silent>sd <Plug>(operator-surround-delete)
-map <silent>sr <Plug>(operator-surround-replace)
+"map <silent>sa <Plug>(operator-surround-append)
+"map <silent>sd <Plug>(operator-surround-delete)
+"map <silent>sr <Plug>(operator-surround-replace)
 
 " delete or replace most inner surround
 
