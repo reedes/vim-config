@@ -1,45 +1,76 @@
-#/bin/bash
+#!/bin/bash
 # Name       : onevim
 # Description: Use MacVim in a single instance
 #
-# Author     : reedes
+# Author     : github.com/reedes
 # Created    : February 17, 2014
 #
-# Based on a script by Wout Mertens and suggestions from Laurent Bihanic.  This
-# version is the fault of Benji Fisher, 16 May 2005 (with modifications by Nico
-# Weber and Bjorn Winckler, Aug 13 2007).
+# $ gvim --remote-send "<C-\><C-n>:if &ft == 'nerdtree'|wincmd p|endif|edit filename<CR>"
+# "help view" for startup modes
+# view     vim -R     Start in read-only mode (see |-R|).       *view*
+# gvim     vim -g     Start the GUI (see |gui|).          *gvim*
+# gex      vim -eg    Start the GUI in Ex mode.       *gex*
+# gview    vim -Rg    Start the GUI in read-only mode.      *gview*
+# rvim     vim -Z     Like "vim", but in restricted mode (see |-Z|)   *rvim*
+# rview    vim -RZ    Like "view", but in restricted mode.    *rview*
+# rgvim    vim -gZ    Like "gvim", but in restricted mode.    *rgvim*
+# rgview   vim -RgZ   Like "gview", but in restricted mode.   *rgview*
+# evim     vim -y     Easy Vim: set 'insertmode' (see |-y|)     *evim*
+# eview    vim -yR    Like "evim" in read-only mode     *eview*
+# vimdiff  vim -d     Start in diff mode |diff-mode|
+# gvimdiff vim -gd    Start in diff mode |diff-mode|
+# :hide            - close current window
+# :only            - keep only this window open
 
-VIM_APP_DIR=/usr/local/Cellar/macvim/7.4-72
+# obtain the full path of a filename
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
 
-if [ -z "$VIM_APP_DIR" ]
-then
-  myDir="`dirname "$0"`"
-  myAppDir="$myDir/../Applications"
-  for i in ~/Applications ~/Applications/vim $myDir $myDir/vim $myAppDir $myAppDir/vim /Applications /Applications/vim /Applications/Utilities /Applications/Utilities/vim; do
-    if [ -x "$i/MacVim.app" ]; then
-      VIM_APP_DIR="$i"
-      break
-    fi
-  done
-fi
-if [ -z "$VIM_APP_DIR" ]
-then
-  echo "Sorry, cannot find MacVim.app.  Try setting the VIM_APP_DIR environment variable to the directory containing MacVim.app."
-  exit 1
-fi
-binary="$VIM_APP_DIR/MacVim.app/Contents/MacOS/Vim"
+# determine the edit cmd from the name of the script
+# TODO view, sview
+case "`basename "$0"`" in
+v*)
+  edit_cmd="vsplit"
+  more_keys="<c-w>L"     # right
+  ;;
+t*)
+  edit_cmd="tabedit"
+  more_keys=
+  ;;
+s*)
+  edit_cmd="split"
+  more_keys="<c-w>="          # equal
+  #more_keys="<c-w>_"          # maximize
+  ;;
+*)
+  edit_cmd="edit"
+  more_keys=
+  ;;
+esac
 
-# load a single instance
-VIM_SERVER=$( mvim --serverlist | head -n1 )
-
-if [ -n "$1" ] ; then
-  if [ -n "$VIM_SERVER" ]; then
-    exec "$binary" -g --server-name=$VIM_SERVER --remote-send ":call foreground()<CR><C-\><C-n>:split $@<CR>"
+# assume one or zero servers
+server=$( mvim --serverlist | head -n1 )
+if [ $? -ne 0 ]; then
+  # punt, because our vim lacks client server
+  mvim "$@"
+elif [ -n "$server" ] ; then
+  if [ $# -gt 1 ] ; then
+    # load many files
+    mvim --server-name="$server" "$@" --remote-send ":call foreground()<CR>"
   else
-    exec "$binary" -g --remote-silent "$@"
+    keys=
+    if [ -n "$1" ] ; then
+      # load single file (which may not yet exist) in split/tab
+      full_path=$(realpath "$1")
+      keys="<C-\><C-n>:$edit_cmd $full_path<CR>"
+    fi
+    mvim --server-name="$server" --remote-send ":call foreground()<CR>$keys$more_keys"
   fi
-elif [ -n "$VIM_SERVER" ] ; then
-  exec "$binary" -g --server-name=$VIM_SERVER --remote-send ":call foreground()<CR>:enew<CR>:<BS>"
+elif [ -n "$@" ] ; then
+  # attempt to edit in a new server instance
+  mvim --remote-silent "$@"
 else
-  exec "$binary" -g
+  # punt, because --remote-silent complains if no files
+  mvim
 fi

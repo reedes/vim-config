@@ -186,6 +186,11 @@ augroup END
 " automatically save all buffers when focus is lost
 autocmd FocusLost * :silent! wall
 
+"autowriteall
+
+" jump to the first open window that has buffer
+"set switchbuf=useopen
+
 " delete buffer without closing window (vim-bbye plugin)
 nmap <C-@> :Bdelete<CR>
 
