@@ -16,20 +16,6 @@
 #
 # Adapted by Reed Esau for use with server instances, Feb 18 2014.
 
-# ":help view" for startup modes
-# view     vim -R     Start in read-only mode (see |-R|).       *view*
-# gvim     vim -g     Start the GUI (see |gui|).          *gvim*
-# gex      vim -eg    Start the GUI in Ex mode.       *gex*
-# gview    vim -Rg    Start the GUI in read-only mode.      *gview*
-# rvim     vim -Z     Like "vim", but in restricted mode (see |-Z|)   *rvim*
-# rview    vim -RZ    Like "view", but in restricted mode.    *rview*
-# rgvim    vim -gZ    Like "gvim", but in restricted mode.    *rgvim*
-# rgview   vim -RgZ   Like "gview", but in restricted mode.   *rgview*
-# evim     vim -y     Easy Vim: set 'insertmode' (see |-y|)     *evim*
-# eview    vim -yR    Like "evim" in read-only mode     *eview*
-# vimdiff  vim -d     Start in diff mode |diff-mode|
-# gvimdiff vim -gd    Start in diff mode |diff-mode|
-
 # obtain the full path of a filename
 realpath() {
     [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
@@ -47,7 +33,7 @@ quote() {
 # First, check "All the Usual Suspects" for the location of the Vim.app bundle.
 # You can short-circuit this by setting the VIM_APP_DIR environment variable
 # or by un-commenting and editing the following line:
-#VIM_APP_DIR=/usr/local/Cellar/macvim/7.4-72
+VIM_APP_DIR=/usr/local/Cellar/macvim/7.4-72
 
 if [ -z "$VIM_APP_DIR" ]
 then
@@ -86,6 +72,8 @@ case "$name" in
   *v) open_with=vsplit
       more_keys="<c-w>L"     # right
       ;;
+  *)  open_with=edit
+      ;;
 esac
 
 # GUI mode, implies forking
@@ -121,7 +109,7 @@ if [ $? -eq 0 ]; then
   # filenames
   # extract --servername non-destructively, if specified by user
   server_name=
-  found_remote=0
+  found_remote=
   files=()
   filtered_args=
   # destructively iterates across $@
@@ -140,7 +128,7 @@ if [ $? -eq 0 ]; then
             ;;
         --remote*)
             # detected user-managed remote session, so bail early
-            found_remote=1
+            found_remote=true
             break
             ;;
         -g | -f | --nofork | -v | -e | -E | -s | -d | -y | -R | -Z | -m | -M | -b | \
@@ -151,10 +139,10 @@ if [ $? -eq 0 ]; then
             ;;
         -V* | -r | -T | -u | -U | --cmd | -c | -S | -s | -W | -w | --startuptime | -i)
             # an option with an argument
-            filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
-            shift
-            filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
-            shift
+            for _ in 1 2; do
+              filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
+              shift
+            done
             ;;
         --*)
             # an unrecognized option of some sort which we'll ignore
@@ -168,7 +156,7 @@ if [ $? -eq 0 ]; then
     esac
   done
 
-  if [ $found_remote -eq 1 ] ; then
+  if [ "$found_remote" ] ; then
     # the user is managing the remote session, so bail
     eval set -- "$original_args"
   else
@@ -184,31 +172,43 @@ if [ $? -eq 0 ]; then
       fi
     fi
 
-    is_server_active=0
-    case "${available_servers[@]}" in  *"$server_name"*) is_server_active=1 ;; esac
+    is_server_active=
+    case "${available_servers[@]}" in  *"$server_name"*) is_server_active=true ;; esac
 
-    # we had filtered it out, so re-add it
+    # we had filtered server name out, so re-add it
     opts="$opts --servername $server_name"
 
-    if [ $is_server_active -ne 0 ] ; then
+    # works
+    # /usr/local/Cellar/macvim/7.4-72/MacVim.app/Contents/MacOS/Vim -g --servername VIM --remote-send "<c-\><c-n>G"
+
+    if [ "$is_server_active" ] ; then
       if [ ${#files[@]} -gt 1 ] ; then
-        # more than one file specified, so load them all
-        opts="$opts --remote-send \":call foreground()<CR>\" ${files[*]}"
+        # more than one file specified, so load them all (ignoring open_with)
+        opts="$opts --remote-send \"<c-\><c-n>:call<space>foreground()<CR>\" -- ${files[*]}"
       else
         keys=
-        if [ -n "$1" ] ; then
+        one_file=${files[0]}
+        if [ -n "$one_file" ] ; then
           # load single file (which may not yet exist) in split/tab/etc.
-          full_path=$(realpath "${files[0]}")
-          keys="<C-\><C-n>:$edit_cmd $full_path<CR>"
+          full_path=$(realpath "$one_file")
+          #keys="<C-\><C-n>:$open_with $full_path<CR>"
+          keys="<c-\><c-n>:$open_with<space>$full_path<CR>"
         fi
-        opts="$opts --remote-send \":call foreground()<CR>$keys$more_keys\""
+        opts="$opts --remote-send \"<c-\><c-n>:call<space>foreground()<CR>$keys$more_keys\""
       fi
     else
       # attempt to edit in a new server instance
+      # note that anything after --remote-silent should be a file
       opts="$opts --remote-silent ${files[*]}"
     fi  # is_server_active
   fi  # found_remote
 fi  # server_list
+
+echo "available_servers=$available_servers"
+echo "BINARY=$binary"
+echo "OPTS=[$opts]"
+echo "gui=$gui"
+echo "ARGS=${1:+"$@"}"
 
 # Last step:  fire up vim.
 # The program should fork by default when started in GUI mode, but it does
