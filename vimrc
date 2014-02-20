@@ -14,17 +14,6 @@ call vundle#rc()
 " let vundle manage itself
 Bundle 'gmarik/vundle'
 
-" # Authored Bundles
-Bundle 'reedes/vim-colors-pencil'
-Bundle 'reedes/vim-lexical'
-Bundle 'reedes/vim-litecorrect'
-Bundle 'reedes/vim-pencil'
-Bundle 'reedes/vim-textobj-quote'
-Bundle 'reedes/vim-textobj-sentence'
-Bundle 'reedes/vim-thematic'
-Bundle 'reedes/vim-wheel'
-Bundle 'reedes/vim-wordy'
-
 " # Non-color Bundles
 Bundle 'roman/golden-ratio'
 "Bundle 'ervandew/supertab'
@@ -47,6 +36,16 @@ Bundle 'bling/vim-airline'
 "Bundle 'tpope/vim-unimpaired'
 Bundle 'junegunn/vader.vim'
 
+" # Authored Bundles
+Bundle 'reedes/vim-colors-pencil'
+Bundle 'reedes/vim-lexical'
+Bundle 'reedes/vim-litecorrect'
+Bundle 'reedes/vim-pencil'
+Bundle 'reedes/vim-textobj-quote'
+Bundle 'reedes/vim-textobj-sentence'
+Bundle 'reedes/vim-thematic'
+Bundle 'reedes/vim-wheel'
+Bundle 'reedes/vim-wordy'
 " # Color Bundles
 Bundle 'hmaarrfk/vim-colors-solarized'
 Bundle 'baskerville/bubblegum'
