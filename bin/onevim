@@ -1,6 +1,6 @@
 #!/bin/bash
 # Name       : onevim
-# Description: Launch Vim with server-driven instances
+# Description: Launch against a single server-driven instance of Vim
 #
 # Author     : github.com/reedes
 # Created    : February 18, 2014
@@ -18,7 +18,7 @@
 
 # obtain the full path of a filename
 realpath() {
-    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+  [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 
 # escape any single quotes in an argument
@@ -60,22 +60,6 @@ name="`basename "$0"`"
 gui=
 opts=
 
-# open with
-more_keys=
-open_with=
-case "$name" in
-  *s) open_with=split
-      more_keys="<c-w>="     # equal
-      ;;
-  *t) open_with=tabedit
-      ;;
-  *v) open_with=vsplit
-      more_keys="<c-w>L"     # right
-      ;;
-  *)  open_with=edit
-      ;;
-esac
-
 # GUI mode, implies forking
 case "$name" in m*|g*|rm*|rg*) gui=true ;; esac
 
@@ -95,19 +79,33 @@ case "$name" in
     ;;
 esac
 
+# Does the user want to open as split or as a tab?
+open_keys=
+open_with=
+case "$name" in
+  *s) open_with=split
+      open_keys="<c-w>="     # equal
+      ;;
+  *t) open_with=tabedit
+      ;;
+  *v) open_with=vsplit
+      open_keys="<c-w>L"     # right
+      ;;
+  *)  open_with=edit
+      ;;
+esac
+
 # query existing vim(s) to get server names
 available_servers=($("$binary" --serverlist))
 if [ $? -eq 0 ]; then
 
-  # preserve original arguments
+  # preserve original arguments, in case we must degrade
   original_args=
   for arg in "$@"; do
     original_args="${original_args:+$original_args }'$(quote "$arg")'"
   done
 
-  # analyze the arguments provided by the user, filtering out the
-  # filenames
-  # extract --servername non-destructively, if specified by user
+  # analyze the arguments provided by the user, filtering out the filenames
   server_name=
   found_remote=
   files=()
@@ -116,14 +114,12 @@ if [ $? -eq 0 ]; then
   while test -n "$*"; do
     case "$1" in
         --servername=*)
-            # convert servername to UPPER
-            server_name=$(echo ${1:13}| tr '[:lower:]' '[:upper:]')
+            server_name=${1:13}
             shift
             ;;
         --servername)
-            # convert servername to UPPER
             shift
-            server_name=$(echo $1| tr '[:lower:]' '[:upper:]')
+            server_name=$1
             shift
             ;;
         --remote*)
@@ -144,7 +140,7 @@ if [ $? -eq 0 ]; then
               shift
             done
             ;;
-        --*)
+        -*)
             # an unrecognized option of some sort which we'll ignore
             shift
             ;;
@@ -162,9 +158,13 @@ if [ $? -eq 0 ]; then
   else
     # using a filtered set of args, as this script is managing the remote session
     eval set -- "$filtered_args"
+
     # If no explicit server, choose first from server list,
     # but if no detected servers, choose VIM
-    if [ -z "$server_name" ] ; then
+    if [ -n "$server_name" ] ; then
+      # force UPPER
+      server_name=$(echo $server_name| tr '[:lower:]' '[:upper:]')
+    else
       if [ ${#available_servers[@]} -gt 0 ] ; then
         server_name="${available_servers[0]}"
       else
@@ -175,40 +175,33 @@ if [ $? -eq 0 ]; then
     is_server_active=
     case "${available_servers[@]}" in  *"$server_name"*) is_server_active=true ;; esac
 
-    # we had filtered server name out, so re-add it
+    # we had filtered server name out earlier, so re-add it
     opts="$opts --servername $server_name"
-
-    # works
-    # /usr/local/Cellar/macvim/7.4-72/MacVim.app/Contents/MacOS/Vim -g --servername VIM --remote-send "<c-\><c-n>G"
 
     if [ "$is_server_active" ] ; then
       if [ ${#files[@]} -gt 1 ] ; then
         # more than one file specified, so load them all (ignoring open_with)
+        # TODO should we use --remote-tab here when open_with=tabedit?
         opts="$opts --remote-send \"<c-\><c-n>:call<space>foreground()<CR>\" -- ${files[*]}"
       else
         keys=
         one_file=${files[0]}
         if [ -n "$one_file" ] ; then
           # load single file (which may not yet exist) in split/tab/etc.
+          # TODO do we need to escape file path with <space> ?
           full_path=$(realpath "$one_file")
-          #keys="<C-\><C-n>:$open_with $full_path<CR>"
           keys="<c-\><c-n>:$open_with<space>$full_path<CR>"
         fi
-        opts="$opts --remote-send \"<c-\><c-n>:call<space>foreground()<CR>$keys$more_keys\""
+        opts="$opts --remote-send \"<c-\><c-n>:call<space>foreground()<CR>$keys$open_keys\""
       fi
     else
       # attempt to edit in a new server instance
       # note that anything after --remote-silent should be a file
+      # TODO should we use --remote-tab here when open_with=tabedit?
       opts="$opts --remote-silent ${files[*]}"
     fi  # is_server_active
   fi  # found_remote
 fi  # server_list
-
-echo "available_servers=$available_servers"
-echo "BINARY=$binary"
-echo "OPTS=[$opts]"
-echo "gui=$gui"
-echo "ARGS=${1:+"$@"}"
 
 # Last step:  fire up vim.
 # The program should fork by default when started in GUI mode, but it does
