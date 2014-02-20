@@ -1,0 +1,226 @@
+#!/bin/bash
+# Name       : onevim
+# Description: Launch Vim with server-driven instances
+#
+# Author     : github.com/reedes
+# Created    : February 18, 2014
+#
+# This shell script passes all its arguments to the binary inside the
+# MacVim.app application bundle.  If you make links to this script as view,
+# gvim, etc., then it will peek at the name used to call it and set options
+# appropriately.
+#
+# Based on a script by Wout Mertens and suggestions from Laurent Bihanic.  This
+# version is the fault of Benji Fisher, 16 May 2005 (with modifications by Nico
+# Weber and Bjorn Winckler, Aug 13 2007).
+#
+# Adapted by Reed Esau for use with server instances, Feb 18 2014.
+
+# ":help view" for startup modes
+# view     vim -R     Start in read-only mode (see |-R|).       *view*
+# gvim     vim -g     Start the GUI (see |gui|).          *gvim*
+# gex      vim -eg    Start the GUI in Ex mode.       *gex*
+# gview    vim -Rg    Start the GUI in read-only mode.      *gview*
+# rvim     vim -Z     Like "vim", but in restricted mode (see |-Z|)   *rvim*
+# rview    vim -RZ    Like "view", but in restricted mode.    *rview*
+# rgvim    vim -gZ    Like "gvim", but in restricted mode.    *rgvim*
+# rgview   vim -RgZ   Like "gview", but in restricted mode.   *rgview*
+# evim     vim -y     Easy Vim: set 'insertmode' (see |-y|)     *evim*
+# eview    vim -yR    Like "evim" in read-only mode     *eview*
+# vimdiff  vim -d     Start in diff mode |diff-mode|
+# gvimdiff vim -gd    Start in diff mode |diff-mode|
+
+# obtain the full path of a filename
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+# escape any single quotes in an argument
+quote() {
+  echo "$1" | sed -e "s,','\\\\'',g"
+}
+
+# ===================================
+# Entry point
+# ===================================
+
+# First, check "All the Usual Suspects" for the location of the Vim.app bundle.
+# You can short-circuit this by setting the VIM_APP_DIR environment variable
+# or by un-commenting and editing the following line:
+#VIM_APP_DIR=/usr/local/Cellar/macvim/7.4-72
+
+if [ -z "$VIM_APP_DIR" ]
+then
+  myDir="`dirname "$0"`"
+  myAppDir="$myDir/../Applications"
+  for i in ~/Applications ~/Applications/vim $myDir $myDir/vim $myAppDir $myAppDir/vim /Applications /Applications/vim /Applications/Utilities /Applications/Utilities/vim; do
+    if [ -x "$i/MacVim.app" ]; then
+      VIM_APP_DIR="$i"
+      break
+    fi
+  done
+fi
+if [ -z "$VIM_APP_DIR" ]
+then
+  echo "Sorry, cannot find MacVim.app.  Try setting the VIM_APP_DIR environment variable to the directory containing MacVim.app."
+  exit 1
+fi
+binary="$VIM_APP_DIR/MacVim.app/Contents/MacOS/Vim"
+
+# Next, peek at the name used to invoke this script, and set options
+# accordingly.
+
+name="`basename "$0"`"
+gui=
+opts=
+
+# open with
+more_keys=
+open_with=
+case "$name" in
+  *s) open_with=split
+      more_keys="<c-w>="     # equal
+      ;;
+  *t) open_with=tabedit
+      ;;
+  *v) open_with=vsplit
+      more_keys="<c-w>L"     # right
+      ;;
+esac
+
+# GUI mode, implies forking
+case "$name" in m*|g*|rm*|rg*) gui=true ;; esac
+
+# Restricted mode
+case "$name" in r*) opts="$opts -Z";; esac
+
+# vimdiff, view, and ex mode
+case "$name" in
+  *vimdiff)
+    opts="$opts -dO"
+    ;;
+  *view)
+    opts="$opts -R"
+    ;;
+  *ex)
+    opts="$opts -e"
+    ;;
+esac
+
+# query existing vim(s) to get server names
+available_servers=($("$binary" --serverlist))
+if [ $? -eq 0 ]; then
+
+  # preserve original arguments
+  original_args=
+  for arg in "$@"; do
+    original_args="${original_args:+$original_args }'$(quote "$arg")'"
+  done
+
+  # analyze the arguments provided by the user, filtering out the
+  # filenames
+  # extract --servername non-destructively, if specified by user
+  server_name=
+  found_remote=0
+  files=()
+  filtered_args=
+  # destructively iterates across $@
+  while test -n "$*"; do
+    case "$1" in
+        --servername=*)
+            # convert servername to UPPER
+            server_name=$(echo ${1:13}| tr '[:lower:]' '[:upper:]')
+            shift
+            ;;
+        --servername)
+            # convert servername to UPPER
+            shift
+            server_name=$(echo $1| tr '[:lower:]' '[:upper:]')
+            shift
+            ;;
+        --remote*)
+            # detected user-managed remote session, so bail early
+            found_remote=1
+            break
+            ;;
+        -g | -f | --nofork | -v | -e | -E | -s | -d | -y | -R | -Z | -m | -M | -b | \
+        -l | -C | -N | -D | -n | -L | -A | -H | -F | --noplugin | -p* | -o* | -O* | \
+        +* | -x | --serverlist | -h | --help | --version | --)
+            filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
+            shift
+            ;;
+        -V* | -r | -T | -u | -U | --cmd | -c | -S | -s | -W | -w | --startuptime | -i)
+            # an option with an argument
+            filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
+            shift
+            filtered_args="${filtered_args:+$filtered_args }'$(quote "$1")'"
+            shift
+            ;;
+        --*)
+            # an unrecognized option of some sort which we'll ignore
+            shift
+            ;;
+        *)
+            # preserve the file for later
+            files+=($1)
+            shift
+            ;;
+    esac
+  done
+
+  if [ $found_remote -eq 1 ] ; then
+    # the user is managing the remote session, so bail
+    eval set -- "$original_args"
+  else
+    # using a filtered set of args, as this script is managing the remote session
+    eval set -- "$filtered_args"
+    # If no explicit server, choose first from server list,
+    # but if no detected servers, choose VIM
+    if [ -z "$server_name" ] ; then
+      if [ ${#available_servers[@]} -gt 0 ] ; then
+        server_name="${available_servers[0]}"
+      else
+        server_name="VIM"
+      fi
+    fi
+
+    is_server_active=0
+    case "${available_servers[@]}" in  *"$server_name"*) is_server_active=1 ;; esac
+
+    # we had filtered it out, so re-add it
+    opts="$opts --servername $server_name"
+
+    if [ $is_server_active -ne 0 ] ; then
+      if [ ${#files[@]} -gt 1 ] ; then
+        # more than one file specified, so load them all
+        opts="$opts --remote-send \":call foreground()<CR>\" ${files[*]}"
+      else
+        keys=
+        if [ -n "$1" ] ; then
+          # load single file (which may not yet exist) in split/tab/etc.
+          full_path=$(realpath "${files[0]}")
+          keys="<C-\><C-n>:$edit_cmd $full_path<CR>"
+        fi
+        opts="$opts --remote-send \":call foreground()<CR>$keys$more_keys\""
+      fi
+    else
+      # attempt to edit in a new server instance
+      opts="$opts --remote-silent ${files[*]}"
+    fi  # is_server_active
+  fi  # found_remote
+fi  # server_list
+
+# Last step:  fire up vim.
+# The program should fork by default when started in GUI mode, but it does
+# not; we work around this when this script is invoked as "gvim" or "rgview"
+# etc., but not when it is invoked as "vim -g".
+if [ "$gui" ]; then
+  # Note: this isn't perfect, because any error output goes to the
+  # terminal instead of the console log.
+  # But if you use open instead, you will need to fully qualify the
+  # path names for any filenames you specify, which is hard.
+  exec "$binary" -g $opts ${1:+"$@"}
+else
+  exec "$binary" $opts ${1:+"$@"}
+fi
+

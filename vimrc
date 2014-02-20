@@ -311,6 +311,9 @@ map <silent> ,1 <Plug>(SurroundWithSingle)
 "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
 "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
 
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 
 
