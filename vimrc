@@ -40,12 +40,14 @@ Bundle 'junegunn/vader.vim'
 Bundle 'reedes/vim-colors-pencil'
 Bundle 'reedes/vim-lexical'
 Bundle 'reedes/vim-litecorrect'
+Bundle 'reedes/vim-one'
 Bundle 'reedes/vim-pencil'
 Bundle 'reedes/vim-textobj-quote'
 Bundle 'reedes/vim-textobj-sentence'
 Bundle 'reedes/vim-thematic'
 Bundle 'reedes/vim-wheel'
 Bundle 'reedes/vim-wordy'
+
 " # Color Bundles
 Bundle 'hmaarrfk/vim-colors-solarized'
 Bundle 'baskerville/bubblegum'
@@ -209,9 +211,8 @@ nmap <silent> ,N :clast<cr>zvzz
 "nmap <silent> ,K :lrewind<cr>zvzz
 "nmap <silent> ,J :llast<cr>zvzz
 
-" # Backup, Undo and NoSwap
+" # Common directories for backup, undo and swap
 set backup                        " enable backups
-set noswapfile                    " it's 2013, Vim.
 
 set undofile                      " Save undo's after file closes
 set undolevels=1000               " How many undos
@@ -219,6 +220,7 @@ set undoreload=10000              " number of lines to save for undo
 
 set backupdir=~/.vim/tmp/backup// " backups
 set undodir=~/.vim/tmp/undo//     " undo files
+set directory=~/.vim/tmp/swap//   " swap files
 
 " Make those folders automatically if they don't already exist.
 if !isdirectory(expand("~/.vim/tmp/backup"))
@@ -226,6 +228,9 @@ if !isdirectory(expand("~/.vim/tmp/backup"))
 endif
 if !isdirectory(expand("~/.vim/tmp/undo"))
     call mkdir(expand("~/.vim/tmp/undo"), "p")
+endif
+if !isdirectory(expand("~/.vim/tmp/swap"))
+    call mkdir(expand("~/.vim/tmp/swap"), "p")
 endif
 
 " Close all folds except the one(1) the cursor is on, and center.
@@ -403,7 +408,7 @@ let g:thematic#themes = {
 \ }
 
 
-let g:thematic#theme_name = 'pencil_dark'
+"let g:thematic#theme_name = 'desert'
 
 
 " Motions to Ack for things.  Works with pretty much everything, including:
