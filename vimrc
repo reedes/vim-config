@@ -15,21 +15,21 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " # Non-color Bundles
-Bundle 'roman/golden-ratio'
+"Bundle 'roman/golden-ratio'
 "Bundle 'ervandew/supertab'
-"Bundle 'Lokaltog/vim-easymotion'
-"Bundle 'tommcdo/vim-exchange'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'tommcdo/vim-exchange'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'kana/vim-textobj-user'
 "Bundle 'kana/vim-operator-user'
 Bundle 'kien/ctrlp.vim'
-Bundle 'mileszs/ack.vim'
-Bundle 'milkypostman/vim-togglelist'
+"Bundle 'mileszs/ack.vim'
+"Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-sensible'
 Bundle 'tpope/vim-markdown'
-Bundle 'bling/vim-airline'
+"Bundle 'plasticboy/vim-markdown'
+"Bundle 'bling/vim-airline'
 "Bundle 'rhysd/vim-operator-surround'
 "Bundle 'tpope/vim-repeat'
 "Bundle 'tpope/vim-abolish'
@@ -56,8 +56,77 @@ Bundle 'endel/vim-github-colorscheme'
 Bundle 'nanotech/jellybeans.vim'
 Bundle 'noahfrederick/vim-hemisu'
 
-syntax on
+syntax enable
 filetype plugin indent on
+
+set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
+
+set nrformats-=octal
+set shiftround
+
+set ttimeout
+set ttimeoutlen=100
+
+set incsearch
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+endif
+
+set ruler
+set showcmd
+set wildmenu
+
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
+set display+=lastline
+
+if &encoding ==# 'latin1' && has('gui_running')
+  set encoding=utf-8
+endif
+
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+  if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
+    let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
+  endif
+endif
+
+if &shell =~# 'fish$'
+  set shell=/bin/bash
+endif
+
+set autoread
+set fileformats+=mac
+
+if &history < 1000
+  set history=1000
+endif
+if &tabpagemax < 50
+  set tabpagemax=50
+endif
+if !empty(&viminfo)
+  set viminfo^=!
+endif
+
+" Allow color schemes to do bright colors without forcing bold.
+if &t_Co == 8 && $TERM !~# '^linux'
+  set t_Co=16
+endif
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+inoremap <C-U> <C-G>u<C-U>
 
 imap ,fn <c-r>=expand('%:t:r')<cr>
 
@@ -71,7 +140,7 @@ set lazyredraw
 " Don't show the current command int he lower right corner.
 " In OSX, if this is set and lazyredraw is set then it's
 " slow as molasses, so we unset this
-set noshowcmd
+"set noshowcmd
 
 " Various characters are "wider" than normal fixed width
 " characters, but the default setting of ambiwidth (single)
@@ -81,11 +150,10 @@ set noshowcmd
 " Add the unnamed register to the clipboard
 set clipboard+=unnamed
 
-
 set expandtab                   " use spaces, not tabs (optional)
 set hlsearch                    " highlight matches
 set ignorecase                  " searches are case insensitive...
-set laststatus=2
+set laststatus=0
 set list                        " show invisible characters
 set nowrap                      " don't wrap lines
 set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
@@ -260,6 +328,9 @@ set splitright
 "nnoremap <F4> :GundoToggle<CR>
 "
 "map ,e <Plug>(easymotion-prefix)
+"
+
+let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
 
 nmap <silent> ,v :wall<CR>:Vader<CR>
 
@@ -267,7 +338,7 @@ let g:force_reload_textobj_sentence = 1
 let g:litecorrect#typographic = 0
 augroup various
   autocmd!
-  autocmd FileType markdown
+  autocmd FileType markdown,mkd
     \ call litecorrect#init()           |
     \ call lexical#init()               |
     \ call textobj#sentence#init()      |
@@ -291,7 +362,7 @@ let g:lexical#thesaurus_key = ',j'
 let g:lexical#dictionary_key = ',k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-let g:pencil#wrapModeDefault = 'hard'
+let g:pencil#wrapModeDefault = 'soft'
 
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
@@ -321,6 +392,8 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 
+let g:pencil_neutral_headings = 1
+let g:pencil_higher_contrast_ui = 0
 
 nmap <silent> ,A :ShiftPencil<cr>
 nmap <silent> <D-9> <Plug>ThematicNarrow
@@ -335,7 +408,7 @@ let g:thematic#defaults = {
 \ 'airline-theme': 'jellybeans',
 \ 'fullscreen-background-color-fix': 1,
 \ 'sign-column-color-fix': 1,
-\ 'laststatus': 2,
+\ 'laststatus': 0,
 \ 'background': 'dark',
 \ 'font-size': 20,
 \ 'linespace': 0,
