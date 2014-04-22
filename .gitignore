@@ -5,3 +5,7 @@ bundle
 spell
 thesaurus
 notes
+
+/vim.log
+
+/bin/
