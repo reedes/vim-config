@@ -23,13 +23,13 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'kana/vim-textobj-user'
 "Bundle 'kana/vim-operator-user'
 Bundle 'kien/ctrlp.vim'
-"Bundle 'mileszs/ack.vim'
-"Bundle 'milkypostman/vim-togglelist'
+Bundle 'mileszs/ack.vim'
+Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-markdown'
 "Bundle 'plasticboy/vim-markdown'
-"Bundle 'bling/vim-airline'
+Bundle 'bling/vim-airline'
 "Bundle 'rhysd/vim-operator-surround'
 "Bundle 'tpope/vim-repeat'
 "Bundle 'tpope/vim-abolish'
@@ -103,7 +103,6 @@ if &shell =~# 'fish$'
   set shell=/bin/bash
 endif
 
-set autoread
 set fileformats+=mac
 
 if &history < 1000
@@ -198,21 +197,21 @@ let mapleader = ","             " <Leader> key instead of backslash (options '\_
 " join, maintaining cursor position
 "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
 "nnoremap J mzJ`z
-"nnoremap <silent> K :nohlsearch<CR>
 
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
+"augroup CursorLine
+"  au!
+"  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+"  au WinLeave * setlocal nocursorline
+"augroup END
 "set nocursorline
 "set nocursorcolumn
 
-"nnoremap <silent> Q gwip
+nnoremap <silent> Q gwip
 "nnoremap <silent> K vipJ
+nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
 "nnoremap <silent> ,Q :g/^/norm gqq<cr>
 "nnoremap <silent> ,K :%norm vipJ<cr>
 
@@ -252,10 +251,6 @@ augroup line_return
       \ endif
 augroup END
 
-" automatically save all buffers when focus is lost
-autocmd FocusLost * :silent! wall
-
-"autowriteall
 
 " jump to the first open window that has buffer
 "set switchbuf=useopen
@@ -279,21 +274,30 @@ nmap <silent> ,N :clast<cr>zvzz
 "nmap <silent> ,K :lrewind<cr>zvzz
 "nmap <silent> ,J :llast<cr>zvzz
 
+" aggressively read/write buffers
+augroup AutoWrite
+  autocmd FocusLost * :silent! wall
+  autocmd! BufLeave * :update
+augroup END
+set autoread
+set autowrite
+set autowriteall
+
 " # Common directories for backup, undo and swap
-set backup                        " enable backups
+set nobackup                      " disable backups
 
 set undofile                      " Save undo's after file closes
 set undolevels=1000               " How many undos
 set undoreload=10000              " number of lines to save for undo
 
-set backupdir=~/.vim/tmp/backup// " backups
+"set backupdir=~/.vim/tmp/backup// " backups
 set undodir=~/.vim/tmp/undo//     " undo files
 set directory=~/.vim/tmp/swap//   " swap files
 
 " Make those folders automatically if they don't already exist.
-if !isdirectory(expand("~/.vim/tmp/backup"))
-    call mkdir(expand("~/.vim/tmp/backup"), "p")
-endif
+"if !isdirectory(expand("~/.vim/tmp/backup"))
+"    call mkdir(expand("~/.vim/tmp/backup"), "p")
+"endif
 if !isdirectory(expand("~/.vim/tmp/undo"))
     call mkdir(expand("~/.vim/tmp/undo"), "p")
 endif
@@ -367,10 +371,10 @@ let g:pencil#wrapModeDefault = 'soft'
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
-map <silent> ,c <Plug>(ReplaceWithCurly)
-map <silent> ,s <Plug>(ReplaceWithStraight)
-map <silent> ,2 <Plug>(SurroundWithDouble)
-map <silent> ,1 <Plug>(SurroundWithSingle)
+map <silent> ,c <Plug>ReplaceWithCurly
+map <silent> ,s <Plug>ReplaceWithStraight
+map <silent> ,2 <Plug>SurroundWithDouble
+map <silent> ,1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
@@ -391,11 +395,13 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+nnoremap <silent> K :NextWordy<cr>
 
 let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
+let g:airline_theme='pencil'
 
-nmap <silent> ,A :ShiftPencil<cr>
+"nmap <silent> ,A :ShiftPencil<cr>
 nmap <silent> <D-9> <Plug>ThematicNarrow
 nmap <silent> <D-0> <Plug>ThematicWiden
 nmap ,y <Plug>ThematicNext
@@ -431,7 +437,7 @@ let g:thematic#themes = {
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'light',
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Cousine',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
@@ -440,7 +446,7 @@ let g:thematic#themes = {
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'badwolf',
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Cousine',
 \                },
 \ 'traditional': { 'colorscheme': 'pencil',
@@ -448,6 +454,7 @@ let g:thematic#themes = {
 \                  'font-size': 20,
 \                  'laststatus': 0,
 \                  'linespace': 8,
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Linux Libertine Mono O',
 \                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
@@ -520,6 +527,8 @@ let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
+
+"let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 
 " The Silver Searcher
 if executable('ag')
