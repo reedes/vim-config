@@ -132,9 +132,6 @@ inoremap <C-U> <C-G>u<C-U>
 
 imap ,fn <c-r>=expand('%:t:r')<cr>
 
-" jump to last active buffer, preserving insert mode (TODO detect &readonly buf)
-inoremap <C-^> <C-C><C-^>i
-
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
 set cpoptions+=$
@@ -241,8 +238,13 @@ augroup END
 " jump to the first open window that has buffer
 "set switchbuf=useopen
 
-" delete buffer without closing window (vim-bbye plugin)
-nmap <C-@> :Bdelete<CR>
+" jump to last active buffer
+inoremap <C-^> <C-C><C-^>
+"inoremap <C-^> <C-C>:update<CR><C-^>
+
+" save and delete buffer without closing window (vim-bbye plugin)
+nnoremap <C-@> :update<CR>:Bdelete<CR>
+inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 
 " switch buffers ([b and ]b in unimpaired)
 nmap <C-p> :bprevious<CR>
@@ -262,13 +264,13 @@ nmap <silent> ,N :clast<cr>zvzz
 
 " aggressively read/write buffers
 augroup AutoWrite
+  autocmd!
   autocmd FocusLost * :silent! wall
-  "autocmd! BufLeave * :update
+  autocmd BufLeave * :silent! update
 augroup END
 set autoread
-"set autowrite
+"set autowrite           " ensure save when <C-^>
 "set autowriteall
-" lskjfs
 
 " Clean trailing whitespace and save
 "nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
@@ -394,7 +396,7 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 
 nnoremap <silent> K :NextWordy<cr>
 
-let g:pencil_neutral_headings = 1
+"let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
 let g:airline_theme='pencil'
 
