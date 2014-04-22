@@ -129,6 +129,9 @@ inoremap <C-U> <C-G>u<C-U>
 
 imap ,fn <c-r>=expand('%:t:r')<cr>
 
+" jump to last active buffer, even from insert mode
+inoremap <C-^> <C-C><C-^>
+
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
 set cpoptions+=$
