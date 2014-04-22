@@ -29,7 +29,7 @@ Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-markdown'
 "Bundle 'plasticboy/vim-markdown'
-"Bundle 'bling/vim-airline'
+Bundle 'bling/vim-airline'
 "Bundle 'rhysd/vim-operator-surround'
 "Bundle 'tpope/vim-repeat'
 "Bundle 'tpope/vim-abolish'
@@ -71,10 +71,13 @@ set ttimeout
 set ttimeoutlen=100
 
 set incsearch
+"make <c-l> clear the highlight as well as redraw
+noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
+inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 " Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<C-L>', 'n') ==# ''
-  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
-endif
+"if maparg('<C-L>', 'n') ==# ''
+"  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+"endif
 
 set ruler
 set showcmd
@@ -103,7 +106,6 @@ if &shell =~# 'fish$'
   set shell=/bin/bash
 endif
 
-set autoread
 set fileformats+=mac
 
 if &history < 1000
@@ -129,6 +131,9 @@ endif
 inoremap <C-U> <C-G>u<C-U>
 
 imap ,fn <c-r>=expand('%:t:r')<cr>
+
+" jump to last active buffer, preserving insert mode (TODO detect &readonly buf)
+inoremap <C-^> <C-C><C-^>i
 
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
@@ -198,43 +203,23 @@ let mapleader = ","             " <Leader> key instead of backslash (options '\_
 " join, maintaining cursor position
 "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
 "nnoremap J mzJ`z
-"nnoremap <silent> K :nohlsearch<CR>
 
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
+"augroup CursorLine
+"  au!
+"  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+"  au WinLeave * setlocal nocursorline
+"augroup END
 "set nocursorline
 "set nocursorcolumn
-
-"nnoremap <silent> Q gwip
-"nnoremap <silent> K vipJ
-"nnoremap <silent> ,Q :g/^/norm gqq<cr>
-"nnoremap <silent> ,K :%norm vipJ<cr>
 
 " For quick recordings just type qq to start recording, then q to stop. You
 " don't have to worry about the name this way (you just named the recording
 " 'q'). Now, to play back the recording you just type Q.
 "nnoremap Q @q
 "noremap <Space> @q
-
-"make <c-l> clear the highlight as well as redraw
-noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
-
-" Clean trailing whitespace and save
-"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
-nnoremap <silent> ,w :call TrimAndWrite()<cr>
-function! TrimAndWrite()
-  let l:p = getpos('.')
-  silent! %s/\s\+$//e
-  call setpos('.', l:p)
-  write
-endfunction
 
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
@@ -247,15 +232,11 @@ nnoremap <silent> ,E :edit $MYVIMRC<cr>
 augroup line_return
     au!
     au BufReadPost *
-      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") | 
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
       \   execute 'normal! g`"zvzz' |
       \ endif
 augroup END
 
-" automatically save all buffers when focus is lost
-autocmd FocusLost * :silent! wall
-
-"autowriteall
 
 " jump to the first open window that has buffer
 "set switchbuf=useopen
@@ -279,21 +260,41 @@ nmap <silent> ,N :clast<cr>zvzz
 "nmap <silent> ,K :lrewind<cr>zvzz
 "nmap <silent> ,J :llast<cr>zvzz
 
+" aggressively read/write buffers
+augroup AutoWrite
+  autocmd FocusLost * :silent! wall
+  "autocmd! BufLeave * :update
+augroup END
+set autoread
+"set autowrite
+"set autowriteall
+" lskjfs
+
+" Clean trailing whitespace and save
+"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
+nnoremap <silent> ,w :call TrimAndWrite()<cr>
+function! TrimAndWrite()
+  let l:p = getpos('.')
+  silent! %s/\s\+$//e
+  call setpos('.', l:p)
+  write
+endfunction
+
 " # Common directories for backup, undo and swap
-set backup                        " enable backups
+set nobackup                      " disable backups
 
 set undofile                      " Save undo's after file closes
 set undolevels=1000               " How many undos
 set undoreload=10000              " number of lines to save for undo
 
-set backupdir=~/.vim/tmp/backup// " backups
+"set backupdir=~/.vim/tmp/backup// " backups
 set undodir=~/.vim/tmp/undo//     " undo files
 set directory=~/.vim/tmp/swap//   " swap files
 
 " Make those folders automatically if they don't already exist.
-if !isdirectory(expand("~/.vim/tmp/backup"))
-    call mkdir(expand("~/.vim/tmp/backup"), "p")
-endif
+"if !isdirectory(expand("~/.vim/tmp/backup"))
+"    call mkdir(expand("~/.vim/tmp/backup"), "p")
+"endif
 if !isdirectory(expand("~/.vim/tmp/undo"))
     call mkdir(expand("~/.vim/tmp/undo"), "p")
 endif
@@ -367,10 +368,10 @@ let g:pencil#wrapModeDefault = 'soft'
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
-map <silent> ,c <Plug>(ReplaceWithCurly)
-map <silent> ,s <Plug>(ReplaceWithStraight)
-map <silent> ,2 <Plug>(SurroundWithDouble)
-map <silent> ,1 <Plug>(SurroundWithSingle)
+"map <silent> ,c <Plug>ReplaceWithCurly
+"map <silent> ,s <Plug>ReplaceWithStraight
+"map <silent> ,2 <Plug>SurroundWithDouble
+"map <silent> ,1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
@@ -395,8 +396,9 @@ nnoremap <silent> K :NextWordy<cr>
 
 let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
+let g:airline_theme='pencil'
 
-nmap <silent> ,A :ShiftPencil<cr>
+"nmap <silent> ,A :ShiftPencil<cr>
 nmap <silent> <D-9> <Plug>ThematicNarrow
 nmap <silent> <D-0> <Plug>ThematicWiden
 nmap ,y <Plug>ThematicNext
@@ -432,7 +434,7 @@ let g:thematic#themes = {
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'light',
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Cousine',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
@@ -441,7 +443,7 @@ let g:thematic#themes = {
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'badwolf',
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Cousine',
 \                },
 \ 'traditional': { 'colorscheme': 'pencil',
@@ -449,6 +451,7 @@ let g:thematic#themes = {
 \                  'font-size': 20,
 \                  'laststatus': 0,
 \                  'linespace': 8,
+\                  'airline-theme': 'pencil',
 \                  'typeface': 'Linux Libertine Mono O',
 \                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
@@ -522,6 +525,8 @@ let g:ctrlp_dotfiles = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 
+"let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+
 " The Silver Searcher
 if executable('ag')
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
@@ -580,44 +585,34 @@ let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " ===============================================================
 "
 
-"function! ToggleMinimap()
-"  if exists("s:isMini") && s:isMini == 0
-"    let s:isMini = 1
-"  else
-"    let s:isMini = 0
-"  end
-"
-"  if (s:isMini == 0)
-"    " save current visible lines
-"    let s:firstLine = line("w0")
-"    let s:lastLine = line("w$")
-"
-"    " make font small
-"    exe "set guifont=" . g:small_font
-"    " highlight lines which were visible
-"    let s:lines = ""
-"    for i in range(s:firstLine, s:lastLine)
-"      let s:lines = s:lines . "\\%" . i . "l"
-"
-"      if i < s:lastLine
-"        let s:lines = s:lines . "\\|"
-"      endif
-"    endfor
-"
-"    exe 'match Visible /' . s:lines . '/'
-"    hi Visible guibg=lightblue guifg=black term=bold
-"    nmap <s-j> 10j
-"    nmap <s-k> 10k
-"  else
-"    exe "set guifont=" . g:main_font
-"    hi clear Visible
-"    nunmap <s-j>
-"    nunmap <s-k>
-"  endif
-"endfunction
-"
-"let g:main_font = "Anonymous\\ Pro:h18"
-"let g:small_font = "Anonymous\\ Pro:h2"
-"command! ToggleMinimap call ToggleMinimap()
+nnoremap <silent> Q gwip
+"nnoremap <silent> K vipJ
+nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+"nnoremap <silent> ,Q :g/^/norm gqq<cr>
+"nnoremap <silent> ,K :%norm vipJ<cr>
+
+" TODO for writing mode only
+nnoremap <silent> ,s :call MyParagraph(0)<cr>
+nnoremap <silent> ,j :call MyParagraph(1)<cr>
+
+function! MyParagraph(mode)
+  let p=getpos('.')
+  execute "normal! vip\<esc>"
+  normal! vip
+  if a:mode == 0
+    *s/\([\.\?\!\:]\+\)\s*/\1\r- /ge
+  else
+    *s/^\- //e
+    if &textwidth == 0
+      *join
+    endif
+  endif
+  if &textwidth > 0
+    normal! vipgq
+  endif
+  execute "normal! \<esc>"
+  call setpos('.', p)
+endfunction
+
 
 " vim:set ft=vim et sw=2:
