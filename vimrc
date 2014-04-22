@@ -212,12 +212,6 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 "set nocursorline
 "set nocursorcolumn
 
-nnoremap <silent> Q gwip
-"nnoremap <silent> K vipJ
-nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
-"nnoremap <silent> ,Q :g/^/norm gqq<cr>
-"nnoremap <silent> ,K :%norm vipJ<cr>
-
 " For quick recordings just type qq to start recording, then q to stop. You
 " don't have to worry about the name this way (you just named the recording
 " 'q'). Now, to play back the recording you just type Q.
@@ -591,6 +585,12 @@ let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " ===============================================================
 "
+
+nnoremap <silent> Q gwip
+"nnoremap <silent> K vipJ
+nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+"nnoremap <silent> ,Q :g/^/norm gqq<cr>
+"nnoremap <silent> ,K :%norm vipJ<cr>
 
 " TODO for writing mode only
 nnoremap <silent> ,s :call MyParagraph(0)<cr>
