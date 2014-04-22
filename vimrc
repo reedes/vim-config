@@ -71,10 +71,13 @@ set ttimeout
 set ttimeoutlen=100
 
 set incsearch
+"make <c-l> clear the highlight as well as redraw
+noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
+inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 " Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<C-L>', 'n') ==# ''
-  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
-endif
+"if maparg('<C-L>', 'n') ==# ''
+"  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+"endif
 
 set ruler
 set showcmd
@@ -129,8 +132,8 @@ inoremap <C-U> <C-G>u<C-U>
 
 imap ,fn <c-r>=expand('%:t:r')<cr>
 
-" jump to last active buffer, even from insert mode
-inoremap <C-^> <C-C><C-^>
+" jump to last active buffer, preserving insert mode (TODO detect &readonly buf)
+inoremap <C-^> <C-C><C-^>i
 
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
@@ -217,10 +220,6 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " 'q'). Now, to play back the recording you just type Q.
 "nnoremap Q @q
 "noremap <Space> @q
-
-"make <c-l> clear the highlight as well as redraw
-noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
