@@ -225,16 +225,6 @@ nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
 noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
 inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 
-" Clean trailing whitespace and save
-"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
-nnoremap <silent> ,w :call TrimAndWrite()<cr>
-function! TrimAndWrite()
-  let l:p = getpos('.')
-  silent! %s/\s\+$//e
-  call setpos('.', l:p)
-  write
-endfunction
-
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
@@ -246,7 +236,7 @@ nnoremap <silent> ,E :edit $MYVIMRC<cr>
 augroup line_return
     au!
     au BufReadPost *
-      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") | 
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
       \   execute 'normal! g`"zvzz' |
       \ endif
 augroup END
@@ -277,11 +267,22 @@ nmap <silent> ,N :clast<cr>zvzz
 " aggressively read/write buffers
 augroup AutoWrite
   autocmd FocusLost * :silent! wall
-  autocmd! BufLeave * :update
+  "autocmd! BufLeave * :update
 augroup END
 set autoread
-set autowrite
-set autowriteall
+"set autowrite
+"set autowriteall
+" lskjfs
+
+" Clean trailing whitespace and save
+"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
+nnoremap <silent> ,w :call TrimAndWrite()<cr>
+function! TrimAndWrite()
+  let l:p = getpos('.')
+  silent! %s/\s\+$//e
+  call setpos('.', l:p)
+  write
+endfunction
 
 " # Common directories for backup, undo and swap
 set nobackup                      " disable backups
@@ -371,10 +372,10 @@ let g:pencil#wrapModeDefault = 'soft'
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
-map <silent> ,c <Plug>ReplaceWithCurly
-map <silent> ,s <Plug>ReplaceWithStraight
-map <silent> ,2 <Plug>SurroundWithDouble
-map <silent> ,1 <Plug>SurroundWithSingle
+"map <silent> ,c <Plug>ReplaceWithCurly
+"map <silent> ,s <Plug>ReplaceWithStraight
+"map <silent> ,2 <Plug>SurroundWithDouble
+"map <silent> ,1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
@@ -588,44 +589,28 @@ let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " ===============================================================
 "
 
-"function! ToggleMinimap()
-"  if exists("s:isMini") && s:isMini == 0
-"    let s:isMini = 1
-"  else
-"    let s:isMini = 0
-"  end
-"
-"  if (s:isMini == 0)
-"    " save current visible lines
-"    let s:firstLine = line("w0")
-"    let s:lastLine = line("w$")
-"
-"    " make font small
-"    exe "set guifont=" . g:small_font
-"    " highlight lines which were visible
-"    let s:lines = ""
-"    for i in range(s:firstLine, s:lastLine)
-"      let s:lines = s:lines . "\\%" . i . "l"
-"
-"      if i < s:lastLine
-"        let s:lines = s:lines . "\\|"
-"      endif
-"    endfor
-"
-"    exe 'match Visible /' . s:lines . '/'
-"    hi Visible guibg=lightblue guifg=black term=bold
-"    nmap <s-j> 10j
-"    nmap <s-k> 10k
-"  else
-"    exe "set guifont=" . g:main_font
-"    hi clear Visible
-"    nunmap <s-j>
-"    nunmap <s-k>
-"  endif
-"endfunction
-"
-"let g:main_font = "Anonymous\\ Pro:h18"
-"let g:small_font = "Anonymous\\ Pro:h2"
-"command! ToggleMinimap call ToggleMinimap()
+" TODO for writing mode only
+nnoremap <silent> ,s :call MyParagraph(0)<cr>
+nnoremap <silent> ,j :call MyParagraph(1)<cr>
+
+function! MyParagraph(mode)
+  let p=getpos('.')
+  execute "normal! vip\<esc>"
+  normal! vip
+  if a:mode == 0
+    *s/\([\.\?\!\:]\+\)\s*/\1\r- /ge
+  else
+    *s/^\- //e
+    if &textwidth == 0
+      *join
+    endif
+  endif
+  if &textwidth > 0
+    normal! vipgq
+  endif
+  execute "normal! \<esc>"
+  call setpos('.', p)
+endfunction
+
 
 " vim:set ft=vim et sw=2:
