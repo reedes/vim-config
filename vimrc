@@ -23,8 +23,8 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'kana/vim-textobj-user'
 "Bundle 'kana/vim-operator-user'
 Bundle 'kien/ctrlp.vim'
-"Bundle 'mileszs/ack.vim'
-"Bundle 'milkypostman/vim-togglelist'
+Bundle 'mileszs/ack.vim'
+Bundle 'milkypostman/vim-togglelist'
 Bundle 'moll/vim-bbye'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-markdown'
@@ -391,6 +391,7 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+nnoremap <silent> K :NextWordy<cr>
 
 let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0

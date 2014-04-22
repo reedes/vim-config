@@ -14,6 +14,7 @@ if has("gui_macvim")
   set guioptions-=m   "don't source menus
   set guioptions+=M
 
+  "set guifont=Linux\ Libertine\ Mono\ O\:h18
   set guifont=Cousine\:h18
   "set guifont=Source\ Code\ Pro\:h18
   set linespace=2     "extra space between lines
