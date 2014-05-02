@@ -390,6 +390,13 @@ nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
 "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
 
+augroup python
+  autocmd!
+  autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd BufRead *.py set nocindent
+  autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
+augroup END
+
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
