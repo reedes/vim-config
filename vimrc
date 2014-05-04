@@ -12,49 +12,49 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let vundle manage itself
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
-" # Non-color Bundles
-"Bundle 'roman/golden-ratio'
-"Bundle 'ervandew/supertab'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'tommcdo/vim-exchange'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'kana/vim-textobj-user'
-"Bundle 'kana/vim-operator-user'
-Bundle 'kien/ctrlp.vim'
-Bundle 'mileszs/ack.vim'
-Bundle 'milkypostman/vim-togglelist'
-Bundle 'moll/vim-bbye'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-markdown'
-"Bundle 'plasticboy/vim-markdown'
-Bundle 'bling/vim-airline'
-"Bundle 'rhysd/vim-operator-surround'
-"Bundle 'tpope/vim-repeat'
-"Bundle 'tpope/vim-abolish'
-"Bundle 'tpope/vim-unimpaired'
-Bundle 'junegunn/vader.vim'
+" # Non-color Plugins
+"Plugin 'roman/golden-ratio'
+"Plugin 'ervandew/supertab'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'tommcdo/vim-exchange'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'kana/vim-textobj-user'
+"Plugin 'kana/vim-operator-user'
+Plugin 'kien/ctrlp.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'milkypostman/vim-togglelist'
+Plugin 'moll/vim-bbye'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-markdown'
+"Plugin 'plasticboy/vim-markdown'
+Plugin 'bling/vim-airline'
+"Plugin 'rhysd/vim-operator-surround'
+"Plugin 'tpope/vim-repeat'
+"Plugin 'tpope/vim-abolish'
+"Plugin 'tpope/vim-unimpaired'
+Plugin 'junegunn/vader.vim'
 
-" # Authored Bundles
-Bundle 'reedes/vim-colors-pencil'
-Bundle 'reedes/vim-lexical'
-Bundle 'reedes/vim-litecorrect'
-Bundle 'reedes/vim-one'
-Bundle 'reedes/vim-pencil'
-Bundle 'reedes/vim-textobj-quote'
-Bundle 'reedes/vim-textobj-sentence'
-Bundle 'reedes/vim-thematic'
-Bundle 'reedes/vim-wheel'
-Bundle 'reedes/vim-wordy'
+" # Authored Plugins
+Plugin 'reedes/vim-colors-pencil'
+Plugin 'reedes/vim-lexical'
+Plugin 'reedes/vim-litecorrect'
+Plugin 'reedes/vim-one'
+Plugin 'reedes/vim-pencil'
+Plugin 'reedes/vim-textobj-quote'
+Plugin 'reedes/vim-textobj-sentence'
+Plugin 'reedes/vim-thematic'
+Plugin 'reedes/vim-wheel'
+Plugin 'reedes/vim-wordy'
 
-" # Color Bundles
-Bundle 'hmaarrfk/vim-colors-solarized'
-Bundle 'baskerville/bubblegum'
-Bundle 'chriskempson/base16-vim'
-Bundle 'endel/vim-github-colorscheme'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'noahfrederick/vim-hemisu'
+" # Color Plugins
+Plugin 'hmaarrfk/vim-colors-solarized'
+Plugin 'baskerville/bubblegum'
+Plugin 'chriskempson/base16-vim'
+Plugin 'endel/vim-github-colorscheme'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'noahfrederick/vim-hemisu'
 
 syntax enable
 filetype plugin indent on
@@ -391,6 +391,13 @@ nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 "" if you use vim-textobj-sentence
 "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
 "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
+
+augroup python
+  autocmd!
+  autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd BufRead *.py set nocindent
+  autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
+augroup END
 
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
