@@ -367,6 +367,8 @@ let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
 
+let g:wheel#scroll_on_wrap = 1
+
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
