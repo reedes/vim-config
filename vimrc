@@ -22,6 +22,7 @@ Plugin 'tommcdo/vim-exchange'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kana/vim-textobj-user'
 "Plugin 'kana/vim-operator-user'
+Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
@@ -204,6 +205,10 @@ let mapleader = ","             " <Leader> key instead of backslash (options '\_
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
+" D is d$ C is c$ A is $a but Y is yy. WHY?
+"map Y y$
+noremap Y y$
+
 "augroup CursorLine
 "  au!
 "  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
@@ -311,6 +316,15 @@ nnoremap z1 zMzvzz
 " matter where the cursor happens to be, and center.
 nnoremap zO zCzOzz
 
+" In normal mode, press Space to toggle the current fold open/closed. However,
+" if the cursor is not in a fold, move to the right (the default behavior). In
+" addition, with the manual fold method, you can create a fold by visually
+" selecting some lines, then pressing Space.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+vnoremap <Space> zf
+
+let g:markdown_fold_style = 'nested'
+
 " Make horizontal scrolling easier
 "nmap <silent> <C-o> 10zl
 "nmap <silent> <C-i> 10zh
@@ -410,8 +424,8 @@ let g:pencil_higher_contrast_ui = 0
 let g:airline_theme='pencil'
 
 "nmap <silent> ,A :ShiftPencil<cr>
-nmap <silent> <D-9> <Plug>ThematicNarrow
-nmap <silent> <D-0> <Plug>ThematicWiden
+map <silent> <D-9> <Plug>ThematicNarrow
+map <silent> <D-0> <Plug>ThematicWiden
 nmap ,y <Plug>ThematicNext
 nmap ,Y <Plug>ThematicRandom
 nmap ,I :Thematic pencil_dark<CR>
