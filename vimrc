@@ -36,6 +36,7 @@ Plugin 'bling/vim-airline'
 "Plugin 'tpope/vim-abolish'
 "Plugin 'tpope/vim-unimpaired'
 Plugin 'junegunn/vader.vim'
+Plugin 'junegunn/limelight.vim'
 
 " # Authored Plugins
 Plugin 'reedes/vim-colors-pencil'
@@ -129,13 +130,14 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
+" undo during insert
 inoremap <C-U> <C-G>u<C-U>
 
-imap ,fn <c-r>=expand('%:t:r')<cr>
+"imap ,fn <c-r>=expand('%:t:r')<cr>
 
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
-set cpoptions+=$
+"set cpoptions+=$
 
 " Don't update the display while executing macros
 set lazyredraw
@@ -226,7 +228,7 @@ noremap Y y$
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
-nnoremap <silent> ,E :edit $MYVIMRC<cr>
+nnoremap <silent> ,E :edit $HOME/.vim/vimrc<cr>
 "nnoremap <silent> ,es :wall<cr>:so $MYVIMRC<cr>
 
 " Remember last location in file, but not for commit messages.
@@ -243,7 +245,7 @@ augroup END
 " jump to the first open window that has buffer
 "set switchbuf=useopen
 
-" jump to last active buffer
+" from insert mode, jump to last active buffer
 inoremap <C-^> <C-C><C-^>
 "inoremap <C-^> <C-C>:update<CR><C-^>
 
@@ -347,11 +349,11 @@ set splitright
 "map ,e <Plug>(easymotion-prefix)
 "
 
-let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
+"let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
 
-nmap <silent> ,v :wall<CR>:Vader<CR>
+"nmap <silent> ,v :wall<CR>:Vader<CR>
 
-let g:force_reload_textobj_sentence = 1
+"let g:force_reload_textobj_sentence = 1
 let g:litecorrect#typographic = 0
 augroup various
   autocmd!
@@ -361,12 +363,14 @@ augroup various
     \ call textobj#sentence#init()      |
     \ call textobj#quote#init()         |
     \ call pencil#init()
+    " Limelight
   autocmd FileType text
     \ call litecorrect#init()           |
     \ call lexical#init({ 'spell': 0 }) |
     \ call textobj#sentence#init()      |
     \ call textobj#quote#init()         |
     \ call pencil#init()
+    " Limelight
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -380,8 +384,6 @@ let g:lexical#dictionary_key = ',k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
-
-let g:wheel#scroll_on_wrap = 1
 
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
@@ -406,22 +408,14 @@ nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
 "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
 
-augroup python
-  autocmd!
-  autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
-  autocmd BufRead *.py set nocindent
-  autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
-augroup END
-
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
 nnoremap <silent> K :NextWordy<cr>
 
 "let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
-let g:airline_theme='pencil'
+let g:airline_theme = 'pencil'
+
+" increase contrast for cursor line
+"let g:pencil_focus = 1
 
 "nmap <silent> ,A :ShiftPencil<cr>
 map <silent> <D-9> <Plug>ThematicNarrow
@@ -512,6 +506,16 @@ let g:thematic#themes = {
 
 "let g:thematic#theme_name = 'desert'
 
+augroup python
+  autocmd!
+  autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd BufRead *.py set nocindent
+  autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
+augroup END
+
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " Motions to Ack for things.  Works with pretty much everything, including:
 "   w, W, e, E, b, B, t*, f*, i*, a*, and custom text objects
