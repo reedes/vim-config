@@ -390,8 +390,8 @@ nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
 "map <silent> ,c <Plug>ReplaceWithCurly
 "map <silent> ,s <Plug>ReplaceWithStraight
-"map <silent> ,2 <Plug>SurroundWithDouble
-"map <silent> ,1 <Plug>SurroundWithSingle
+map <silent> ,2 <Plug>SurroundWithDouble
+map <silent> ,1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
