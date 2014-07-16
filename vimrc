@@ -395,6 +395,7 @@ nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 augroup python
   autocmd!
   autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd BufRead *.py set expandtab tabstop=4 shiftwidth=4 autoindent
   autocmd BufRead *.py set nocindent
   autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
 augroup END
