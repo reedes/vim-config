@@ -22,6 +22,7 @@ Plugin 'tommcdo/vim-exchange'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kana/vim-textobj-user'
 "Plugin 'kana/vim-operator-user'
+Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
@@ -35,6 +36,7 @@ Plugin 'bling/vim-airline'
 "Plugin 'tpope/vim-abolish'
 "Plugin 'tpope/vim-unimpaired'
 Plugin 'junegunn/vader.vim'
+Plugin 'junegunn/limelight.vim'
 
 " # Authored Plugins
 Plugin 'reedes/vim-colors-pencil'
@@ -128,13 +130,14 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
+" undo during insert
 inoremap <C-U> <C-G>u<C-U>
 
-imap ,fn <c-r>=expand('%:t:r')<cr>
+"imap ,fn <c-r>=expand('%:t:r')<cr>
 
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
-set cpoptions+=$
+"set cpoptions+=$
 
 " Don't update the display while executing macros
 set lazyredraw
@@ -204,6 +207,10 @@ let mapleader = ","             " <Leader> key instead of backslash (options '\_
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
+" D is d$ C is c$ A is $a but Y is yy. WHY?
+"map Y y$
+noremap Y y$
+
 "augroup CursorLine
 "  au!
 "  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
@@ -221,7 +228,7 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
-nnoremap <silent> ,E :edit $MYVIMRC<cr>
+nnoremap <silent> ,E :edit $HOME/.vim/vimrc<cr>
 "nnoremap <silent> ,es :wall<cr>:so $MYVIMRC<cr>
 
 " Remember last location in file, but not for commit messages.
@@ -238,7 +245,7 @@ augroup END
 " jump to the first open window that has buffer
 "set switchbuf=useopen
 
-" jump to last active buffer
+" from insert mode, jump to last active buffer
 inoremap <C-^> <C-C><C-^>
 "inoremap <C-^> <C-C>:update<CR><C-^>
 
@@ -311,6 +318,15 @@ nnoremap z1 zMzvzz
 " matter where the cursor happens to be, and center.
 nnoremap zO zCzOzz
 
+" In normal mode, press Space to toggle the current fold open/closed. However,
+" if the cursor is not in a fold, move to the right (the default behavior). In
+" addition, with the manual fold method, you can create a fold by visually
+" selecting some lines, then pressing Space.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+vnoremap <Space> zf
+
+let g:markdown_fold_style = 'nested'
+
 " Make horizontal scrolling easier
 "nmap <silent> <C-o> 10zl
 "nmap <silent> <C-i> 10zh
@@ -333,11 +349,11 @@ set splitright
 "map ,e <Plug>(easymotion-prefix)
 "
 
-let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
+"let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
 
-nmap <silent> ,v :wall<CR>:Vader<CR>
+"nmap <silent> ,v :wall<CR>:Vader<CR>
 
-let g:force_reload_textobj_sentence = 1
+"let g:force_reload_textobj_sentence = 1
 let g:litecorrect#typographic = 0
 augroup various
   autocmd!
@@ -347,12 +363,14 @@ augroup various
     \ call textobj#sentence#init()      |
     \ call textobj#quote#init()         |
     \ call pencil#init()
+    " Limelight
   autocmd FileType text
     \ call litecorrect#init()           |
     \ call lexical#init({ 'spell': 0 }) |
     \ call textobj#sentence#init()      |
     \ call textobj#quote#init()         |
     \ call pencil#init()
+    " Limelight
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -367,15 +385,13 @@ let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
 
-let g:wheel#scroll_on_wrap = 1
-
 let g:online_thesaurus_map_keys = 0
 nnoremap ,r :OnlineThesaurusCurrentWord<CR>
 
 "map <silent> ,c <Plug>ReplaceWithCurly
 "map <silent> ,s <Plug>ReplaceWithStraight
-"map <silent> ,2 <Plug>SurroundWithDouble
-"map <silent> ,1 <Plug>SurroundWithSingle
+map <silent> ,2 <Plug>SurroundWithDouble
+map <silent> ,1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
@@ -408,11 +424,14 @@ nnoremap <silent> K :NextWordy<cr>
 
 "let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
-let g:airline_theme='pencil'
+let g:airline_theme = 'pencil'
+
+" increase contrast for cursor line
+"let g:pencil_focus = 1
 
 "nmap <silent> ,A :ShiftPencil<cr>
-nmap <silent> <D-9> <Plug>ThematicNarrow
-nmap <silent> <D-0> <Plug>ThematicWiden
+map <silent> <D-9> <Plug>ThematicNarrow
+map <silent> <D-0> <Plug>ThematicWiden
 nmap ,y <Plug>ThematicNext
 nmap ,Y <Plug>ThematicRandom
 nmap ,I :Thematic pencil_dark<CR>
@@ -498,7 +517,6 @@ let g:thematic#themes = {
 
 
 "let g:thematic#theme_name = 'desert'
-
 
 " Motions to Ack for things.  Works with pretty much everything, including:
 "   w, W, e, E, b, B, t*, f*, i*, a*, and custom text objects
