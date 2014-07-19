@@ -133,6 +133,9 @@ endif
 " undo during insert
 inoremap <C-U> <C-G>u<C-U>
 
+" get out of insert mode
+inoremap kj <esc>
+
 "imap ,fn <c-r>=expand('%:t:r')<cr>
 
 " Make the 'cw' and like commands put a $ at the end
