@@ -134,7 +134,7 @@ endif
 inoremap <C-U> <C-G>u<C-U>
 
 " get out of insert mode
-inoremap kj <esc>
+inoremap kj <esc>l
 
 "imap ,fn <c-r>=expand('%:t:r')<cr>
 
