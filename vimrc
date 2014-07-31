@@ -38,6 +38,7 @@ Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-markdown'
 Plugin 'kana/vim-textobj-user'
+Plugin 'luochen1990/rainbow'
 
 " # Authored Plugins
 Plugin 'reedes/vim-litecorrect'
@@ -649,5 +650,7 @@ function! MyParagraph(mode)
   call setpos('.', p)
 endfunction
 
+" Rainbow parens
+let g:rainbow_active = 1
 
 " vim:set ft=vim et sw=2:
