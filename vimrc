@@ -26,7 +26,9 @@ Plugin 'gmarik/vundle'
 "Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'junegunn/vader.vim'
 "Plugin 'tommcdo/vim-exchange'
-"
+"Plugin 'luochen1990/rainbow'
+"Plugin 'kien/rainbow_parentheses.vim'
+
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'junegunn/limelight.vim'
@@ -38,7 +40,6 @@ Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-markdown'
 Plugin 'kana/vim-textobj-user'
-Plugin 'luochen1990/rainbow'
 
 " # Authored Plugins
 Plugin 'reedes/vim-litecorrect'
@@ -492,7 +493,7 @@ let g:thematic#themes = {
 \                  'typeface': 'Linux Libertine Mono O',
 \                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
-\                  'font-size': 8,
+\                  'font-size': 10,
 \                  'linespace': 0,
 \                  'typeface': 'Menlo',
 \                },
@@ -651,6 +652,6 @@ function! MyParagraph(mode)
 endfunction
 
 " Rainbow parens
-let g:rainbow_active = 1
+"let g:rainbow_active = 1
 
 " vim:set ft=vim et sw=2:
