@@ -26,7 +26,9 @@ Plugin 'gmarik/vundle'
 "Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'junegunn/vader.vim'
 "Plugin 'tommcdo/vim-exchange'
-"
+"Plugin 'luochen1990/rainbow'
+"Plugin 'kien/rainbow_parentheses.vim'
+
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'junegunn/limelight.vim'
@@ -699,5 +701,7 @@ function! MyParagraph(mode)
   call setpos('.', p)
 endfunction
 
+" Rainbow parens
+"let g:rainbow_active = 1
 
 " vim:set ft=vim et sw=2:
