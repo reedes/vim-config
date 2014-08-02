@@ -76,13 +76,6 @@ set ttimeout
 set ttimeoutlen=100
 
 set incsearch
-"make <c-l> clear the highlight as well as redraw
-noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
-" Use <C-L> to clear the highlighting of :set hlsearch.
-"if maparg('<C-L>', 'n') ==# ''
-"  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
-"endif
 
 set ruler
 set showcmd
@@ -100,15 +93,9 @@ if &encoding ==# 'latin1' && has('gui_running')
   set encoding=utf-8
 endif
 
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-  if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
-    let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
-  endif
-endif
-
-if &shell =~# 'fish$'
-  set shell=/bin/bash
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
+  let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
 endif
 
 set fileformats+=mac
@@ -116,9 +103,11 @@ set fileformats+=mac
 if &history < 1000
   set history=1000
 endif
+
 if &tabpagemax < 50
   set tabpagemax=50
 endif
+
 if !empty(&viminfo)
   set viminfo^=!
 endif
@@ -145,21 +134,14 @@ inoremap <C-U> <C-G>u<C-U>
 " instead of just deleting the text and replacing it.
 "set cpoptions+=$
 
-" Don't update the display while executing macros
-set lazyredraw
-
-" Don't show the current command int he lower right corner.
-" In OSX, if this is set and lazyredraw is set then it's
-" slow as molasses, so we unset this
-"set noshowcmd
-
 " Various characters are "wider" than normal fixed width
 " characters, but the default setting of ambiwidth (single)
 " squeezes them into "normal" width, which sucks.
 "set ambiwidth=double
 
 " Add the unnamed register to the clipboard
-set clipboard+=unnamed
+" (shares with system clipboard)
+"set clipboard+=unnamed
 
 set expandtab                   " use spaces, not tabs (optional)
 set hlsearch                    " highlight matches
@@ -195,20 +177,11 @@ set wildignore+=.svn/**
 set wildignore+=log/**
 set wildignore+=tmp/**
 
-" get rid of cmd-t for tab
-"if has('gui_macvim')
-"  macmenu File.New\ Tab key=<nop>
-"endif
-
 iab mdy <c-r>=strftime("%B %d, %Y")<CR>
 iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
 iab isodate <c-r>=strftime("%FT%T%z")<CR>
 
 let mapleader = ","             " <Leader> key instead of backslash (options '\_,;')
-
-" join, maintaining cursor position
-"nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
-"nnoremap J mzJ`z
 
 " select what was just pasted
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -237,16 +210,26 @@ noremap Y y$
 nnoremap <silent> ,E :edit $HOME/.vim/vimrc<cr>
 "nnoremap <silent> ,es :wall<cr>:so $MYVIMRC<cr>
 
-" Remember last location in file, but not for commit messages.
-" see :help last-position-jump
-augroup line_return
-    au!
-    au BufReadPost *
-      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
-      \   execute 'normal! g`"zvzz' |
-      \ endif
-augroup END
+" == Redraw ================== {{{
+"
+" Don't update the display while executing macros
+set lazyredraw
 
+" Don't show the current command int he lower right corner.
+" In OSX, if this is set and lazyredraw is set then it's
+" slow as molasses, so we unset this
+"set noshowcmd
+
+"make <c-l> clear the highlight as well as redraw screen
+noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
+inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
+" Use <C-L> to clear the highlighting of :set hlsearch.
+"if maparg('<C-L>', 'n') ==# ''
+"  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+"endif
+
+" }}}
+" == Navigating buffers ================= {{{
 
 " jump to the first open window that has buffer
 "set switchbuf=useopen
@@ -254,10 +237,6 @@ augroup END
 " from insert mode, jump to last active buffer
 inoremap <C-^> <C-C><C-^>
 "inoremap <C-^> <C-C>:update<CR><C-^>
-
-" save and delete buffer without closing window (vim-bbye plugin)
-nnoremap <C-@> :update<CR>:Bdelete<CR>
-inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 
 " switch buffers ([b and ]b in unimpaired)
 nmap <C-p> :bprevious<CR>
@@ -274,6 +253,27 @@ nmap <silent> ,N :clast<cr>zvzz
 "nmap <silent> ,j :lnext<cr>zvzz
 "nmap <silent> ,K :lrewind<cr>zvzz
 "nmap <silent> ,J :llast<cr>zvzz
+
+
+" }}}
+" == Saving buffers ==================== {{{
+
+" Remember last location in file, but not for commit messages.
+" see :help last-position-jump
+augroup line_return
+    au!
+    au BufReadPost *
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
+      \   execute 'normal! g`"zvzz' |
+      \ endif
+augroup END
+
+" save and delete buffer without closing window (vim-bbye plugin)
+nnoremap <C-@> :update<CR>:Bdelete<CR>
+inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
+
+" save with running vim tests
+"nmap <silent> ,v :wall<CR>:Vader<CR>
 
 " aggressively read/write buffers
 augroup AutoWrite
@@ -294,7 +294,8 @@ function! TrimAndWrite()
   call setpos('.', l:p)
   write
 endfunction
-
+" }}}
+" == Backup/Undo/Swap files =================== {{{
 " # Common directories for backup, undo and swap
 set nobackup                      " disable backups
 
@@ -317,6 +318,9 @@ if !isdirectory(expand("~/.vim/tmp/swap"))
     call mkdir(expand("~/.vim/tmp/swap"), "p")
 endif
 
+" }}}
+" == folding ================= {{{
+
 " Close all folds except the one(1) the cursor is on, and center.
 nnoremap z1 zMzvzz
 
@@ -333,34 +337,18 @@ vnoremap <Space> zf
 
 let g:markdown_fold_style = 'nested'
 
-" Make horizontal scrolling easier
-"nmap <silent> <C-o> 10zl
-"nmap <silent> <C-i> 10zh
-
+" }}}
+" == splits ==================== {{{
 " set styling on vertical splits (hard space)
 set fillchars=vert: 
 
 set splitbelow
 set splitright
 
-"let g:SuperTabDefaultCompletionType = "context"
-
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.\+/
-"call matchadd('ColorColumn', '\%81v', 100)
-
-"key mapping for Gundo
-"nnoremap <F4> :GundoToggle<CR>
-"
-"map ,e <Plug>(easymotion-prefix)
-"
-
-"let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
-
-"nmap <silent> ,v :wall<CR>:Vader<CR>
-
+" }}}
 " == My Plugins ===================== {{{
 
+"let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
 "let g:force_reload_textobj_sentence = 1
 let g:litecorrect#typographic = 0
 augroup various
@@ -619,7 +607,7 @@ func! MyNerdTree(mode)
     exec "set columns=" . g:myNerdTreeCols
     let g:myNerdTreeCols = 0
   else
-    " Open it, maximizing scree, but preserving original columns
+    " Open it, maximizing screen, but preserving original columns
     let g:myNerdTreeCols=&columns
     set columns=999
     if a:mode == 1
@@ -669,8 +657,11 @@ let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
 " }}}
-" ===============================================================
-"
+" == Paragraph formatting ================ {{{
+
+" join, maintaining cursor position
+"nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
+"nnoremap J mzJ`z
 
 nnoremap <silent> Q gwip
 "nnoremap <silent> K vipJ
@@ -701,7 +692,6 @@ function! MyParagraph(mode)
   call setpos('.', p)
 endfunction
 
-" Rainbow parens
-"let g:rainbow_active = 1
+" }}}
 
 " vim:set ft=vim et sw=2:
