@@ -613,14 +613,14 @@ endfunc
 
 " restore columns when disabling NERDTree; expand when enabling
 func! MyNerdTree(mode)
-  if exists("g:toggleNTcols") && g:toggleNTcols
+  if exists("g:myNerdTreeCols") && g:myNerdTreeCols
     " NT was open, so close it, restoring columns
     NERDTreeClose
-    exec "set columns=" . g:toggleNTcols
-    let g:toggleNTcols = 0
+    exec "set columns=" . g:myNerdTreeCols
+    let g:myNerdTreeCols = 0
   else
     " Open it, maximizing scree, but preserving original columns
-    let g:toggleNTcols=&columns
+    let g:myNerdTreeCols=&columns
     set columns=999
     if a:mode == 1
       NERDTree
