@@ -27,4 +27,7 @@ endif
 set background=dark
 colorscheme pencil
 
+map <silent> <D-9> <Plug>ThematicNarrow
+map <silent> <D-0> <Plug>ThematicWiden
+
 " vim:set ft=vim et sw=2:
