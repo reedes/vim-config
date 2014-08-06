@@ -1,5 +1,9 @@
 " see my work in vimrc
 
+" get rid of cmd-t for tab
+macmenu File.New\ Tab key=<nop>
+"nmap <D-t> :sp .<CR>
+
 " disable cursor blink
 set guicursor+=a:blinkon0
 
@@ -20,8 +24,9 @@ if has("gui_macvim")
   "set guifont=Cousine\:h18
   "set guifont=Source\ Code\ Pro\:h18
   set linespace=2     "extra space between lines
-  "set lines=8
-  "set columns=65
+
+  map <silent> <D-9> <Plug>ThematicNarrow
+  map <silent> <D-0> <Plug>ThematicWiden
 endif
 
 set background=dark
