@@ -40,6 +40,7 @@ Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-markdown'
 Plugin 'kana/vim-textobj-user'
+Plugin 'kshenoy/vim-signature'
 
 " # Authored Plugins
 Plugin 'reedes/vim-litecorrect'
