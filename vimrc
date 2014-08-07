@@ -128,7 +128,7 @@ inoremap <C-U> <C-G>u<C-U>
 " get out of insert mode
 "inoremap kj <esc>l
 
-"imap ,fn <c-r>=expand('%:t:r')<cr>
+"imap <leader>fn <c-r>=expand('%:t:r')<cr>
 
 " Make the 'cw' and like commands put a $ at the end
 " instead of just deleting the text and replacing it.
@@ -161,7 +161,7 @@ if has('unix')
 endif
 
 " Make the current file executable
-nmap ,x :w<cr>:!chmod 755 %<cr>:e<cr>
+nmap <leader>x :w<cr>:!chmod 755 %<cr>:e<cr>
 
 " command-t, ctrlp config and expanding wildcards
 set wildignore+=*.*~
@@ -207,8 +207,8 @@ noremap Y y$
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
-nnoremap <silent> ,E :edit $HOME/.vim/vimrc<cr>
-"nnoremap <silent> ,es :wall<cr>:so $MYVIMRC<cr>
+nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
+"nnoremap <silent> <leader>es :wall<cr>:so $MYVIMRC<cr>
 
 " == Redraw ================== {{{
 "
@@ -243,16 +243,16 @@ nmap <C-p> :bprevious<CR>
 nmap <C-n> :bnext<CR>
 
 " switch buffers via quickfix ([q and ]q in unimpaired)
-nmap <silent> ,p :cprevious<cr>zvzz
-nmap <silent> ,n :cnext<cr>zvzz
-nmap <silent> ,P :crewind<cr>zvzz
-nmap <silent> ,N :clast<cr>zvzz
+nmap <silent> <leader>p :cprevious<cr>zvzz
+nmap <silent> <leader>n :cnext<cr>zvzz
+nmap <silent> <leader>P :crewind<cr>zvzz
+nmap <silent> <leader>N :clast<cr>zvzz
 
 " switch buffers via location ([l and ]l in unimpaired)
-"nmap <silent> ,k :lprevious<cr>zvzz
-"nmap <silent> ,j :lnext<cr>zvzz
-"nmap <silent> ,K :lrewind<cr>zvzz
-"nmap <silent> ,J :llast<cr>zvzz
+"nmap <silent> <leader>k :lprevious<cr>zvzz
+"nmap <silent> <leader>j :lnext<cr>zvzz
+"nmap <silent> <leader>K :lrewind<cr>zvzz
+"nmap <silent> <leader>J :llast<cr>zvzz
 
 
 " }}}
@@ -273,7 +273,7 @@ nnoremap <C-@> :update<CR>:Bdelete<CR>
 inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 
 " save with running vim tests
-"nmap <silent> ,v :wall<CR>:Vader<CR>
+"nmap <silent> <leader>v :wall<CR>:Vader<CR>
 
 " aggressively read/write buffers
 augroup AutoWrite
@@ -286,8 +286,8 @@ set autoread
 "set autowriteall
 
 " Clean trailing whitespace and save
-"nnoremap ,w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
-nnoremap <silent> ,w :call TrimAndWrite()<cr>
+"nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
+nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
 function! TrimAndWrite()
   let l:p = getpos('.')
   silent! %s/\s\+$//e
@@ -382,12 +382,12 @@ let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
 
 let g:online_thesaurus_map_keys = 0
-nnoremap ,r :OnlineThesaurusCurrentWord<CR>
+nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
 
-"map <silent> ,c <Plug>ReplaceWithCurly
-"map <silent> ,s <Plug>ReplaceWithStraight
-map <silent> ,2 <Plug>SurroundWithDouble
-map <silent> ,1 <Plug>SurroundWithSingle
+"map <silent> <leader>c <Plug>ReplaceWithCurly
+"map <silent> <leader>s <Plug>ReplaceWithStraight
+map <silent> <leader>2 <Plug>SurroundWithDouble
+map <silent> <leader>1 <Plug>SurroundWithSingle
 
 " operator mappings for rhysd/vim-operator-surround
 "map <silent>sa <Plug>(operator-surround-append)
@@ -433,10 +433,10 @@ let g:airline_theme = 'pencil'
 " increase contrast for cursor line
 "let g:pencil_focus = 1
 
-"nmap <silent> ,A :ShiftPencil<cr>
-nmap ,y <Plug>ThematicNext
-nmap ,Y <Plug>ThematicRandom
-nmap ,I :Thematic pencil_dark<CR>
+"nmap <silent> <leader>A :ShiftPencil<cr>
+nmap <leader>y <Plug>ThematicNext
+nmap <leader>Y <Plug>ThematicRandom
+nmap <leader>I :Thematic pencil_dark<CR>
 
 " use jellybeans as default airline theme as it maps from
 " existing colors
@@ -537,8 +537,8 @@ let g:thematic#themes = {
 " Note: If the text covered by a motion contains a newline it won't work.  Ack
 " searches line-by-line.
 
-nnoremap <silent> ,a :set opfunc=<SID>AckMotion<CR>g@
-xnoremap <silent> ,a :<C-U>call <SID>AckMotion(visualmode())<CR>
+nnoremap <silent> <leader>a :set opfunc=<SID>AckMotion<CR>g@
+xnoremap <silent> <leader>a :<C-U>call <SID>AckMotion(visualmode())<CR>
 
 function! s:CopyMotionForType(type)
     if a:type ==# 'v'
@@ -559,8 +559,8 @@ endfunction
 " == CtrlP ================== {{{
 
 " http://kien.github.com/ctrlp.vim/
-nmap ,b :CtrlPBuffer<CR>
-nmap ,m :CtrlPMRU<CR>
+nmap <leader>b :CtrlPBuffer<CR>
+nmap <leader>m :CtrlPMRU<CR>
 "let g:ctrlp_map = '<c-p>'
 let g:ctrlp_map = '<Leader>f'
 let g:ctrlp_working_path_mode = 0      " don't manage
@@ -618,8 +618,8 @@ func! MyNerdTree(mode)
   endif
 endfunc
 
-nmap <silent> ,t :call MyNerdTree(1)<cr>
-nmap <silent> ,T :call MyNerdTree(2)<cr>
+nmap <silent> <leader>t :call MyNerdTree(1)<cr>
+nmap <silent> <leader>T :call MyNerdTree(2)<cr>
 let NERDChristmasTree=1
 let NERDTreeChDirMode=2
 let NERDTreeDirArrows=1
@@ -665,13 +665,13 @@ let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
 nnoremap <silent> Q gwip
 "nnoremap <silent> K vipJ
-nnoremap <silent> ,J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
-"nnoremap <silent> ,Q :g/^/norm gqq<cr>
-"nnoremap <silent> ,K :%norm vipJ<cr>
+nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+"nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
+"nnoremap <silent> <leader>K :%norm vipJ<cr>
 
 " TODO for writing mode only
-nnoremap <silent> ,s :call MyParagraph(0)<cr>
-nnoremap <silent> ,j :call MyParagraph(1)<cr>
+nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
+nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
 
 function! MyParagraph(mode)
   let p=getpos('.')
