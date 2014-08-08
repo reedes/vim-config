@@ -32,7 +32,8 @@ Plugin 'gmarik/vundle'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
 Plugin 'junegunn/limelight.vim'
-Plugin 'kien/ctrlp.vim'
+"Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
@@ -161,8 +162,10 @@ if has('unix')
   set shell=/bin/bash\ -i       " make Vim’s :! shell behave like your command prompt
 endif
 
+"nmap <leader>M :delm! | delm A-Z0-9<cr>
+
 " Make the current file executable
-nmap <leader>x :w<cr>:!chmod 755 %<cr>:e<cr>
+nmap <leader>x :w<cr>:!chmod 755 %<cr>:e<cr><cr>
 
 " command-t, ctrlp config and expanding wildcards
 set wildignore+=*.*~
