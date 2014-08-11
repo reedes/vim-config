@@ -212,7 +212,8 @@ noremap Y y$
 " NOTE pointing to all files in vim dir so that can easily
 "      browse directory using NERDTreeFind (<leader>T).
 nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
-"nnoremap <silent> <leader>es :wall<cr>:so $MYVIMRC<cr>
+" reload vimrc when saved
+au BufWritePost $HOME/.vim/vimrc so $HOME/.vim/vimrc
 
 " == Redraw ================== {{{
 "
