@@ -214,7 +214,7 @@ noremap Y y$
 "      browse directory using NERDTreeFind (<leader>T).
 nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
 " reload vimrc when saved
-au BufWritePost $HOME/.vim/vimrc so $HOME/.vim/vimrc
+"au BufWritePost $HOME/.vim/vimrc so $HOME/.vim/vimrc
 
 " == Redraw ================== {{{
 "
@@ -642,11 +642,13 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " == Signify =================== {{{
 
 " Try ]c and [c to jump between hunks
-let g:signify_sign_change='~'
-let g:signify_sign_delete='-'
-let g:signify_sign_overwrite=0    " prevent dumping gutter
-let g:signify_update_on_focusgained=1    " dumps gutter if overwrite=1
-let g:signify_sign_color_inherit_from_linenr=1
+"let g:signify_sign_change='~'
+"let g:signify_sign_delete='-'
+"let g:signify_sign_overwrite=0    " prevent dumping gutter
+"let g:signify_update_on_focusgained=1    " dumps gutter if overwrite=1
+"let g:signify_sign_color_inherit_from_linenr=1
+let g:signify_vcs_list = [ 'svn', 'git' ]
+" test
 
 " }}}
 " == Airline =================== {{{
