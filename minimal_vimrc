@@ -1,0 +1,13 @@
+" File: minimal_vimrc
+"
+" Author: created by reedes on August 14, 2014
+" Updated: continuously
+" URL: https://github.com/reedes/vim-config
+
+set nocompatible
+
+syntax enable
+
+set hidden                      " allow unwritten background buffers
+
+" vim:set ft=vim et sw=2:
