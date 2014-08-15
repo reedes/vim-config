@@ -362,12 +362,8 @@ set splitright
 "let g:force_reload_textobj_sentence = 1
 augroup prose
   autocmd!
-  autocmd FileType markdown,mkd
-    \ call MyProseInit()
-    " Limelight
-  autocmd FileType text
-    \ call MyProseInit()
-    " Limelight
+  autocmd FileType markdown,mkd call MyProseInit()
+  autocmd FileType text         call MyProseInit()
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -504,6 +500,8 @@ function! MyProseInit()
   call pencil#init()
 
   setlocal foldlevel=6
+
+  Limelight
 
   " join, maintaining cursor position
   "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
