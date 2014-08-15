@@ -1,4 +1,4 @@
 " Execute commands after the vim config filetype handler has been run
-setlocal foldlevel=6
+"setlocal foldlevel=6
 
 

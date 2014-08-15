@@ -6,7 +6,7 @@
 
 set nocompatible
 
-"  # VUNDLE (package management)
+"{{{ == VUNDLE (package management)
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -63,7 +63,8 @@ Plugin 'endel/vim-github-colorscheme'
 Plugin 'hmaarrfk/vim-colors-solarized'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'noahfrederick/vim-hemisu'
-
+"}}}
+"{{{ == BASIC
 syntax enable
 filetype plugin indent on
 
@@ -215,8 +216,8 @@ noremap Y y$
 nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
 " reload vimrc when saved
 "au BufWritePost $HOME/.vim/vimrc so $HOME/.vim/vimrc
-
-" == Redraw ================== {{{
+"}}}
+" == Redraw  {{{
 "
 " Don't update the display while executing macros
 set lazyredraw
@@ -235,7 +236,7 @@ inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 "endif
 
 " }}}
-" == Navigating buffers ================= {{{
+" == Navigating buffers  {{{
 
 " jump to the first open window that has buffer
 "set switchbuf=useopen
@@ -262,7 +263,7 @@ nmap <silent> <leader>N :clast<cr>zvzz
 
 
 " }}}
-" == Saving buffers ==================== {{{
+" == Saving buffers {{{
 
 " Remember last location in file, but not for commit messages.
 " see :help last-position-jump
@@ -291,17 +292,18 @@ set autoread
 "set autowrite           " ensure save when <C-^>
 "set autowriteall
 
-" Clean trailing whitespace and save
+" Remove any trailing whitespace that is in the file
+autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
 "nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
-nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
-function! TrimAndWrite()
-  let l:p = getpos('.')
-  silent! %s/\s\+$//e
-  call setpos('.', l:p)
-  write
-endfunction
+"nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
+"function! TrimAndWrite()
+"  let l:p = getpos('.')
+"  silent! %s/\s\+$//ge
+"  call setpos('.', l:p)
+"  write
+"endfunction
 " }}}
-" == Backup/Undo/Swap files =================== {{{
+" == Backup/Undo/Swap files {{{
 " # Common directories for backup, undo and swap
 set nobackup                      " disable backups
 
@@ -325,7 +327,7 @@ if !isdirectory(expand("~/.vim/tmp/swap"))
 endif
 
 " }}}
-" == folding ================= {{{
+" == Folding  {{{
 
 " Close all folds except the one(1) the cursor is on, and center.
 nnoremap z1 zMzvzz
@@ -339,12 +341,14 @@ nnoremap zO zCzOzz
 " addition, with the manual fold method, you can create a fold by visually
 " selecting some lines, then pressing Space.
 nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-vnoremap <Space> zf
+
+" surround the selection with {{{ }}}
+"vnoremap <Space> zf
 
 let g:markdown_fold_style = 'nested'
 
 " }}}
-" == splits ==================== {{{
+" == Splits {{{
 " set styling on vertical splits (hard space)
 set fillchars=vert: 
 
@@ -352,26 +356,17 @@ set splitbelow
 set splitright
 
 " }}}
-" == My Plugins ===================== {{{
+" == My Plugins {{{
 
 "let g:one#handleSwapfileConflicts = 1     " 0=disable, 1=enable (def)
 "let g:force_reload_textobj_sentence = 1
-let g:litecorrect#typographic = 0
-augroup various
+augroup prose
   autocmd!
   autocmd FileType markdown,mkd
-    \ call litecorrect#init()           |
-    \ call lexical#init()               |
-    \ call textobj#sentence#init()      |
-    \ call textobj#quote#init()         |
-    \ call pencil#init()
+    \ call MyProseInit()
     " Limelight
   autocmd FileType text
-    \ call litecorrect#init()           |
-    \ call lexical#init({ 'spell': 0 }) |
-    \ call textobj#sentence#init()      |
-    \ call textobj#quote#init()         |
-    \ call pencil#init()
+    \ call MyProseInit()
     " Limelight
 augroup END
 
@@ -387,50 +382,12 @@ let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
 
-let g:online_thesaurus_map_keys = 0
-nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
-
-"map <silent> <leader>c <Plug>ReplaceWithCurly
-"map <silent> <leader>s <Plug>ReplaceWithStraight
-map <silent> <leader>2 <Plug>SurroundWithDouble
-map <silent> <leader>1 <Plug>SurroundWithSingle
-
-" operator mappings for rhysd/vim-operator-surround
-"map <silent>sa <Plug>(operator-surround-append)
-"map <silent>sd <Plug>(operator-surround-delete)
-"map <silent>sr <Plug>(operator-surround-replace)
-
-" delete or replace most inner surround
-
-"" if you use vim-textobj-quote
-"nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-quote-a)
-"nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-quote-a)
-"
-"" if you use vim-textobj-sentence
-"nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
-"nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
+"let g:online_thesaurus_map_keys = 0
+"nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
 
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
-nnoremap <silent> K :NextWordy<cr>
-
-" TEMPORARY see where this loads
-"augroup mycustomhighlights
-"  autocmd!
-"  autocmd colorscheme *
-"        \ hi cursor guibg=#5FD7A7 guifg=#80a0ff
-"augroup END
-"augroup MyCustomHighlights2
-"  autocmd!
-"  autocmd colorscheme *
-"   \ highlight SpellBad   gui=bold guibg=#faa |
-"   \ highlight SpellCap   gui=bold guibg=#faf |
-"   \ highlight SpellRare  gui=bold guibg=#aff |
-"   \ highlight SpellLocal gui=bold guibg=#ffa
-"augroup END
-
 
 "let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
@@ -536,7 +493,77 @@ let g:thematic#themes = {
 "let g:thematic#theme_name = 'desert'
 
 " }}}
-" == Ack ================== {{{
+" == Text editing  {{{
+
+function! MyProseInit()
+
+  call litecorrect#init()
+  call lexical#init()
+  call textobj#sentence#init()
+  call textobj#quote#init()
+  call pencil#init()
+
+  setlocal foldlevel=6
+
+  " join, maintaining cursor position
+  "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
+  "nnoremap J mzJ`z
+
+  nnoremap <silent> K :NextWordy<cr>
+
+  nnoremap <silent> Q gwip
+  "nnoremap <silent> K vipJ
+  nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+  "nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
+  "nnoremap <silent> <leader>K :%norm vipJ<cr>
+
+  " TODO for writing mode only
+  nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
+  nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
+
+  "map <silent> <leader>c <Plug>ReplaceWithCurly
+  "map <silent> <leader>s <Plug>ReplaceWithStraight
+  map <silent> <leader>2 <Plug>SurroundWithDouble
+  map <silent> <leader>1 <Plug>SurroundWithSingle
+
+  " operator mappings for rhysd/vim-operator-surround
+  "map <silent>sa <Plug>(operator-surround-append)
+  "map <silent>sd <Plug>(operator-surround-delete)
+  "map <silent>sr <Plug>(operator-surround-replace)
+
+  " delete or replace most inner surround
+
+  "" if you use vim-textobj-quote
+  "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-quote-a)
+  "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-quote-a)
+  "
+  "" if you use vim-textobj-sentence
+  "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
+  "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
+
+endfunction
+
+function! MyParagraph(mode)
+  let p=getpos('.')
+  execute "normal! vip\<esc>"
+  normal! vip
+  if a:mode == 0
+    *s/\([\.\?\!\:]\+\)\s*/\1\r- /ge
+  else
+    *s/^\- //e
+    if &textwidth == 0
+      *join
+    endif
+  endif
+  if &textwidth > 0
+    normal! vipgq
+  endif
+  execute "normal! \<esc>"
+  call setpos('.', p)
+endfunction
+
+" }}}
+" == Ack  {{{
 
 " Motions to Ack for things.  Works with pretty much everything, including:
 "   w, W, e, E, b, B, t*, f*, i*, a*, and custom text objects
@@ -562,7 +589,7 @@ function! s:AckMotion(type) abort
 endfunction
 
 " }}}
-" == CtrlP ================== {{{
+" == CtrlP  {{{
 
 " http://kien.github.com/ctrlp.vim/
 nmap <leader>b :CtrlPBuffer<CR>
@@ -603,7 +630,7 @@ func! s:DeleteBuffer()
 endfunc
 
 " }}}
-" == NERDTree =================== {{{
+" == NERDTree {{{
 
 " restore columns when disabling NERDTree; expand when enabling
 func! MyNerdTree(mode)
@@ -639,7 +666,7 @@ let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " }}}
-" == Signify =================== {{{
+" == Signify {{{
 
 " Try ]c and [c to jump between hunks
 "let g:signify_sign_change='~'
@@ -651,7 +678,7 @@ let g:signify_vcs_list = [ 'svn', 'git' ]
 " test
 
 " }}}
-" == Airline =================== {{{
+" == Airline {{{
 
 let g:airline#extensions#whitespace#show_message = 0
 let g:airline#extensions#whitespace#checks = [ ]
@@ -663,42 +690,6 @@ let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
-
-" }}}
-" == Paragraph formatting ================ {{{
-
-" join, maintaining cursor position
-"nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
-"nnoremap J mzJ`z
-
-nnoremap <silent> Q gwip
-"nnoremap <silent> K vipJ
-nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
-"nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
-"nnoremap <silent> <leader>K :%norm vipJ<cr>
-
-" TODO for writing mode only
-nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
-nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
-
-function! MyParagraph(mode)
-  let p=getpos('.')
-  execute "normal! vip\<esc>"
-  normal! vip
-  if a:mode == 0
-    *s/\([\.\?\!\:]\+\)\s*/\1\r- /ge
-  else
-    *s/^\- //e
-    if &textwidth == 0
-      *join
-    endif
-  endif
-  if &textwidth > 0
-    normal! vipgq
-  endif
-  execute "normal! \<esc>"
-  call setpos('.', p)
-endfunction
 
 " }}}
 
