@@ -31,12 +31,14 @@ Plugin 'gmarik/vundle'
 "Plugin 'tpope/vim-repeat'
 "Plugin 'tpope/vim-unimpaired'
 
+" causing a change in directory
+Plugin 'mhinz/vim-signify'
+
+Plugin 'kana/vim-textobj-user'
+Plugin 'kshenoy/vim-signature'
 Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'junegunn/limelight.vim'
-Plugin 'kana/vim-textobj-user'
-Plugin 'kshenoy/vim-signature'
-Plugin 'mhinz/vim-signify'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
@@ -63,6 +65,8 @@ Plugin 'endel/vim-github-colorscheme'
 Plugin 'hmaarrfk/vim-colors-solarized'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'noahfrederick/vim-hemisu'
+Plugin 'jonathanfilip/vim-lucius'
+Plugin 'morhetz/gruvbox'
 "}}}
 "{{{ == BASIC
 syntax enable
@@ -220,7 +224,7 @@ nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
 " == Redraw  {{{
 "
 " Don't update the display while executing macros
-set lazyredraw
+"set lazyredraw
 
 " Don't show the current command int he lower right corner.
 " In OSX, if this is set and lazyredraw is set then it's
@@ -410,7 +414,7 @@ let g:thematic#defaults = {
 \ 'transparency': 0,
 \ }
 let g:thematic#themes = {
-\ 'desert'     : { 'sign-column-color-fix': 1,
+\ 'bubblegum'  : { 'sign-column-color-fix': 1,
 \                  'columns': 80,
 \                  'lines': 30,
 \                  'linespace': 9,
@@ -419,7 +423,7 @@ let g:thematic#themes = {
 \                  'number-column-color-mute': 1,
 \                  'typeface': 'Cutive Mono',
 \                },
-\ 'pencil_light':{ 'colorscheme': 'pencil',
+\ 'pencil_lite' :{ 'colorscheme': 'pencil',
 \                  'background': 'light',
 \                  'columns': 75,
 \                  'font-size': 20,
@@ -435,23 +439,23 @@ let g:thematic#themes = {
 \                  'laststatus': 0,
 \                  'linespace': 8,
 \                  'airline-theme': 'pencil',
-\                  'typeface': 'Cousine',
+\                  'typeface': 'Menlo',
 \                },
-\ 'latin':       { 'colorscheme': 'pencil',
-\                  'background': 'dark',
+\ 'latin':       { 'colorscheme': 'lucius',
+\                  'background': 'light',
 \                  'font-size': 24,
+\                  'columns': 75,
 \                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'pencil',
 \                  'typeface': 'Latin Modern Mono 10 Regular',
 \                },
-\ 'traditional': { 'colorscheme': 'pencil',
+\ 'traditional': { 'colorscheme': 'lucius',
 \                  'background': 'light',
 \                  'font-size': 20,
+\                  'columns': 75,
 \                  'laststatus': 0,
 \                  'linespace': 8,
-\                  'airline-theme': 'pencil',
 \                  'typeface': 'Linux Libertine Mono O',
 \                },
 \ 'hemi_dark'  : { 'colorscheme': 'hemisu',
@@ -463,7 +467,7 @@ let g:thematic#themes = {
 \ 'hemi_lite'  : { 'colorscheme': 'hemisu',
 \                  'background': 'light',
 \                  'columns': 75,
-\                  'typeface': 'Menlo',
+\                  'typeface': 'Verily Serif Mono Book',
 \                },
 \ 'matrix'     : { 'colorscheme': 'base16-greenscreen',
 \                  'font-size': 24,
@@ -482,7 +486,19 @@ let g:thematic#themes = {
 \                  'sign-column-color-fix': 1,
 \                  'typeface': 'Source Code Pro Medium',
 \                },
-\ 'github'     : { 'background': 'light' },
+\ 'github'     : { 'background': 'light',
+\                  'typeface': 'Oxygen Mono Regular',
+\                },
+\ 'gruvbox_lite' : { 'colorscheme': 'gruvbox',
+\                  'background': 'light',
+\                  'columns': 75,
+\                  'typeface': 'Aurulent Sans Mono Regular',
+\                },
+\ 'gruvbox_dark' : { 'colorscheme': 'gruvbox',
+\                  'background': 'dark',
+\                  'columns': 75,
+\                  'typeface': 'OCRA Regular',
+\                },
 \ }
 
 
@@ -501,7 +517,7 @@ function! MyProseInit()
 
   setlocal foldlevel=6
 
-  Limelight
+  "Limelight
 
   " join, maintaining cursor position
   "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
@@ -667,6 +683,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " == Signify {{{
 
 " Try ]c and [c to jump between hunks
+let g:signify_disable_by_default = 0
 "let g:signify_sign_change='~'
 "let g:signify_sign_delete='-'
 "let g:signify_sign_overwrite=0    " prevent dumping gutter

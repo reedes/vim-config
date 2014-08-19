@@ -18,6 +18,8 @@ if has("gui_macvim")
   set guioptions-=m   "don't source menus
   set guioptions+=M
 
+  set guioptions+=E   " Emoji support
+
   "set guifont=Fantasque\ Sans\ Mono\:h22
   set guifont=Cousine\:h18
   "set guifont=Linux\ Libertine\ Mono\ O\:h18
