@@ -43,6 +43,8 @@ Plugin 'moll/vim-bbye'
 Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-markdown'
+"Plugin 'terryma/vim-multiple-cursors'
+Plugin 'kris89/vim-multiple-cursors'
 
 " # Authored Plugins
 Plugin 'reedes/vim-litecorrect'
@@ -501,7 +503,7 @@ function! MyProseInit()
 
   setlocal foldlevel=6
 
-  Limelight
+  "Limelight
 
   " join, maintaining cursor position
   "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
@@ -689,6 +691,16 @@ let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
+" }}}
+" == Multi-cursor {{{
+
+  " Default mapping
+let g:multi_cursor_next_key='<D-n>'
+let g:multi_cursor_prev_key='<D-p>'
+let g:multi_cursor_skip_key='<D-x>'
+let g:multi_cursor_quit_key='<Esc>'
+" Map start key separately from next key
+let g:multi_cursor_start_key='<F6>'
 " }}}
 
 " vim:set ft=vim et sw=2:
