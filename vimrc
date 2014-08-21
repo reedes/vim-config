@@ -34,10 +34,10 @@ Plugin 'gmarik/vundle'
 
 "Plugin 'jtratner/vim-flavored-markdown'
 "Plugin 'mikewest/vim-markdown'
-"Plugin 'tpope/vim-markdown'
-"Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'tpope/vim-markdown'
+Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'gabrielelana/vim-markdown'
-Plugin 'plasticboy/vim-markdown'
+"Plugin 'plasticboy/vim-markdown'
 
 " # experimental
 Plugin 'kshenoy/vim-signature'
@@ -521,29 +521,29 @@ let g:thematic#themes = {
 
 function! MyProseInit()
 
-  if exists('litecorrect#init')
+  "if exists('*litecorrect#init')
     call litecorrect#init()
-  en
-  if exists('lexical#init')
+  "en
+  "if exists('*lexical#init')
     call lexical#init()
-  en
-  if exists('textobj#sentence#init')
+  "en
+  "if exists('*textobj#sentence#init')
     call textobj#sentence#init()
-  en
-  if exists('textobj#quote#init')
+  "en
+  "if exists('*textobj#quote#init')
     call textobj#quote#init()
     "map <silent> <leader>c <Plug>ReplaceWithCurly
     "map <silent> <leader>s <Plug>ReplaceWithStraight
     map <silent> <leader>2 <Plug>SurroundWithDouble
     map <silent> <leader>1 <Plug>SurroundWithSingle
-  en
-  if exists('pencil#init')
+  "en
+  "if exists('*pencil#init')
     call pencil#init()
-  en
+  "en
 
-  if exists('wordy#init')
+  "if exists('*wordy#init')
     nnoremap <silent> K :NextWordy<cr>
-  en
+  "en
 
   setlocal foldlevel=6
 
