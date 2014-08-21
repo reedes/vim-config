@@ -23,13 +23,17 @@ Plugin 'gmarik/vundle'
 "Plugin 'kien/ctrlp.vim'
 "Plugin 'kien/rainbow_parentheses.vim'
 "Plugin 'luochen1990/rainbow'
-"Plugin 'plasticboy/vim-markdown'
 "Plugin 'rhysd/vim-operator-surround'
-"Plugin 'roman/golden-ratio'
+Plugin 'roman/golden-ratio'
 "Plugin 'tommcdo/vim-exchange'
 "Plugin 'tpope/vim-abolish'
 "Plugin 'tpope/vim-repeat'
 "Plugin 'tpope/vim-unimpaired'
+
+Plugin 'tpope/vim-markdown'
+"Plugin 'nelstrom/vim-markdown-folding'
+"Plugin 'gabrielelana/vim-markdown'
+"Plugin 'plasticboy/vim-markdown'
 
 " causing a change in directory
 Plugin 'mhinz/vim-signify'
@@ -42,10 +46,7 @@ Plugin 'junegunn/limelight.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
-Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'scrooloose/nerdtree'
-Plugin 'tpope/vim-markdown'
-"Plugin 'terryma/vim-multiple-cursors'
 Plugin 'kris89/vim-multiple-cursors'
 
 " # Authored Plugins
@@ -391,7 +392,7 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-"let g:pencil_neutral_headings = 1
+let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
 let g:airline_theme = 'pencil'
 
@@ -511,11 +512,29 @@ let g:thematic#themes = {
 
 function! MyProseInit()
 
-  call litecorrect#init()
-  call lexical#init()
-  call textobj#sentence#init()
-  call textobj#quote#init()
-  call pencil#init()
+  if exists('litecorrect#init')
+    call litecorrect#init()
+  en
+  if exists('lexical#init')
+    call lexical#init()
+  en
+  if exists('textobj#sentence#init')
+    call textobj#sentence#init()
+  en
+  if exists('textobj#quote#init')
+    call textobj#quote#init()
+    "map <silent> <leader>c <Plug>ReplaceWithCurly
+    "map <silent> <leader>s <Plug>ReplaceWithStraight
+    map <silent> <leader>2 <Plug>SurroundWithDouble
+    map <silent> <leader>1 <Plug>SurroundWithSingle
+  en
+  if exists('pencil#init')
+    call pencil#init()
+  en
+
+  if exists('wordy#init')
+    nnoremap <silent> K :NextWordy<cr>
+  en
 
   setlocal foldlevel=6
 
@@ -525,7 +544,6 @@ function! MyProseInit()
   "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
   "nnoremap J mzJ`z
 
-  nnoremap <silent> K :NextWordy<cr>
 
   nnoremap <silent> Q gwip
   "nnoremap <silent> K vipJ
@@ -537,10 +555,6 @@ function! MyProseInit()
   nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
   nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
 
-  "map <silent> <leader>c <Plug>ReplaceWithCurly
-  "map <silent> <leader>s <Plug>ReplaceWithStraight
-  map <silent> <leader>2 <Plug>SurroundWithDouble
-  map <silent> <leader>1 <Plug>SurroundWithSingle
 
   " operator mappings for rhysd/vim-operator-surround
   "map <silent>sa <Plug>(operator-surround-append)
