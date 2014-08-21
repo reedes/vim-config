@@ -1,19 +1,25 @@
 " File: minimal_vimrc
-"
+" Description: used in testing plugins
 " Author: created by reedes on August 14, 2014
 " Updated: continuously
 " URL: https://github.com/reedes/vim-config
 
 set nocompatible
 
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let vundle manage itself
+Plugin 'gmarik/vundle'
+
+Plugin 'reedes/vim-litecorrect'
+
 syntax on
+filetype plugin indent on
 set background=dark
 set shiftwidth=2
 set tabstop=2
-
-if has('autocmd')
-  filetype plugin indent on
-endif
 
 set showcmd             " Show (partial) command in status line.
 set showmatch           " Show matching brackets.

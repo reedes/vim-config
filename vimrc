@@ -24,32 +24,38 @@ Plugin 'gmarik/vundle'
 "Plugin 'kien/rainbow_parentheses.vim'
 "Plugin 'luochen1990/rainbow'
 "Plugin 'rhysd/vim-operator-surround'
-Plugin 'roman/golden-ratio'
+"Plugin 'roman/golden-ratio'
 "Plugin 'tommcdo/vim-exchange'
 "Plugin 'tpope/vim-abolish'
 "Plugin 'tpope/vim-repeat'
 "Plugin 'tpope/vim-unimpaired'
+"Plugin 'junegunn/limelight.vim'
+"Plugin 'bling/vim-airline'
 
-Plugin 'tpope/vim-markdown'
+"Plugin 'jtratner/vim-flavored-markdown'
+"Plugin 'mikewest/vim-markdown'
+"Plugin 'tpope/vim-markdown'
 "Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'gabrielelana/vim-markdown'
-"Plugin 'plasticboy/vim-markdown'
+Plugin 'plasticboy/vim-markdown'
 
-" causing a change in directory
+" # experimental
+Plugin 'kshenoy/vim-signature'
+Plugin 'kris89/vim-multiple-cursors'
+
+" # causing a change in directory
 Plugin 'mhinz/vim-signify'
 
+" # standards
+Plugin 'itchyny/lightline.vim'
 Plugin 'kana/vim-textobj-user'
-Plugin 'kshenoy/vim-signature'
-Plugin 'bling/vim-airline'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'junegunn/limelight.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
-Plugin 'kris89/vim-multiple-cursors'
 
-" # Authored Plugins
+" # authored plugins
 Plugin 'reedes/vim-litecorrect'
 Plugin 'reedes/vim-textobj-sentence'
 Plugin 'reedes/vim-lexical'
@@ -61,7 +67,7 @@ Plugin 'reedes/vim-one'
 Plugin 'reedes/vim-thematic'
 Plugin 'reedes/vim-wheel'
 
-" # Color Plugins
+" # color plugins
 Plugin 'baskerville/bubblegum'
 Plugin 'chriskempson/base16-vim'
 Plugin 'endel/vim-github-colorscheme'
@@ -123,10 +129,15 @@ if !empty(&viminfo)
   set viminfo^=!
 endif
 
-" Allow color schemes to do bright colors without forcing bold.
-if &t_Co == 8 && $TERM !~# '^linux'
-  set t_Co=16
-endif
+if !has('gui_running')
+  if &t_Co == 8 && $TERM !~# '^linux'
+    " Allow color schemes to do bright colors without forcing bold.
+    set t_Co=16
+  el
+    " Needs : export TERM=xterm-256color
+    set t_Co=256
+  en
+en
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -394,10 +405,8 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 
 let g:pencil_neutral_headings = 1
 let g:pencil_higher_contrast_ui = 0
+let g:pencil_markdown_code_bg = 1
 let g:airline_theme = 'pencil'
-
-" increase contrast for cursor line
-"let g:pencil_focus = 1
 
 "nmap <silent> <leader>A :ShiftPencil<cr>
 nmap <leader>y <Plug>ThematicNext
@@ -721,6 +730,71 @@ let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = ''
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
+
+" }}}
+" == Lightline {{{
+
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'landscape',
+      \ 'mode_map': { 'c': 'NORMAL' },
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+      \ },
+      \ 'component_function': {
+      \   'modified': 'MyModified',
+      \   'readonly': 'MyReadonly',
+      \   'fugitive': 'MyFugitive',
+      \   'filename': 'MyFilename',
+      \   'fileformat': 'MyFileformat',
+      \   'filetype': 'MyFiletype',
+      \   'fileencoding': 'MyFileencoding',
+      \   'mode': 'MyMode',
+      \ },
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+      \ }
+
+function! MyModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '⭤' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
+    let _ = fugitive#head()
+    return strlen(_) ? '⭠ '._ : ''
+  endif
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
 
 " }}}
 " == Multi-cursor {{{
