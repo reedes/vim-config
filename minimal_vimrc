@@ -28,4 +28,9 @@ set smartcase           " Do smart case matching
 set incsearch           " Incremental search
 set hidden              " Hide buffers when they are abandoned
 
+augroup prose
+  autocmd!
+  autocmd FileType markdown,mkd call litecorrect#init()
+augroup END
+
 " vim:set ft=vim et sw=2:
