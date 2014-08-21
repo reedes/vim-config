@@ -734,7 +734,7 @@ let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 " }}}
 " == Lightline {{{
 
-set laststatus=2
+"set laststatus=2
 let g:lightline = {
       \ 'colorscheme': 'landscape',
       \ 'mode_map': { 'c': 'NORMAL' },
