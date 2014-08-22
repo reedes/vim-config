@@ -31,7 +31,4 @@ if has("gui_macvim")
   map <silent> <D-0> <Plug>ThematicWiden
 endif
 
-set background=dark
-colorscheme pencil
-
 " vim:set ft=vim et sw=2:

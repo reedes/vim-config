@@ -32,12 +32,12 @@ Plugin 'gmarik/vundle'
 "Plugin 'junegunn/limelight.vim'
 "Plugin 'bling/vim-airline'
 
-"Plugin 'jtratner/vim-flavored-markdown'
-"Plugin 'mikewest/vim-markdown'
 Plugin 'tpope/vim-markdown'
 Plugin 'nelstrom/vim-markdown-folding'
-"Plugin 'gabrielelana/vim-markdown'
 "Plugin 'plasticboy/vim-markdown'
+"Plugin 'gabrielelana/vim-markdown'
+"Plugin 'jtratner/vim-flavored-markdown'
+"Plugin 'mikewest/vim-markdown'
 
 " # experimental
 Plugin 'kshenoy/vim-signature'
@@ -395,6 +395,7 @@ let g:lexical#dictionary_key = ',k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#conceallevel = 2
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -403,7 +404,7 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-let g:pencil_neutral_headings = 1
+let g:pencil_heading_color = 'green'   " ''=neutral
 let g:pencil_higher_contrast_ui = 0
 let g:pencil_markdown_code_bg = 1
 let g:airline_theme = 'pencil'
@@ -412,6 +413,9 @@ let g:airline_theme = 'pencil'
 nmap <leader>y <Plug>ThematicNext
 nmap <leader>Y <Plug>ThematicRandom
 nmap <leader>I :Thematic pencil_dark<CR>
+
+set background=dark
+colorscheme pencil
 
 " use jellybeans as default airline theme as it maps from
 " existing colors
@@ -479,7 +483,7 @@ let g:thematic#themes = {
 \ 'hemi_lite'  : { 'colorscheme': 'hemisu',
 \                  'background': 'light',
 \                  'columns': 75,
-\                  'typeface': 'Verily Serif Mono Book',
+\                  'typeface': 'Verily Serif Mono',
 \                },
 \ 'matrix'     : { 'colorscheme': 'base16-greenscreen',
 \                  'font-size': 24,
@@ -504,7 +508,7 @@ let g:thematic#themes = {
 \ 'gruvbox_lite' : { 'colorscheme': 'gruvbox',
 \                  'background': 'light',
 \                  'columns': 75,
-\                  'typeface': 'Aurulent Sans Mono Regular',
+\                  'typeface': 'AurulentSansMono-Regular',
 \                },
 \ 'gruvbox_dark' : { 'colorscheme': 'gruvbox',
 \                  'background': 'dark',
