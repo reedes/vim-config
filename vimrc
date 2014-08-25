@@ -364,6 +364,7 @@ nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 "vnoremap <Space> zf
 
 let g:markdown_fold_style = 'nested'
+let g:markdown_fenced_languages = ['python', 'sh', 'vim']
 
 " }}}
 " == Splits {{{
@@ -399,7 +400,8 @@ let g:pencil#wrapModeDefault = 'soft'
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
 
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+map <F10> :echo "hi<"
+\ . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
