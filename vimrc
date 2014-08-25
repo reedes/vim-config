@@ -395,7 +395,6 @@ let g:lexical#dictionary_key = ',k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
-let g:pencil#conceallevel = 2
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -428,6 +427,7 @@ let g:thematic#defaults = {
 \ 'font-size': 20,
 \ 'linespace': 0,
 \ 'transparency': 0,
+\ 'ruler': 0,
 \ }
 let g:thematic#themes = {
 \ 'bubblegum'  : { 'sign-column-color-fix': 1,
@@ -441,17 +441,17 @@ let g:thematic#themes = {
 \                },
 \ 'pencil_lite' :{ 'colorscheme': 'pencil',
 \                  'background': 'light',
-\                  'columns': 75,
+\                  'columns': 60,
+\                  'lines': 24,
 \                  'font-size': 20,
-\                  'fullscreen': 1,
 \                  'laststatus': 0,
+\                  'fullscreen': 1,
 \                  'linespace': 8,
 \                  'typeface': 'Cousine',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
 \                  'background': 'dark',
 \                  'font-size': 20,
-\                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
 \                  'airline-theme': 'pencil',
@@ -461,7 +461,6 @@ let g:thematic#themes = {
 \                  'background': 'light',
 \                  'font-size': 24,
 \                  'columns': 75,
-\                  'fullscreen': 1,
 \                  'laststatus': 0,
 \                  'linespace': 8,
 \                  'typeface': 'Latin Modern Mono 10 Regular',
@@ -518,7 +517,7 @@ let g:thematic#themes = {
 \ }
 
 
-"let g:thematic#theme_name = 'desert'
+"let g:thematic#theme_name = 'pencil_lite'
 
 " }}}
 " == Text editing  {{{
@@ -536,10 +535,10 @@ function! MyProseInit()
   "en
   "if exists('*textobj#quote#init')
     call textobj#quote#init()
-    "map <silent> <leader>c <Plug>ReplaceWithCurly
-    "map <silent> <leader>s <Plug>ReplaceWithStraight
-    map <silent> <leader>2 <Plug>SurroundWithDouble
-    map <silent> <leader>1 <Plug>SurroundWithSingle
+    "nmap <silent> <leader>c <Plug>ReplaceWithCurly
+    "nmap <silent> <leader>s <Plug>ReplaceWithStraight
+    nmap <silent> <leader>2 <Plug>SurroundWithDouble
+    nmap <silent> <leader>1 <Plug>SurroundWithSingle
   "en
   "if exists('*pencil#init')
     call pencil#init()
