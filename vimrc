@@ -19,11 +19,11 @@ Plugin 'gmarik/vundle'
 "Plugin 'airblade/vim-gitgutter'
 "Plugin 'ervandew/supertab'
 "Plugin 'junegunn/vader.vim'
-"Plugin 'kana/vim-operator-user'
+Plugin 'kana/vim-operator-user'
 "Plugin 'kien/ctrlp.vim'
 "Plugin 'kien/rainbow_parentheses.vim'
 "Plugin 'luochen1990/rainbow'
-"Plugin 'rhysd/vim-operator-surround'
+Plugin 'rhysd/vim-operator-surround'
 "Plugin 'roman/golden-ratio'
 "Plugin 'tommcdo/vim-exchange'
 "Plugin 'tpope/vim-abolish'
@@ -417,7 +417,7 @@ let g:airline_theme = 'pencil'
 "nmap <silent> <leader>A :ShiftPencil<cr>
 nmap <leader>y <Plug>ThematicNext
 nmap <leader>Y <Plug>ThematicRandom
-nmap <leader>I :Thematic pencil_dark<CR>
+nmap <leader>I :Thematic pencil_lite<CR>
 
 set background=dark
 colorscheme pencil
@@ -573,11 +573,6 @@ function! MyProseInit()
   "nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
   "nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
 
-
-  " operator mappings for rhysd/vim-operator-surround
-  "map <silent>sa <Plug>(operator-surround-append)
-  "map <silent>sd <Plug>(operator-surround-delete)
-  "map <silent>sr <Plug>(operator-surround-replace)
 
   " delete or replace most inner surround
 
@@ -815,6 +810,14 @@ let g:multi_cursor_skip_key='<D-x>'
 let g:multi_cursor_quit_key='<Esc>'
 " Map start key separately from next key
 let g:multi_cursor_start_key='<F6>'
+" }}}
+" == Surround {{{
+
+" operator mappings for rhysd/vim-operator-surround
+map <silent>sa <Plug>(operator-surround-append)
+map <silent>sd <Plug>(operator-surround-delete)
+map <silent>sr <Plug>(operator-surround-replace)
+
 " }}}
 
 " vim:set ft=vim et sw=2:
