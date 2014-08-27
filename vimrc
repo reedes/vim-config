@@ -38,6 +38,7 @@ Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'gabrielelana/vim-markdown'
 "Plugin 'jtratner/vim-flavored-markdown'
 "Plugin 'mikewest/vim-markdown'
+Plugin 'mattly/vim-markdown-enhancements'
 
 " # experimental
 Plugin 'kshenoy/vim-signature'
