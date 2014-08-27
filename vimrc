@@ -55,6 +55,10 @@ Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
 
+" # pandoc
+"Plugin 'vim-pandoc/vim-pandoc-syntax'
+"Plugin 'vim-pandoc/vim-pandoc'
+
 " # authored plugins
 Plugin 'reedes/vim-litecorrect'
 Plugin 'reedes/vim-textobj-sentence'
@@ -185,7 +189,7 @@ endif
 "nmap <leader>M :delm! | delm A-Z0-9<cr>
 
 " Make the current file executable
-nmap <leader>x :w<cr>:!chmod 755 %<cr>:e<cr><cr>
+"nmap <leader>x :w<cr>:!chmod 755 %<cr>:e<cr><cr>
 
 " command-t, ctrlp config and expanding wildcards
 set wildignore+=*.*~
@@ -537,10 +541,10 @@ function! MyProseInit()
   "en
   "if exists('*textobj#quote#init')
     call textobj#quote#init()
-    "nmap <silent> <leader>c <Plug>ReplaceWithCurly
-    "nmap <silent> <leader>s <Plug>ReplaceWithStraight
-    nmap <silent> <leader>2 <Plug>SurroundWithDouble
-    nmap <silent> <leader>1 <Plug>SurroundWithSingle
+    map <silent> <leader>c <Plug>ReplaceWithCurly
+    map <silent> <leader>s <Plug>ReplaceWithStraight
+    map <silent> <leader>2 <Plug>SurroundWithDouble
+    map <silent> <leader>1 <Plug>SurroundWithSingle
   "en
   "if exists('*pencil#init')
     call pencil#init()
@@ -566,8 +570,8 @@ function! MyProseInit()
   "nnoremap <silent> <leader>K :%norm vipJ<cr>
 
   " TODO for writing mode only
-  nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
-  nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
+  "nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
+  "nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
 
 
   " operator mappings for rhysd/vim-operator-surround
