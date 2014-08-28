@@ -446,7 +446,7 @@ let g:thematic#themes = {
 \                  'laststatus': 0,
 \                  'fullscreen': 1,
 \                  'linespace': 8,
-\                  'typeface': 'Cousine',
+\                  'typeface': 'Fedra Mono Std Light',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
 \                  'background': 'dark',
