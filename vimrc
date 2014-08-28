@@ -39,8 +39,8 @@ Plugin 'gmarik/vundle'
 "Plugin 'junegunn/limelight.vim'
 Plugin 'kana/vim-operator-user'
 Plugin 'rhysd/vim-operator-surround'
-"Plugin 'tpope/vim-markdown'
-"Plugin 'mattly/vim-markdown-enhancements'
+Plugin 'tpope/vim-markdown'
+Plugin 'mattly/vim-markdown-enhancements'
 
 " # established
 Plugin 'mhinz/vim-signify'
