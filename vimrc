@@ -14,51 +14,43 @@ call vundle#rc()
 " let vundle manage itself
 Plugin 'gmarik/vundle'
 
-" # Non-color Plugins
+" # Experimental Plugins
 "Plugin 'Lokaltog/vim-easymotion'
 "Plugin 'airblade/vim-gitgutter'
 "Plugin 'ervandew/supertab'
+"Plugin 'itchyny/lightline.vim'
 "Plugin 'junegunn/vader.vim'
-Plugin 'kana/vim-operator-user'
-"Plugin 'kien/ctrlp.vim'
 "Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'kris89/vim-multiple-cursors'
+"Plugin 'kshenoy/vim-signature'
 "Plugin 'luochen1990/rainbow'
-Plugin 'rhysd/vim-operator-surround'
 "Plugin 'roman/golden-ratio'
 "Plugin 'tommcdo/vim-exchange'
 "Plugin 'tpope/vim-abolish'
 "Plugin 'tpope/vim-repeat'
 "Plugin 'tpope/vim-unimpaired'
-"Plugin 'junegunn/limelight.vim'
-"Plugin 'bling/vim-airline'
-
-Plugin 'tpope/vim-markdown'
-Plugin 'nelstrom/vim-markdown-folding'
+"Plugin 'vim-pandoc/vim-pandoc'
+"Plugin 'vim-pandoc/vim-pandoc-syntax'
+"Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'plasticboy/vim-markdown'
 "Plugin 'gabrielelana/vim-markdown'
 "Plugin 'jtratner/vim-flavored-markdown'
 "Plugin 'mikewest/vim-markdown'
-Plugin 'mattly/vim-markdown-enhancements'
+"Plugin 'junegunn/limelight.vim'
+Plugin 'kana/vim-operator-user'
+Plugin 'rhysd/vim-operator-surround'
+"Plugin 'tpope/vim-markdown'
+"Plugin 'mattly/vim-markdown-enhancements'
 
-" # experimental
-Plugin 'kshenoy/vim-signature'
-Plugin 'kris89/vim-multiple-cursors'
-
-" # causing a change in directory
+" # established
 Plugin 'mhinz/vim-signify'
-
-" # standards
-Plugin 'itchyny/lightline.vim'
+Plugin 'bling/vim-airline'
 Plugin 'kana/vim-textobj-user'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
-
-" # pandoc
-"Plugin 'vim-pandoc/vim-pandoc-syntax'
-"Plugin 'vim-pandoc/vim-pandoc'
 
 " # authored plugins
 Plugin 'reedes/vim-litecorrect'
@@ -207,8 +199,8 @@ set wildignore+=log/**
 set wildignore+=tmp/**
 
 iab mdy <c-r>=strftime("%B %d, %Y")<CR>
-iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
-iab isodate <c-r>=strftime("%FT%T%z")<CR>
+"iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
+"iab isodate <c-r>=strftime("%FT%T%z")<CR>
 
 let mapleader = ","             " <Leader> key instead of backslash (options '\_,;')
 
@@ -555,14 +547,13 @@ function! MyProseInit()
     nnoremap <silent> K :NextWordy<cr>
   "en
 
-  setlocal foldlevel=6
+  "LimeLight0.7
 
-  "Limelight
+  setlocal foldlevel=6
 
   " join, maintaining cursor position
   "nnoremap S i<cr><esc>^mzgk:silent! s/\v +$//<cr>:noh<cr>`z
   "nnoremap J mzJ`z
-
 
   nnoremap <silent> Q gwip
   "nnoremap <silent> K vipJ
@@ -573,7 +564,6 @@ function! MyProseInit()
   " TODO for writing mode only
   "nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
   "nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
-
 
   " delete or replace most inner surround
 
