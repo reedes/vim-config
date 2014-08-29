@@ -1,8 +1,8 @@
 " File: vimrc
 "
 " Author: created by reedes on 16-Feb-2013
-" Updated: continuously
 " URL: https://github.com/reedes/vim-config
+" Updated: continuously
 
 set nocompatible
 
@@ -41,6 +41,7 @@ Plugin 'kana/vim-operator-user'
 Plugin 'rhysd/vim-operator-surround'
 Plugin 'tpope/vim-markdown'
 Plugin 'mattly/vim-markdown-enhancements'
+Plugin 'zirrostig/vim-schlepp.git'
 
 " # established
 Plugin 'mhinz/vim-signify'
@@ -810,5 +811,20 @@ map <silent>sd <Plug>(operator-surround-delete)
 map <silent>sr <Plug>(operator-surround-replace)
 
 " }}}
+
+if has("gui_macvim")
+  let macvim_hig_shift_movement = 1
+endif
+
+" Schlepp
+"""""""""
+let g:Schlepp#allowSquishingLines = 1
+let g:Schlepp#allowSquishingBlocks = 1
+vmap <unique> <left>  <Plug>SchleppLeft
+vmap <unique> <up>    <Plug>SchleppUp
+vmap <unique> <down>  <Plug>SchleppDown
+vmap <unique> <right> <Plug>SchleppRight
+vmap <unique> <S-up>   <Plug>SchleppIndentUp
+vmap <unique> <S-down> <Plug>SchleppIndentDown
 
 " vim:set ft=vim et sw=2:
