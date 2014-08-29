@@ -41,7 +41,7 @@ Plugin 'kana/vim-operator-user'
 Plugin 'rhysd/vim-operator-surround'
 Plugin 'tpope/vim-markdown'
 Plugin 'mattly/vim-markdown-enhancements'
-Plugin 'zirrostig/vim-schlepp.git'
+"Plugin 'zirrostig/vim-schlepp.git'
 
 " # established
 Plugin 'mhinz/vim-signify'
@@ -818,13 +818,13 @@ endif
 
 " Schlepp
 """""""""
-let g:Schlepp#allowSquishingLines = 1
-let g:Schlepp#allowSquishingBlocks = 1
-vmap <unique> <left>  <Plug>SchleppLeft
-vmap <unique> <up>    <Plug>SchleppUp
-vmap <unique> <down>  <Plug>SchleppDown
-vmap <unique> <right> <Plug>SchleppRight
-vmap <unique> <S-up>   <Plug>SchleppIndentUp
-vmap <unique> <S-down> <Plug>SchleppIndentDown
+"let g:Schlepp#allowSquishingLines = 1
+"let g:Schlepp#allowSquishingBlocks = 1
+"vmap <unique> <left>  <Plug>SchleppLeft
+"vmap <unique> <up>    <Plug>SchleppUp
+"vmap <unique> <down>  <Plug>SchleppDown
+"vmap <unique> <right> <Plug>SchleppRight
+"vmap <unique> <S-up>   <Plug>SchleppIndentUp
+"vmap <unique> <S-down> <Plug>SchleppIndentDown
 
 " vim:set ft=vim et sw=2:
