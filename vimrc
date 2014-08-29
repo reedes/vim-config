@@ -812,9 +812,10 @@ map <silent>sr <Plug>(operator-surround-replace)
 
 " }}}
 
-if has("gui_macvim")
-  let macvim_hig_shift_movement = 1
-endif
+" Warning: causes virtual mode ctrl-f and ctrl-b to lose their selection
+"if has("gui_macvim")
+"  let macvim_hig_shift_movement = 1
+"endif
 
 " Schlepp
 """""""""
