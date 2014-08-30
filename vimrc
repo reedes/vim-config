@@ -14,36 +14,11 @@ call vundle#rc()
 " let vundle manage itself
 Plugin 'gmarik/vundle'
 
-" # Experimental Plugins
-"Plugin 'Lokaltog/vim-easymotion'
-"Plugin 'airblade/vim-gitgutter'
-"Plugin 'ervandew/supertab'
-"Plugin 'itchyny/lightline.vim'
-"Plugin 'junegunn/vader.vim'
-"Plugin 'kien/rainbow_parentheses.vim'
-"Plugin 'kris89/vim-multiple-cursors'
-"Plugin 'kshenoy/vim-signature'
-"Plugin 'luochen1990/rainbow'
-"Plugin 'roman/golden-ratio'
-"Plugin 'tommcdo/vim-exchange'
-"Plugin 'tpope/vim-abolish'
-"Plugin 'tpope/vim-repeat'
-"Plugin 'tpope/vim-unimpaired'
-"Plugin 'vim-pandoc/vim-pandoc'
-"Plugin 'vim-pandoc/vim-pandoc-syntax'
-"Plugin 'nelstrom/vim-markdown-folding'
-"Plugin 'plasticboy/vim-markdown'
-"Plugin 'gabrielelana/vim-markdown'
-"Plugin 'jtratner/vim-flavored-markdown'
-"Plugin 'mikewest/vim-markdown'
-"Plugin 'junegunn/limelight.vim'
+Plugin 'tpope/vim-sensible'
 Plugin 'kana/vim-operator-user'
 Plugin 'rhysd/vim-operator-surround'
 Plugin 'tpope/vim-markdown'
 Plugin 'mattly/vim-markdown-enhancements'
-"Plugin 'zirrostig/vim-schlepp.git'
-
-" # established
 Plugin 'mhinz/vim-signify'
 Plugin 'bling/vim-airline'
 Plugin 'kana/vim-textobj-user'
@@ -76,74 +51,10 @@ Plugin 'jonathanfilip/vim-lucius'
 Plugin 'morhetz/gruvbox'
 "}}}
 "{{{ == BASIC
-syntax enable
-filetype plugin indent on
 
-set autoindent
-set backspace=indent,eol,start
-set complete-=i
-set smarttab
-
-set nrformats-=octal
-set shiftround
-
-set ttimeout
-set ttimeoutlen=100
-
-set incsearch
-
-set ruler
-set showcmd
-set wildmenu
-
-if !&scrolloff
-  set scrolloff=1
-endif
-if !&sidescrolloff
-  set sidescrolloff=5
-endif
-set display+=lastline
-
-if &encoding ==# 'latin1' && has('gui_running')
-  set encoding=utf-8
-endif
-
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
   let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
 endif
-
-set fileformats+=mac
-
-if &history < 1000
-  set history=1000
-endif
-
-if &tabpagemax < 50
-  set tabpagemax=50
-endif
-
-if !empty(&viminfo)
-  set viminfo^=!
-endif
-
-if !has('gui_running')
-  if &t_Co == 8 && $TERM !~# '^linux'
-    " Allow color schemes to do bright colors without forcing bold.
-    set t_Co=16
-  el
-    " Needs : export TERM=xterm-256color
-    set t_Co=256
-  en
-en
-
-" Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
-
-" undo during insert
-inoremap <C-U> <C-G>u<C-U>
 
 " get out of insert mode
 "inoremap kj <esc>l
@@ -154,9 +65,9 @@ inoremap <C-U> <C-G>u<C-U>
 " instead of just deleting the text and replacing it.
 "set cpoptions+=$
 
-" Various characters are "wider" than normal fixed width
+" Various characters are 'wider' than normal fixed width
 " characters, but the default setting of ambiwidth (single)
-" squeezes them into "normal" width, which sucks.
+" squeezes them into 'normal' width, which sucks.
 "set ambiwidth=double
 
 " Add the unnamed register to the clipboard
@@ -164,18 +75,21 @@ inoremap <C-U> <C-G>u<C-U>
 "set clipboard+=unnamed
 
 set expandtab                   " use spaces, not tabs (optional)
+set fillchars=vert: 
+set hidden                      " allow unwritten background buffers
 set hlsearch                    " highlight matches
 set ignorecase                  " searches are case insensitive...
-set laststatus=0
+set infercase
 set list                        " show invisible characters
 set nowrap                      " don't wrap lines
+set shiftwidth=2                " a tab is two spaces (or set this to 4)
 set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
 set smartcase                   " ... unless they contain at least one capital letter
-set infercase
+set splitbelow
+set splitright
 set synmaxcol=800               " Don't try to lines highlight longer than 800 characters.
-set tabstop=2 shiftwidth=2      " a tab is two spaces (or set this to 4)
+set tabstop=2
 set visualbell                  " avoid beeping
-set hidden                      " allow unwritten background buffers
 
 if has('unix')
   set shell=/bin/bash\ -i       " make Vim’s :! shell behave like your command prompt
@@ -364,14 +278,6 @@ nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 
 let g:markdown_fold_style = 'nested'
 let g:markdown_fenced_languages = ['python', 'sh', 'vim', 'html',]
-
-" }}}
-" == Splits {{{
-" set styling on vertical splits (hard space)
-set fillchars=vert: 
-
-set splitbelow
-set splitright
 
 " }}}
 " == My Plugins {{{
