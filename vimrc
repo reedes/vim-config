@@ -171,6 +171,7 @@ set list                        " show invisible characters
 set nowrap                      " don't wrap lines
 set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
 set smartcase                   " ... unless they contain at least one capital letter
+set infercase
 set synmaxcol=800               " Don't try to lines highlight longer than 800 characters.
 set tabstop=2 shiftwidth=2      " a tab is two spaces (or set this to 4)
 set visualbell                  " avoid beeping

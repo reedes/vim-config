@@ -1,36 +1,177 @@
-" File: minimal_vimrc
-" Description: used in testing plugins
-" Author: created by reedes on August 14, 2014
+" File: pencil_vimrc
+" Description: minimalist vimrc for word processing on vim
+" Author: created by reedes on August 29, 2014
 " Updated: continuously
 " URL: https://github.com/reedes/vim-config
 
 set nocompatible
 
+" VUNDLE {{{
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-" let vundle manage itself
-Plugin 'gmarik/vundle'
+Plugin 'tpope/vim-sensible'
 
+Plugin 'gmarik/vundle'          " let vundle manage itself
+
+Plugin 'kana/vim-operator-user'
+Plugin 'kana/vim-textobj-user'
+Plugin 'mattly/vim-markdown-enhancements'
+Plugin 'reedes/vim-colors-pencil'
+Plugin 'reedes/vim-lexical'
 Plugin 'reedes/vim-litecorrect'
+Plugin 'reedes/vim-pencil'
+Plugin 'reedes/vim-textobj-quote'
+Plugin 'reedes/vim-textobj-sentence'
+Plugin 'reedes/vim-thematic'
+Plugin 'reedes/vim-wheel'
+Plugin 'reedes/vim-wordy'
+Plugin 'rhysd/vim-operator-surround'
+Plugin 'tpope/vim-markdown'
 
-syntax on
+" }}}
+" BASIC {{{
+
+syntax enable
 filetype plugin indent on
-set background=dark
-set shiftwidth=2
-set tabstop=2
+set expandtab                   " use spaces, not tabs (optional)
+set hidden                      " allow unwritten background buffers
+set hlsearch                    " highlight matches
+set ignorecase                  " Do case insensitive matching
+set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
+set smartcase                   " ... unless they contain at least one capital letter
+set nowrap
+set splitbelow
+set splitright
 
-set showcmd             " Show (partial) command in status line.
-set showmatch           " Show matching brackets.
-set ignorecase          " Do case insensitive matching
-set smartcase           " Do smart case matching
-set incsearch           " Incremental search
-set hidden              " Hide buffers when they are abandoned
+"make <c-l> clear the highlight as well as redraw screen
+noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
+inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
+" }}}
+" SAVE/LOAD {{{
+
+" Remember last location in file, but not for commit messages.
+" see :help last-position-jump
+augroup line_return
+    au!
+    au BufReadPost *
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
+      \   execute 'normal! g`"zvzz' |
+      \ endif
+augroup END
+
+" aggressively read/write buffers
+set autoread
+augroup AutoWrite
+  au!
+  au FocusLost * :silent! wall
+  au BufLeave * :silent! update
+augroup END
+
+" }}}
+" KEY MAPPINGS {{{
+
+" <Leader> key instead of backslash (options '\_,;')
+let mapleader = ","
+
+" select what was just pasted
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" match the behavior of D, C, and A
+noremap Y y$
+
+" from insert mode, jump to last active buffer
+inoremap <C-^> <C-C><C-^>
+
+" switch buffers ([b and ]b in unimpaired)
+nmap <C-p> :bprevious<CR>
+nmap <C-n> :bnext<CR>
+
+" }}}
+" FOLDING  {{{
+
+" Close all folds except the one(1) the cursor is on, and center.
+nnoremap z1 zMzvzz
+
+" Make zO (letter O, not zero) recursively open whatever top level
+" fold we're in, no matter where the cursor happens to be, and center.
+nnoremap zO zCzOzz
+
+" In normal mode, press Space to toggle the current fold open/closed. However,
+" if the cursor is not in a fold, move to the right (the default behavior). In
+" addition, with the manual fold method, you can create a fold by visually
+" selecting some lines, then pressing Space.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+
+" }}}
+" MY PLUGINS {{{
 
 augroup prose
   autocmd!
-  autocmd FileType markdown,mkd call litecorrect#init()
+  autocmd FileType markdown,mkd call MyProseInit()
+  autocmd FileType text         call MyProseInit()
 augroup END
+
+let g:lexical#spelllang      = ['en_us',]
+let g:lexical#spell_key      = '<leader>u'
+let g:lexical#thesaurus_key  = '<leader>j'
+let g:lexical#dictionary_key = '<leader>k'
+
+function! MyProseInit()
+  call litecorrect#init()
+  call lexical#init()
+  call textobj#sentence#init()
+  call textobj#quote#init()
+  call pencil#init()
+
+  map <silent> <leader>c <Plug>ReplaceWithCurly
+  map <silent> <leader>s <Plug>ReplaceWithStraight
+  map <silent> <leader>2 <Plug>SurroundWithDouble
+  map <silent> <leader>1 <Plug>SurroundWithSingle
+
+  nnoremap <silent> K :NextWordy<cr>
+  nnoremap <silent> Q gwip
+
+  " Join while maintaining cursor position
+  nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+endfunction
+
+" }}}
+" THEMING {{{
+
+let g:thematic#theme_name = 'pencil_dark'
+
+let g:thematic#defaults = {
+\ 'fullscreen-background-color-fix': 1,
+\ 'sign-column-color-fix': 1,
+\ 'laststatus': 0,
+\ 'background': 'dark',
+\ 'transparency': 0,
+\ 'ruler': 0,
+\ 'typeface': 'Cousine',
+\ 'linespace': 8,
+\ 'font-size': 20,
+\ }
+let g:thematic#themes = {
+\ 'pencil_lite' :{ 'colorscheme': 'pencil',
+\                  'background': 'light',
+\                },
+\ 'pencil_dark': { 'colorscheme': 'pencil',
+\                  'background': 'dark',
+\                },
+\ }
+
+" }}}
+" PLUGINS {{{
+let g:markdown_fold_style = 'nested'
+let g:markdown_fenced_languages = ['sh', 'vim', 'html', 'js', 'css', ]
+
+" operator mappings for rhysd/vim-operator-surround
+map <silent>sa <Plug>(operator-surround-append)
+map <silent>sd <Plug>(operator-surround-delete)
+map <silent>sr <Plug>(operator-surround-replace)
+
+" }}}
 
 " vim:set ft=vim et sw=2:

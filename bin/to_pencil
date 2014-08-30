@@ -3,5 +3,5 @@
 rm ~/.vimrc
 rm ~/.gvimrc
 
-ln -s ~/.vim/minimal_vimrc ~/.vimrc
-ln -s ~/.vim/minimal_gvimrc ~/.gvimrc
+ln -s ~/.vim/pencil_vimrc ~/.vimrc
+ln -s ~/.vim/pencil_gvimrc ~/.gvimrc
