@@ -27,6 +27,10 @@ Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
+"Plugin 'junegunn/goyo.vim'
+"Plugin 'junegunn/limelight.vim'
+Plugin 'kana/vim-smartword'
+"Plugin 'tpope/vim-surround'
 
 " # authored plugins
 Plugin 'reedes/vim-litecorrect'
@@ -431,6 +435,9 @@ let g:thematic#themes = {
 
 function! MyProseInit()
 
+  "nnoremap W ]s      needed to skip over words separated by spaces
+  "nnoremap B [s
+
   "if exists('*litecorrect#init')
     call litecorrect#init()
   "en
@@ -483,6 +490,11 @@ function! MyProseInit()
   "nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-sentence-a)
   "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
 
+  " Kana's smartword support GGGGG
+  map w  <Plug>(smartword-w)
+  map b  <Plug>(smartword-b)
+  map e  <Plug>(smartword-e)
+  map ge <Plug>(smartword-ge)
 endfunction
 
 function! MyParagraph(mode)
@@ -623,6 +635,8 @@ let g:signify_vcs_list = [ 'svn', 'git' ]
 " }}}
 " == Airline {{{
 
+"set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{PencilMode()}\ %P
+
 let g:airline#extensions#whitespace#show_message = 0
 let g:airline#extensions#whitespace#checks = [ ]
 let g:airline_powerline_fonts = 0
@@ -631,7 +645,7 @@ let g:airline_right_sep = ''
 let g:airline_linecolumn_prefix = ''
 let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
-let g:airline_section_x = ''
+let g:airline_section_x = '%{PencilMode()}'
 let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
 
 " }}}
