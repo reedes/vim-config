@@ -15,8 +15,8 @@ call vundle#rc()
 Plugin 'gmarik/vundle'
 
 Plugin 'tpope/vim-sensible'
-Plugin 'kana/vim-operator-user'
-Plugin 'rhysd/vim-operator-surround'
+"Plugin 'kana/vim-operator-user'
+"Plugin 'rhysd/vim-operator-surround'
 Plugin 'tpope/vim-markdown'
 Plugin 'mattly/vim-markdown-enhancements'
 Plugin 'mhinz/vim-signify'
@@ -27,9 +27,10 @@ Plugin 'mileszs/ack.vim'
 Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'junegunn/goyo.vim'
+
+Plugin 'junegunn/goyo.vim'
 "Plugin 'junegunn/limelight.vim'
-Plugin 'kana/vim-smartword'
+"Plugin 'kana/vim-smartword'
 "Plugin 'tpope/vim-surround'
 
 " # authored plugins
@@ -55,6 +56,9 @@ Plugin 'jonathanfilip/vim-lucius'
 Plugin 'morhetz/gruvbox'
 "}}}
 "{{{ == BASIC
+
+" override Vim's own definition
+"autocmd BufNewFile,BufRead *.md set filetype=markdown
 
 if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
   let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
@@ -491,10 +495,10 @@ function! MyProseInit()
   "nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-sentence-a)
 
   " Kana's smartword support GGGGG
-  map w  <Plug>(smartword-w)
-  map b  <Plug>(smartword-b)
-  map e  <Plug>(smartword-e)
-  map ge <Plug>(smartword-ge)
+  "map w  <Plug>(smartword-w)
+  "map b  <Plug>(smartword-b)
+  "map e  <Plug>(smartword-e)
+  "map ge <Plug>(smartword-ge)
 endfunction
 
 function! MyParagraph(mode)
