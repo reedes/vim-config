@@ -43,7 +43,7 @@ if has("gui_macvim")
   macm Window.Minimize\ All key=<nop>
   macm Window.Select\ Next\ Tab     key=<nop>
   macm Window.Select\ Previous\ Tab   key=<nop>
-  macm Window.Toggle\ Full\ Screen\ Mode  key=<nop>
+  "macm Window.Toggle\ Full\ Screen\ Mode  key=<nop>
   macm Window.Zoom    key=<nop>
   macm Window.Zoom\ All   key=<nop>
 endif
