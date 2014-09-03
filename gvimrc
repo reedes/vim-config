@@ -13,10 +13,10 @@ if has("gui_macvim")
   macm Edit.Font.Bigger       key=<nop>
   macm Edit.Font.Show\ Fonts
   macm Edit.Font.Smaller      key=<nop>
-  macm Edit.Redo<Tab>^R       key=<nop>
+  "macm Edit.Redo<Tab>^R       key=<nop>
   macm Edit.Select\ All<Tab>ggVG    key=<nop>
   macm Edit.Special\ Characters\.\.\.   key=<nop>
-  macm Edit.Undo<Tab>u        key=<nop>
+  "macm Edit.Undo<Tab>u        key=<nop>
   macm File.Close       key=<nop>
   macm File.Close\ Window<Tab>:qa   key=<nop>
   macm File.New\ Tab        key=<nop>

@@ -285,7 +285,7 @@ nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 "vnoremap <Space> zf
 
 let g:markdown_fold_style = 'nested'
-let g:markdown_fenced_languages = ['python', 'sh', 'vim', 'html',]
+let g:markdown_fenced_languages = ['vim',]
 
 " }}}
 " == My Plugins {{{
