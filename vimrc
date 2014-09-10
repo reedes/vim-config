@@ -330,6 +330,7 @@ nmap <leader>I :Thematic pencil_lite<CR>
 
 set background=dark
 colorscheme pencil
+"colorscheme desert
 
 " use jellybeans as default airline theme as it maps from
 " existing colors
