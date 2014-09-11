@@ -8,19 +8,20 @@ set nocompatible
 
 "{{{ == VUNDLE (package management)
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+
+" TEMPORARY - get rid of this
+"set rtp+=~/.vim/bundle/vundle/
+
+call vundle#begin()
+"call vundle#rc()
 
 " let vundle manage itself
-Plugin 'gmarik/vundle'
+"Plugin 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
+" core
 Plugin 'tpope/vim-sensible'
-"Plugin 'kana/vim-operator-user'
-"Plugin 'rhysd/vim-operator-surround'
-Plugin 'tpope/vim-markdown'
-Plugin 'mattly/vim-markdown-enhancements'
-Plugin 'mhinz/vim-signify'
-Plugin 'bling/vim-airline'
 Plugin 'kana/vim-textobj-user'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
@@ -28,10 +29,24 @@ Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
 
+"Plugin 'tpope/vim-markdown'
+Plugin 'plasticboy/vim-markdown'
+"Plugin 'gabrielelana/vim-markdown'
+
+"Plugin 'kana/vim-operator-user'
+"Plugin 'rhysd/vim-operator-surround'
+"Plugin 'mattly/vim-markdown-enhancements'
+"Plugin 'nelstrom/vim-markdown-folding'
+"Plugin 'mhinz/vim-signify'
+"Plugin 'bling/vim-airline'
+"Plugin 'tpope/vim-fugitive'
+
+"Plugin '907th/vim-auto-save'
 Plugin 'junegunn/goyo.vim'
 "Plugin 'junegunn/limelight.vim'
 "Plugin 'kana/vim-smartword'
 "Plugin 'tpope/vim-surround'
+"Plugin 'terryma/vim-multiple-cursors'
 
 " # authored plugins
 Plugin 'reedes/vim-litecorrect'
@@ -54,6 +69,8 @@ Plugin 'nanotech/jellybeans.vim'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'jonathanfilip/vim-lucius'
 Plugin 'morhetz/gruvbox'
+
+call vundle#end()
 "}}}
 "{{{ == BASIC
 
@@ -126,10 +143,10 @@ iab mdy <c-r>=strftime("%B %d, %Y")<CR>
 "iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
 "iab isodate <c-r>=strftime("%FT%T%z")<CR>
 
-let mapleader = ","             " <Leader> key instead of backslash (options '\_,;')
+let mapleader = ','             " <Leader> key instead of backslash (options '\_,;')
 
 " select what was just pasted
-nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+"nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 " D is d$ C is c$ A is $a but Y is yy. WHY?
 "map Y y$
@@ -183,10 +200,11 @@ inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
 " from insert mode, jump to last active buffer
 inoremap <C-^> <C-C><C-^>
 "inoremap <C-^> <C-C>:update<CR><C-^>
+"map <leader>x :bprevious<cr>:bdelete #<cr>
 
 " switch buffers ([b and ]b in unimpaired)
-nmap <C-p> :bprevious<CR>
-nmap <C-n> :bnext<CR>
+map <C-p> :bprevious<CR>
+map <C-n> :bnext<CR>
 
 " switch buffers via quickfix ([q and ]q in unimpaired)
 nmap <silent> <leader>p :cprevious<cr>zvzz
@@ -222,12 +240,14 @@ inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 "nmap <silent> <leader>v :wall<CR>:Vader<CR>
 
 " aggressively read/write buffers
-augroup AutoWrite
-  autocmd!
-  autocmd FocusLost * :silent! wall
-  autocmd BufLeave * :silent! update
-augroup END
+let g:auto_save = 1
 set autoread
+
+"augroup AutoWrite
+"  autocmd!
+"  autocmd FocusLost * :silent! wall
+"  autocmd BufLeave * :silent! update
+"augroup END
 "set autowrite           " ensure save when <C-^>
 "set autowriteall
 
@@ -284,8 +304,9 @@ nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 " surround the selection with {{{ }}}
 "vnoremap <Space> zf
 
+let g:markdown_folding = 1
 let g:markdown_fold_style = 'nested'
-let g:markdown_fenced_languages = ['vim',]
+"let g:markdown_fenced_languages = ['vim',]
 
 " }}}
 " == My Plugins {{{
@@ -294,8 +315,8 @@ let g:markdown_fenced_languages = ['vim',]
 "let g:force_reload_textobj_sentence = 1
 augroup prose
   autocmd!
-  autocmd FileType markdown,mkd call MyProseInit()
-  autocmd FileType text         call MyProseInit()
+  autocmd FileType markdown,mkd call Prose()
+  autocmd FileType text         call Prose()
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -437,7 +458,7 @@ let g:thematic#themes = {
 " }}}
 " == Text editing  {{{
 
-function! MyProseInit()
+function! Prose()
 
   "nnoremap W ]s      needed to skip over words separated by spaces
   "nnoremap B [s
@@ -476,13 +497,12 @@ function! MyProseInit()
 
   nnoremap <silent> Q gwip
   "nnoremap <silent> K vipJ
-  nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
+  "nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
   "nnoremap <silent> <leader>Q :g/^/norm gqq<cr>
   "nnoremap <silent> <leader>K :%norm vipJ<cr>
 
-  " TODO for writing mode only
-  "nnoremap <silent> <leader>s :call MyParagraph(0)<cr>
-  "nnoremap <silent> <leader>j :call MyParagraph(1)<cr>
+  nnoremap <silent> <leader>S :call MyParagraph(0)<cr>
+  nnoremap <silent> <leader>J :call MyParagraph(1)<cr>
 
   " delete or replace most inner surround
 

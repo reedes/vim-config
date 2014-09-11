@@ -1,177 +1,172 @@
 " File: pencil_vimrc
-" Description: minimalist vimrc for word processing on vim
+" Description: demonstration vimrc for word processing on vim
 " Author: created by reedes on August 29, 2014
 " Updated: continuously
 " URL: https://github.com/reedes/vim-config
+"
+" Key Mappings (consult plugin docs for additional mappings)
+"
+" K            next wordy dictionary
+"
+" Q            format current paragraph (gwip)
+"
+" z1           close all folds but this one
+" <space>      toggle fold
+"
+" <c-n>        next buffer
+" <c-p>        previous buffer
+"
+" For the following, note that leader is '\' key by default
+"
+" <leader>C    replace straight quotes with curly quotes
+" <leader>S    replace curly quotes with straight quotes
+" <leader>q    surround with double curly quotes
+" <leader>Q    surround with single curly quotes
+"
+" <leader>s    spell (normal mode)
+" <leader>t    thesaurus (normal mode)
+" <leader>k    dictionary (normal mode)
+"
+" <leader>F    toggle Fullscreen (gui)
+" <leader>T    select next Theme
+" <leader>G    toggle Goyo
+" <leader>L    toggle Limelight
 
 set nocompatible
-
-" VUNDLE {{{
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
+" core
+Plugin 'gmarik/vundle'
 Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-markdown'
+Plugin 'reedes/vim-pencil'
 
-Plugin 'gmarik/vundle'          " let vundle manage itself
-
+" non-core
+Plugin 'airblade/vim-gitgutter'
+Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
 Plugin 'kana/vim-operator-user'
 Plugin 'kana/vim-textobj-user'
 Plugin 'mattly/vim-markdown-enhancements'
+Plugin 'nelstrom/vim-markdown-folding'
 Plugin 'reedes/vim-colors-pencil'
 Plugin 'reedes/vim-lexical'
 Plugin 'reedes/vim-litecorrect'
-Plugin 'reedes/vim-pencil'
 Plugin 'reedes/vim-textobj-quote'
 Plugin 'reedes/vim-textobj-sentence'
 Plugin 'reedes/vim-thematic'
-Plugin 'reedes/vim-wheel'
 Plugin 'reedes/vim-wordy'
 Plugin 'rhysd/vim-operator-surround'
-Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-fugitive'
 
-" }}}
-" BASIC {{{
+call vundle#end()
 
-syntax enable
-filetype plugin indent on
-set expandtab                   " use spaces, not tabs (optional)
+"syntax enable
+"filetype plugin indent on
 set hidden                      " allow unwritten background buffers
 set hlsearch                    " highlight matches
 set ignorecase                  " Do case insensitive matching
-set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
-set smartcase                   " ... unless they contain at least one capital letter
-set nowrap
-set splitbelow
-set splitright
+set smartcase                   " ... unless they contain at
+                                "      least one capital letter
+" == PROSE ====
 
-"make <c-l> clear the highlight as well as redraw screen
-noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-inoremap <silent> <C-l> <C-o>:nohlsearch<cr>
-" }}}
-" SAVE/LOAD {{{
-
-" Remember last location in file, but not for commit messages.
-" see :help last-position-jump
-augroup line_return
-    au!
-    au BufReadPost *
-      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
-      \   execute 'normal! g`"zvzz' |
-      \ endif
+augroup prose
+  autocmd!
+  autocmd FileType markdown,mkd call Prose()
+  autocmd FileType text call Prose({'wrap': 'hard', 'autoformat': 0})
 augroup END
+
+function! Prose(...)
+  let l:pencil_args = a:0 ? a:1 : {}
+
+  " calls to initialize plugins for the current buffer
+  call pencil#init(l:pencil_args)
+  call litecorrect#init()
+  call lexical#init()
+  call textobj#sentence#init()
+  call textobj#quote#init()
+
+  " quote-related
+  map <buffer> <leader>C <Plug>ReplaceWithCurly
+  map <buffer> <leader>S <Plug>ReplaceWithStraight
+  map <buffer> <leader>q <Plug>SurroundWithDouble
+  map <buffer> <leader>Q <Plug>SurroundWithSingle
+
+  nnoremap <buffer> <silent> K :NextWordy<cr>
+  nnoremap <buffer> <silent> Q gwip
+endfunction
+
+" == AUTO SAVE ====
 
 " aggressively read/write buffers
-set autoread
 augroup AutoWrite
-  au!
-  au FocusLost * :silent! wall
-  au BufLeave * :silent! update
+  autocmd!
+  autocmd FocusLost * :silent! wall
+  autocmd BufLeave * :silent! update
 augroup END
 
-" }}}
-" KEY MAPPINGS {{{
+" == NAVIGATION ====
 
-" <Leader> key instead of backslash (options '\_,;')
-let mapleader = ","
+" switch buffers
+map <c-p> :bprevious<cr>
+map <c-n> :bnext<cr>
 
-" select what was just pasted
-nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
-
-" match the behavior of D, C, and A
-noremap Y y$
-
-" from insert mode, jump to last active buffer
-inoremap <C-^> <C-C><C-^>
-
-" switch buffers ([b and ]b in unimpaired)
-nmap <C-p> :bprevious<CR>
-nmap <C-n> :bnext<CR>
-
-" }}}
-" FOLDING  {{{
-
+" == FOLDS ====
+"
 " Close all folds except the one(1) the cursor is on, and center.
 nnoremap z1 zMzvzz
-
-" Make zO (letter O, not zero) recursively open whatever top level
-" fold we're in, no matter where the cursor happens to be, and center.
-nnoremap zO zCzOzz
 
 " In normal mode, press Space to toggle the current fold open/closed. However,
 " if the cursor is not in a fold, move to the right (the default behavior). In
 " addition, with the manual fold method, you can create a fold by visually
 " selecting some lines, then pressing Space.
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':'\<Space>')<CR>
 
-" }}}
-" MY PLUGINS {{{
-
-augroup prose
-  autocmd!
-  autocmd FileType markdown,mkd call MyProseInit()
-  autocmd FileType text         call MyProseInit()
-augroup END
+" == LEXICAL ====
 
 let g:lexical#spelllang      = ['en_us',]
-let g:lexical#spell_key      = '<leader>u'
-let g:lexical#thesaurus_key  = '<leader>j'
-let g:lexical#dictionary_key = '<leader>k'
+let g:lexical#spell_key      = '<leader>s'  " <c-x>s in insert mode
+let g:lexical#thesaurus_key  = '<leader>t'  " <c-x>t ...
+let g:lexical#dictionary_key = '<leader>k'  " <c-x>k ...
 
-function! MyProseInit()
-  call litecorrect#init()
-  call lexical#init()
-  call textobj#sentence#init()
-  call textobj#quote#init()
-  call pencil#init()
-
-  map <silent> <leader>c <Plug>ReplaceWithCurly
-  map <silent> <leader>s <Plug>ReplaceWithStraight
-  map <silent> <leader>2 <Plug>SurroundWithDouble
-  map <silent> <leader>1 <Plug>SurroundWithSingle
-
-  nnoremap <silent> K :NextWordy<cr>
-  nnoremap <silent> Q gwip
-
-  " Join while maintaining cursor position
-  nnoremap <silent> <leader>J :let p=getpos('.')<bar>join<bar>call setpos('.', p)<cr>
-endfunction
-
-" }}}
-" THEMING {{{
-
-let g:thematic#theme_name = 'pencil_dark'
+" == THEMES ====
 
 let g:thematic#defaults = {
-\ 'fullscreen-background-color-fix': 1,
-\ 'sign-column-color-fix': 1,
-\ 'laststatus': 0,
 \ 'background': 'dark',
-\ 'transparency': 0,
-\ 'ruler': 0,
-\ 'typeface': 'Cousine',
-\ 'linespace': 8,
 \ 'font-size': 20,
+\ 'fullscreen-background-color-fix': 1,
+\ 'laststatus': 0,
+\ 'linespace': 8,
+\ 'ruler': 0,
+\ 'transparency': 0,
+\ 'typeface': 'Cousine',
 \ }
 let g:thematic#themes = {
 \ 'pencil_lite' :{ 'colorscheme': 'pencil',
 \                  'background': 'light',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
-\                  'background': 'dark',
+\                },
+\ 'pencil_small':{ 'colorscheme': 'pencil',
+\                  'font-size': 12,
 \                },
 \ }
+let g:thematic#theme_name = 'pencil_dark'
 
-" }}}
-" PLUGINS {{{
-let g:markdown_fold_style = 'nested'
-let g:markdown_fenced_languages = ['sh', 'vim', 'html',]
+if has('fullscreen')
+  nmap <leader>F :set invfullscreen<cr>
+endif
+
+nmap <leader>T <Plug>ThematicNext
+
+nmap <leader>G :Goyo!!<cr>
+nmap <leader>L :Limelight!!<cr>
 
 " operator mappings for rhysd/vim-operator-surround
-map <silent>sa <Plug>(operator-surround-append)
-map <silent>sd <Plug>(operator-surround-delete)
-map <silent>sr <Plug>(operator-surround-replace)
-
-" }}}
+"map <silent>sa <Plug>(operator-surround-append)
+"map <silent>sd <Plug>(operator-surround-delete)
+"map <silent>sr <Plug>(operator-surround-replace)
 
 " vim:set ft=vim et sw=2:
