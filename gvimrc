@@ -10,9 +10,9 @@ if has("gui_macvim")
   macm Edit.Find.Find\ Previous     key=<nop>
   macm Edit.Find.Find\.\.\.     key=<nop>
   macm Edit.Find.Use\ Selection\ for\ Find  key=<nop>
-  macm Edit.Font.Bigger       key=<nop>
+  "macm Edit.Font.Bigger       key=<nop>
   macm Edit.Font.Show\ Fonts
-  macm Edit.Font.Smaller      key=<nop>
+  "macm Edit.Font.Smaller      key=<nop>
   "macm Edit.Redo<Tab>^R       key=<nop>
   macm Edit.Select\ All<Tab>ggVG    key=<nop>
   macm Edit.Special\ Characters\.\.\.   key=<nop>
