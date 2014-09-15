@@ -36,10 +36,12 @@ Plugin 'plasticboy/vim-markdown'
 "Plugin 'kana/vim-operator-user'
 "Plugin 'rhysd/vim-operator-surround'
 "Plugin 'mattly/vim-markdown-enhancements'
-"Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'mhinz/vim-signify'
 "Plugin 'bling/vim-airline'
 "Plugin 'tpope/vim-fugitive'
+
+Plugin 'tpope/abolish.vim'
 
 "Plugin '907th/vim-auto-save'
 Plugin 'junegunn/goyo.vim'
@@ -324,9 +326,9 @@ augroup END
 
 "let g:wheel#map#mouse = -1
 let g:lexical#spelllang = ['en_us',]
-let g:lexical#spell_key = ',u'
-let g:lexical#thesaurus_key = ',j'
-let g:lexical#dictionary_key = ',k'
+let g:lexical#spell_key = '<leader>u'
+let g:lexical#thesaurus_key = '<leader>j'
+let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
@@ -757,13 +759,13 @@ map <silent>sd <Plug>(operator-surround-delete)
 map <silent>sr <Plug>(operator-surround-replace)
 
 " }}}
-
+" == Macvim {{{
 " Warning: causes virtual mode ctrl-f and ctrl-b to lose their selection
 "if has("gui_macvim")
 "  let macvim_hig_shift_movement = 1
 "endif
-
-" Schlepp
+"}}}
+" == Schlepp {{{
 """""""""
 "let g:Schlepp#allowSquishingLines = 1
 "let g:Schlepp#allowSquishingBlocks = 1
@@ -772,6 +774,48 @@ map <silent>sr <Plug>(operator-surround-replace)
 "vmap <unique> <down>  <Plug>SchleppDown
 "vmap <unique> <right> <Plug>SchleppRight
 "vmap <unique> <S-up>   <Plug>SchleppIndentUp
-"vmap <unique> <S-down> <Plug>SchleppIndentDown
+"vmap <unique> <S-down> <Plug>SchleppIndentDown"}}}
+
+function! YouToWe(target, mode, visual)
+  " Extract the target text...
+  if len(a:visual) > 0
+      silent normal! gvy
+  else
+      silent normal! vipy
+  endif
+  let l:text = getreg(v:register)
+  let l:opts = 'g'
+
+  if a:target ==# 3
+    "  first person plural
+    let l:text = substitute(l:text, '\C\<Your\>', 'Our', l:opts)
+    let l:text = substitute(l:text, '\C\<your\>', 'our', l:opts)
+    let l:text = substitute(l:text, '\C\<You\>', 'We', l:opts)
+    let l:text = substitute(l:text, '\C\<you did\>', 'we did', l:opts)
+    let l:text = substitute(l:text, '\C\<you\>', 'we|us', l:opts)
+    " <verb>you => <verb>us
+    " of you => of us
+    " you<verb> => we<verb>
+  elseif a:target ==# 2
+    " second person singular
+    let l:text = substitute(l:text, '\C\<Our\>', 'Your', l:opts)
+    let l:text = substitute(l:text, '\C\<our\>', 'your', l:opts)
+    let l:text = substitute(l:text, '\C\<We\>', 'You', l:opts)
+    let l:text = substitute(l:text, '\C\<\(we\|us\)\>', 'you', l:opts)
+  endif
+  " TODO if doing We/You to he, need to pluralize verb
+  " 'We eat' => 'He eats'
+  " And singularize in reverse
+  " TODO support curly quotes
+
+  " Paste back into buffer in place of original...
+  call setreg(v:register, l:text, mode())
+  silent normal! gvp
+endfunction
+nnoremap ,r :call YouToWe(3, 1, '')<cr>
+vnoremap ,r :<C-u>call YouToWe(3, 1, visualmode())<cr>
+nnoremap ,R :call YouToWe(2, 1, '')<cr>
+vnoremap ,R :<C-u>call YouToWe(2, 1, visualmode())<cr>
+
 
 " vim:set ft=vim et sw=2:
