@@ -14,7 +14,7 @@ if has("gui_macvim")
   macm Edit.Font.Show\ Fonts
   "macm Edit.Font.Smaller      key=<nop>
   "macm Edit.Redo<Tab>^R       key=<nop>
-  macm Edit.Select\ All<Tab>ggVG    key=<nop>
+  "macm Edit.Select\ All<Tab>ggVG    key=<nop>
   macm Edit.Special\ Characters\.\.\.   key=<nop>
   "macm Edit.Undo<Tab>u        key=<nop>
   macm File.Close       key=<nop>
@@ -70,7 +70,14 @@ set guifont=Cousine\:h18
 "set guifont=Source\ Code\ Pro\:h18
 set linespace=2     "extra space between lines
 
-map <silent> <D-9> <Plug>ThematicNarrow
-map <silent> <D-0> <Plug>ThematicWiden
+noremap <silent> <D-9> :<C-u>ThematicNarrow<cr>
+noremap <silent> <D-0> :<C-u>ThematicWiden<cr>
+inoremap <silent> <D-9> <C-o>:ThematicNarrow<cr>
+inoremap <silent> <D-0> <C-o>:ThematicWiden<cr>
+
+"noremap <silent> <D--> :<C-u>action fontSizeDown:<cr>
+"noremap <silent> <D-=> :<C-u>action fontSizeUp:<cr>
+"inoremap <silent> <D--> <C-o>:action fontSizeDown:<cr>
+"inoremap <silent> <D-=> <C-o>:action fontSizeUp:<cr>
 
 " vim:set ft=vim et sw=2:

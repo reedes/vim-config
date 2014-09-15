@@ -378,7 +378,7 @@ let g:thematic#themes = {
 \                },
 \ 'pencil_lite' :{ 'colorscheme': 'pencil',
 \                  'background': 'light',
-\                  'columns': 60,
+\                  'columns': 80,
 \                  'lines': 24,
 \                  'font-size': 20,
 \                  'laststatus': 0,
