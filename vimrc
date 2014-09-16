@@ -6,76 +6,83 @@
 
 set nocompatible
 
-"{{{ == VUNDLE (package management)
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+"{{{ == Plugin management
+"filetype off
+
+call plug#begin('~/.vim/plugged')
+
+"set rtp+=~/.vim/bundle/Vundle.vim
 
 " TEMPORARY - get rid of this
 "set rtp+=~/.vim/bundle/vundle/
 
-call vundle#begin()
+"call vundle#begin()
 "call vundle#rc()
 
 " let vundle manage itself
-"Plugin 'gmarik/vundle'
-Plugin 'gmarik/Vundle.vim'
+"Plug 'gmarik/vundle'
+"Plug 'gmarik/Vundle.vim'
+Plug 'junegunn/vim-plug'
 
 " core
-Plugin 'tpope/vim-sensible'
-Plugin 'kana/vim-textobj-user'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'mileszs/ack.vim'
-Plugin 'milkypostman/vim-togglelist'
-Plugin 'moll/vim-bbye'
-Plugin 'scrooloose/nerdtree'
+Plug 'tpope/vim-sensible'
+Plug 'kana/vim-textobj-user'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mileszs/ack.vim'
+Plug 'milkypostman/vim-togglelist'
+Plug 'moll/vim-bbye'
+Plug 'scrooloose/nerdtree'
 
-Plugin 'tpope/vim-markdown'
-"Plugin 'gabrielelana/vim-markdown'
+Plug 'tpope/vim-markdown'
+"Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
-"Plugin 'plasticboy/vim-markdown'
+"Plug 'plasticboy/vim-markdown'
 
-"Plugin 'kana/vim-operator-user'
-"Plugin 'rhysd/vim-operator-surround'
-"Plugin 'mattly/vim-markdown-enhancements'
-Plugin 'nelstrom/vim-markdown-folding'
-"Plugin 'mhinz/vim-signify'
-"Plugin 'bling/vim-airline'
-"Plugin 'tpope/vim-fugitive'
+"Plug 'kana/vim-operator-user'
+"Plug 'rhysd/vim-operator-surround'
+"Plug 'mattly/vim-markdown-enhancements'
+Plug 'nelstrom/vim-markdown-folding'
+"Plug 'mhinz/vim-signify'
+"Plug 'bling/vim-airline'
+"Plug 'tpope/vim-fugitive'
 
-Plugin 'tpope/vim-abolish'
+Plug 'tpope/vim-abolish'
 
-"Plugin '907th/vim-auto-save'
-Plugin 'junegunn/goyo.vim'
-"Plugin 'junegunn/limelight.vim'
-"Plugin 'kana/vim-smartword'
-"Plugin 'tpope/vim-surround'
-"Plugin 'terryma/vim-multiple-cursors'
+"Plug '907th/vim-auto-save'
+Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/limelight.vim'
+"Plug 'kana/vim-smartword'
+"Plug 'tpope/vim-surround'
+"Plug 'terryma/vim-multiple-cursors'
 
 " # authored plugins
-Plugin 'reedes/vim-litecorrect'
-Plugin 'reedes/vim-textobj-sentence'
-Plugin 'reedes/vim-lexical'
-Plugin 'reedes/vim-pencil'
-Plugin 'reedes/vim-textobj-quote'
-Plugin 'reedes/vim-wordy'
-Plugin 'reedes/vim-colors-pencil'
-Plugin 'reedes/vim-one'
-Plugin 'reedes/vim-thematic'
-Plugin 'reedes/vim-wheel'
+Plug 'reedes/vim-litecorrect'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'reedes/vim-lexical'
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-textobj-quote'
+Plug 'reedes/vim-wordy'
+Plug 'reedes/vim-colors-pencil'
+Plug 'reedes/vim-one'
+Plug 'reedes/vim-thematic'
+Plug 'reedes/vim-wheel'
 
 " # color plugins
-Plugin 'baskerville/bubblegum'
-Plugin 'chriskempson/base16-vim'
-Plugin 'endel/vim-github-colorscheme'
-Plugin 'hmaarrfk/vim-colors-solarized'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'noahfrederick/vim-hemisu'
-Plugin 'jonathanfilip/vim-lucius'
-Plugin 'morhetz/gruvbox'
+Plug 'baskerville/bubblegum'
+Plug 'chriskempson/base16-vim'
+Plug 'endel/vim-github-colorscheme'
+Plug 'hmaarrfk/vim-colors-solarized'
+Plug 'nanotech/jellybeans.vim'
+Plug 'noahfrederick/vim-hemisu'
+Plug 'jonathanfilip/vim-lucius'
+Plug 'morhetz/gruvbox'
 
-call vundle#end()
+call plug#end()
+"call vundle#end()
 "}}}
 "{{{ == BASIC
+
+set nomodeline                  " disable mode lines as a security measure
 
 " override Vim's own definition
 "autocmd BufNewFile,BufRead *.md set filetype=markdown
@@ -185,6 +192,9 @@ nnoremap <silent> <leader>E :edit $HOME/.vim/vimrc<cr>
 " In OSX, if this is set and lazyredraw is set then it's
 " slow as molasses, so we unset this
 "set noshowcmd
+
+"nnoremap / /\v
+"vnoremap / /\v
 
 "make <c-l> clear the highlight as well as redraw screen
 noremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
@@ -313,7 +323,7 @@ nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 
 let g:markdown_folding = 1
 let g:markdown_fold_style = 'nested'
-"let g:markdown_fenced_languages = ['vim',]
+let g:markdown_fenced_languages = ['vim',]
 
 " }}}
 " == My Plugins {{{
@@ -322,7 +332,26 @@ let g:markdown_fold_style = 'nested'
 "let g:force_reload_textobj_sentence = 1
 augroup prose
   autocmd!
-  autocmd FileType markdown,mkd call Prose()
+  autocmd FileType markdown,mkd call pencil#init() |
+                              \ call lexical#init() |
+                              \ call litecorrect#init() |
+                              \ call textobj#quote#init() |
+                              \ call textobj#sentence#init() |
+                              \ setlocal ruler nonumber |
+                              \ nnoremap <buffer> <silent> Q gwip |
+                              \ setl fdl=4 noru nonu nornu |
+                              \ setl fdo+=search
+  autocmd Filetype git,gitcommit,gitsendemail,hgcommit,svn,*commit*,*COMMIT* |
+                              \ call pencil#init({'wrap': 'hard', 'textwidth': 72}) |
+                              \ call litecorrect#init() |
+                              \ setl spell spl=en_us et sw=2 ts=2 noai
+  autocmd Filetype mail         call pencil#init({'wrap': 'hard', 'textwidth': 60}) |
+                              \ call litecorrect#init() |
+                              \ setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+  autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'}) |
+                              \ call litecorrect#init() |
+                              \ setl spell spl=en_us et sw=2 ts=2
+  "autocmd FileType markdown,mkd call Prose()
   autocmd FileType text         call Prose()
 augroup END
 
