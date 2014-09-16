@@ -29,9 +29,10 @@ Plugin 'milkypostman/vim-togglelist'
 Plugin 'moll/vim-bbye'
 Plugin 'scrooloose/nerdtree'
 
-"Plugin 'tpope/vim-markdown'
-Plugin 'plasticboy/vim-markdown'
+Plugin 'tpope/vim-markdown'
 "Plugin 'gabrielelana/vim-markdown'
+" has an annoying set foldopen-=search
+"Plugin 'plasticboy/vim-markdown'
 
 "Plugin 'kana/vim-operator-user'
 "Plugin 'rhysd/vim-operator-surround'
@@ -41,7 +42,7 @@ Plugin 'nelstrom/vim-markdown-folding'
 "Plugin 'bling/vim-airline'
 "Plugin 'tpope/vim-fugitive'
 
-Plugin 'tpope/abolish.vim'
+Plugin 'tpope/vim-abolish'
 
 "Plugin '907th/vim-auto-save'
 Plugin 'junegunn/goyo.vim'
@@ -289,6 +290,10 @@ endif
 
 " }}}
 " == Folding  {{{
+
+" automatically open folds on
+" Default "block,hor,mark,percent,quickfix,search,tag,undo"
+"set foldopen+=search
 
 " Close all folds except the one(1) the cursor is on, and center.
 nnoremap z1 zMzvzz
