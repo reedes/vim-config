@@ -9,7 +9,7 @@ set nocompatible
 "{{{ == Plugin management
 "filetype off
 
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/bundle')
 
 "set rtp+=~/.vim/bundle/Vundle.vim
 
@@ -332,26 +332,26 @@ let g:markdown_fenced_languages = ['vim',]
 "let g:force_reload_textobj_sentence = 1
 augroup prose
   autocmd!
-  autocmd FileType markdown,mkd call pencil#init() |
-                              \ call lexical#init() |
-                              \ call litecorrect#init() |
-                              \ call textobj#quote#init() |
-                              \ call textobj#sentence#init() |
-                              \ setlocal ruler nonumber |
-                              \ nnoremap <buffer> <silent> Q gwip |
-                              \ setl fdl=4 noru nonu nornu |
-                              \ setl fdo+=search
-  autocmd Filetype git,gitcommit,gitsendemail,hgcommit,svn,*commit*,*COMMIT* |
-                              \ call pencil#init({'wrap': 'hard', 'textwidth': 72}) |
-                              \ call litecorrect#init() |
-                              \ setl spell spl=en_us et sw=2 ts=2 noai
-  autocmd Filetype mail         call pencil#init({'wrap': 'hard', 'textwidth': 60}) |
-                              \ call litecorrect#init() |
-                              \ setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
-  autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'}) |
-                              \ call litecorrect#init() |
-                              \ setl spell spl=en_us et sw=2 ts=2
-  "autocmd FileType markdown,mkd call Prose()
+  "autocmd FileType markdown,mkd call pencil#init() |
+  "                            \ call lexical#init() |
+  "                            \ call litecorrect#init() |
+  "                            \ call textobj#quote#init() |
+  "                            \ call textobj#sentence#init() |
+  "                            \ setlocal ruler nonumber |
+  "                            \ nnoremap <buffer> <silent> Q gwip |
+  "                            \ setl fdl=4 noru nonu nornu |
+  "                            \ setl fdo+=search
+  "autocmd Filetype git,gitcommit,gitsendemail,hgcommit,svn,*commit*,*COMMIT* |
+  "                            \ call pencil#init({'wrap': 'hard', 'textwidth': 72}) |
+  "                            \ call litecorrect#init() |
+  "                            \ setl spell spl=en_us et sw=2 ts=2 noai
+  "autocmd Filetype mail         call pencil#init({'wrap': 'hard', 'textwidth': 60}) |
+  "                            \ call litecorrect#init() |
+  "                            \ setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+  "autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'}) |
+  "                            \ call litecorrect#init() |
+  "                            \ setl spell spl=en_us et sw=2 ts=2
+  autocmd FileType markdown,mkd call Prose()
   autocmd FileType text         call Prose()
 augroup END
 
