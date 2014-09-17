@@ -256,11 +256,11 @@ inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 let g:auto_save = 1
 set autoread
 
-"augroup AutoWrite
-"  autocmd!
-"  autocmd FocusLost * :silent! wall
-"  autocmd BufLeave * :silent! update
-"augroup END
+augroup AutoWrite
+  autocmd!
+  autocmd FocusLost * :silent! wall
+  autocmd BufLeave * :silent! update
+augroup END
 "set autowrite           " ensure save when <C-^>
 "set autowriteall
 
