@@ -237,13 +237,14 @@ nmap <silent> <leader>N :clast<cr>zvzz
 
 " Remember last location in file, but not for commit messages.
 " see :help last-position-jump
-augroup line_return
-    au!
-    au BufReadPost *
-      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
-      \   execute 'normal! g`"zvzz' |
-      \ endif
-augroup END
+" Not working well with save -- cursor jumping
+"augroup line_return
+"    au!
+"    au BufReadPost *
+"      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
+"      \   execute 'normal! g`"zvzz' |
+"      \ endif
+"augroup END
 
 " save and delete buffer without closing window (vim-bbye plugin)
 nnoremap <C-@> :update<CR>:Bdelete<CR>
@@ -316,7 +317,7 @@ nnoremap zO zCzOzz
 " if the cursor is not in a fold, move to the right (the default behavior). In
 " addition, with the manual fold method, you can create a fold by visually
 " selecting some lines, then pressing Space.
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+"nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 
 " surround the selection with {{{ }}}
 "vnoremap <Space> zf
@@ -500,6 +501,8 @@ function! Prose()
   "nnoremap W ]s      needed to skip over words separated by spaces
   "nnoremap B [s
 
+  inoremap <buffer> <C-z> <Esc>[s1z=gi
+  "
   "if exists('*litecorrect#init')
     call litecorrect#init()
   "en
@@ -521,7 +524,9 @@ function! Prose()
   "en
 
   "if exists('*wordy#init')
-    nnoremap <silent> K :NextWordy<cr>
+    "nnoremap <silent> K :NextWordy<cr>
+    noremap <silent> <F8> :<C-u>NextWordy<cr>
+    inoremap <silent> <F8> <C-o>:NextWordy<cr>
   "en
 
   "LimeLight0.7
