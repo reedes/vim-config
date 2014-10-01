@@ -317,7 +317,7 @@ nnoremap zO zCzOzz
 " if the cursor is not in a fold, move to the right (the default behavior). In
 " addition, with the manual fold method, you can create a fold by visually
 " selecting some lines, then pressing Space.
-"nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 
 " surround the selection with {{{ }}}
 "vnoremap <Space> zf
@@ -354,13 +354,14 @@ augroup prose
   "                            \ setl spell spl=en_us et sw=2 ts=2
   autocmd FileType markdown,mkd call Prose()
   autocmd FileType text         call Prose()
+  autocmd FileType tex          call pencil#init({'wrap': 'hard'})
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
 
 "let g:wheel#map#mouse = -1
-let g:lexical#spelllang = ['en_us',]
+"let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
 let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
@@ -375,6 +376,14 @@ map <F10> :echo "hi<"
 \ . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+nmap <F9> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 let g:pencil_heading_color = 'green'   " ''=neutral
 let g:pencil_higher_contrast_ui = 0
@@ -501,7 +510,9 @@ function! Prose()
   "nnoremap W ]s      needed to skip over words separated by spaces
   "nnoremap B [s
 
-  inoremap <buffer> <C-z> <Esc>[s1z=gi
+  " force top correction on most recent misspelling
+  nnoremap <buffer> <C-s> [s1z=<c-o>
+  inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
   "
   "if exists('*litecorrect#init')
     call litecorrect#init()
@@ -561,7 +572,63 @@ function! Prose()
   "map b  <Plug>(smartword-b)
   "map e  <Plug>(smartword-e)
   "map ge <Plug>(smartword-ge)
+  "
+  " https://github.com/q335r49/vimrc/blob/b17b7b129fb610acf7dcd93d099fb1187c28ac40/vimrc
+  "let b:CapStarters=".?!\<nl>\<cr>\<tab>\<space>"
+  "let b:CapSeparators="\<nl>\<cr>\<tab>\<space>"
+  "nm <buffer> <silent> O O^<Left><C-R>=CapWait("\r")<CR>
+  "nm <buffer> <silent> o o^<Left><C-R>=CapWait("\r")<CR>
+  "nm <buffer> <silent> cc cc^<Left><C-R>=CapHere()<CR>
+  "nm <buffer> <silent> C C^<Left><C-R>=CapHere()<CR>
+  "nm <buffer> <silent> I I^<Left><C-R>=CapHere()<CR>
+  "im <buffer> <silent> <CR> <CR>^<Left><C-R>=CapWait("\r")<CR>
+  "im <buffer> <silent> <NL> <NL>^<Left><C-R>=CapWait("\n")<CR>
+
+  "syntax region Bold matchgroup=Normal start=+\(\W\|^\)\zs\*\ze\w+ end=+\w\zs\*+ concealends
+  "syntax region Underline matchgroup=Normal start=+\(\W\|^\)\zs\/\ze\w+ end=+\w\zs\/+ concealends
+  "syntax match Label +^txb\S*: \zs.[^#\n]*+ oneline display
+  "setl noai
+  "ino <buffer> <silent> <F6> <ESC>mt:call search("'",'b')<CR>x`ts
 endfunction
+
+command! -nargs=0 BookEnglisch call lexical#init({
+                    \ 'spell': 1,
+                    \ 'spelllang':  ['en_us'],
+                    \ 'dictionary': ['/usr/share/dict/words'],
+                    \ })
+
+command! -nargs=0 BookGerman call lexical#init({
+                    \ 'spell': 1,
+                    \ 'spelllang':  ['de_20'],
+                    \ 'dictionary': ['~/.vim/spell/gerspchk.dict'],
+                    \ 'spellfile': ['~/.vim/spell/de.utf-8.add'],
+                    \ })
+
+"let g:EscChar="\e"
+"let g:charL=[]
+"fun! CapWait(prev)
+"  call add(g:charL,a:prev)
+"  redr | let next=nr2char(getchar())
+"  if next==g:EscChar || empty(next)
+"    let g:charL=[]
+"    return "\<del>".(next==g:EscChar? "\<esc>":"")
+"  elseif stridx(b:CapStarters,next)!=-1
+"    exe 'norm! i' . next . "\<right>"
+"    if len(g:charL)>0 && next=='.' && g:charL[-1]=='.'
+"      let g:charL=[]
+"      return "\<del>"
+"    el| return CapWait(next) |en
+"  elseif stridx(b:CapSeparators,a:prev)!=-1
+"    let g:charL=[]
+"    return (next=~#'[A-Z]'? tolower(next) : toupper(next)). "\<del>"
+"  el| let g:charL=[]
+"    return next."\<del>"
+"  endif
+"endfun
+"fun! CapHere()
+"  let trunc = getline(".")[:col(".")-2]
+"  return col(".")==1 ? (b:CapSeparators!=' '? CapWait("\r") : "\<del>") : (trunc=~'[?!.]\s*$\|^\s*$' && trunc!~'\.\.\s*$') ? (CapWait(trunc[-1:-1])) : "\<del>"
+"endfun
 
 function! MyParagraph(mode)
   let p=getpos('.')
