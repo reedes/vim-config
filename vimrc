@@ -355,6 +355,7 @@ augroup prose
   autocmd FileType markdown,mkd call Prose()
   autocmd FileType text         call Prose()
   autocmd FileType tex          call pencil#init({'wrap': 'hard'})
+  autocmd FileType rst          call Prose()
 augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
@@ -505,14 +506,66 @@ let g:thematic#themes = {
 " }}}
 " == Text editing  {{{
 
+function! Foo(direction, mode)
+  " TODO support insert mode
+  " TODO support visual mode
+  " TODO rotate among recent corrections by pressing repeatedly?
+  let l:save_cursor = getcurpos()
+  let l:orig_line = line('.')
+  let l:orig_col = col('.')
+
+  if a:direction < 0
+    sil norm! [s
+  el
+    sil norm! ]s
+  en
+
+  " if not moved, then bail (spelling not enabled?)
+  if l:orig_line ==# line('.') && l:orig_col ==# col('.')
+    retu
+  en
+
+  " if moved, set to end of word that we'll correct
+  sil norm! e
+
+  " correct the misspelling with the first suggested correction
+  " (if available) and jump to the end of the result, which
+  " may be unchanged
+  let l:pre_correct_col = col('.')
+  sil norm! 1z=e
+  let l:post_correct_col = col('.')
+
+  let l:same_line = (line('.') ==# l:orig_line)
+
+  " restore original cursor position
+  call setpos('.', l:save_cursor)
+
+  " if spelling was on same line, adjust cursor position
+  if l:same_line
+    let l:diff = l:pre_correct_col - l:post_correct_col
+    "echom 'pre=' . l:pre_correct_col . ' post=' . l:post_correct_col . ' diff=' . l:diff
+    if l:diff ># 0
+      exe 'sil norm! ' . l:diff . 'h'
+    elsei l:diff <# 0
+      exe 'sil norm! ' . (-1*l:diff) . 'l'
+    en
+  en
+  if a:mode ==# 'i'
+    startinsert
+  en
+endf
+
 function! Prose()
 
   "nnoremap W ]s      needed to skip over words separated by spaces
   "nnoremap B [s
 
   " force top correction on most recent misspelling
-  nnoremap <buffer> <C-s> [s1z=<c-o>
-  inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+  "nnoremap <buffer> <C-s> [s1z=<c-o>
+  "inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+  nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
+  "vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
+  ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
   "
   "if exists('*litecorrect#init')
     call litecorrect#init()
@@ -882,46 +935,46 @@ map <silent>sr <Plug>(operator-surround-replace)
 "vmap <unique> <S-up>   <Plug>SchleppIndentUp
 "vmap <unique> <S-down> <Plug>SchleppIndentDown"}}}
 
-function! YouToWe(target, mode, visual)
-  " Extract the target text...
-  if len(a:visual) > 0
-      silent normal! gvy
-  else
-      silent normal! vipy
-  endif
-  let l:text = getreg(v:register)
-  let l:opts = 'g'
-
-  if a:target ==# 3
-    "  first person plural
-    let l:text = substitute(l:text, '\C\<Your\>', 'Our', l:opts)
-    let l:text = substitute(l:text, '\C\<your\>', 'our', l:opts)
-    let l:text = substitute(l:text, '\C\<You\>', 'We', l:opts)
-    let l:text = substitute(l:text, '\C\<you did\>', 'we did', l:opts)
-    let l:text = substitute(l:text, '\C\<you\>', 'we|us', l:opts)
-    " <verb>you => <verb>us
-    " of you => of us
-    " you<verb> => we<verb>
-  elseif a:target ==# 2
-    " second person singular
-    let l:text = substitute(l:text, '\C\<Our\>', 'Your', l:opts)
-    let l:text = substitute(l:text, '\C\<our\>', 'your', l:opts)
-    let l:text = substitute(l:text, '\C\<We\>', 'You', l:opts)
-    let l:text = substitute(l:text, '\C\<\(we\|us\)\>', 'you', l:opts)
-  endif
-  " TODO if doing We/You to he, need to pluralize verb
-  " 'We eat' => 'He eats'
-  " And singularize in reverse
-  " TODO support curly quotes
-
-  " Paste back into buffer in place of original...
-  call setreg(v:register, l:text, mode())
-  silent normal! gvp
-endfunction
-nnoremap ,r :call YouToWe(3, 1, '')<cr>
-vnoremap ,r :<C-u>call YouToWe(3, 1, visualmode())<cr>
-nnoremap ,R :call YouToWe(2, 1, '')<cr>
-vnoremap ,R :<C-u>call YouToWe(2, 1, visualmode())<cr>
+"function! YouToWe(target, mode, visual)
+"  " Extract the target text...
+"  if len(a:visual) > 0
+"      silent normal! gvy
+"  else
+"      silent normal! vipy
+"  endif
+"  let l:text = getreg(v:register)
+"  let l:opts = 'g'
+"
+"  if a:target ==# 3
+"    "  first person plural
+"    let l:text = substitute(l:text, '\C\<Your\>', 'Our', l:opts)
+"    let l:text = substitute(l:text, '\C\<your\>', 'our', l:opts)
+"    let l:text = substitute(l:text, '\C\<You\>', 'We', l:opts)
+"    let l:text = substitute(l:text, '\C\<you did\>', 'we did', l:opts)
+"    let l:text = substitute(l:text, '\C\<you\>', 'we|us', l:opts)
+"    " <verb>you => <verb>us
+"    " of you => of us
+"    " you<verb> => we<verb>
+"  elseif a:target ==# 2
+"    " second person singular
+"    let l:text = substitute(l:text, '\C\<Our\>', 'Your', l:opts)
+"    let l:text = substitute(l:text, '\C\<our\>', 'your', l:opts)
+"    let l:text = substitute(l:text, '\C\<We\>', 'You', l:opts)
+"    let l:text = substitute(l:text, '\C\<\(we\|us\)\>', 'you', l:opts)
+"  endif
+"  " TODO if doing We/You to he, need to pluralize verb
+"  " 'We eat' => 'He eats'
+"  " And singularize in reverse
+"  " TODO support curly quotes
+"
+"  " Paste back into buffer in place of original...
+"  call setreg(v:register, l:text, mode())
+"  silent normal! gvp
+"endfunction
+"nnoremap ,r :call YouToWe(3, 1, '')<cr>
+"vnoremap ,r :<C-u>call YouToWe(3, 1, visualmode())<cr>
+"nnoremap ,R :call YouToWe(2, 1, '')<cr>
+"vnoremap ,R :<C-u>call YouToWe(2, 1, visualmode())<cr>
 
 
 " vim:set ft=vim et sw=2:
