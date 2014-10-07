@@ -34,6 +34,7 @@ Plug 'moll/vim-bbye'
 Plug 'scrooloose/nerdtree'
 
 Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-liquid'
 "Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
@@ -43,13 +44,13 @@ Plug 'tpope/vim-markdown'
 "Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
 "Plug 'mhinz/vim-signify'
-"Plug 'bling/vim-airline'
+Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
 
 Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
-Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/goyo.vim'
 "Plug 'junegunn/limelight.vim'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
@@ -560,6 +561,9 @@ function! Prose()
   "nnoremap W ]s      needed to skip over words separated by spaces
   "nnoremap B [s
 
+  " add two lines after the current line
+  nmap <leader>o o<cr>
+  
   " force top correction on most recent misspelling
   "nnoremap <buffer> <C-s> [s1z=<c-o>
   "inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
@@ -644,18 +648,18 @@ function! Prose()
   "ino <buffer> <silent> <F6> <ESC>mt:call search("'",'b')<CR>x`ts
 endfunction
 
-command! -nargs=0 BookEnglisch call lexical#init({
-                    \ 'spell': 1,
-                    \ 'spelllang':  ['en_us'],
-                    \ 'dictionary': ['/usr/share/dict/words'],
-                    \ })
-
-command! -nargs=0 BookGerman call lexical#init({
-                    \ 'spell': 1,
-                    \ 'spelllang':  ['de_20'],
-                    \ 'dictionary': ['~/.vim/spell/gerspchk.dict'],
-                    \ 'spellfile': ['~/.vim/spell/de.utf-8.add'],
-                    \ })
+"command! -nargs=0 BookEnglisch call lexical#init({
+"                    \ 'spell': 1,
+"                    \ 'spelllang':  ['en_us'],
+"                    \ 'dictionary': ['/usr/share/dict/words'],
+"                    \ })
+"
+"command! -nargs=0 BookGerman call lexical#init({
+"                    \ 'spell': 1,
+"                    \ 'spelllang':  ['de_20'],
+"                    \ 'dictionary': ['~/.vim/spell/gerspchk.dict'],
+"                    \ 'spellfile': ['~/.vim/spell/de.utf-8.add'],
+"                    \ })
 
 "let g:EscChar="\e"
 "let g:charL=[]
