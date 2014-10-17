@@ -239,13 +239,13 @@ nmap <silent> <leader>N :clast<cr>zvzz
 " Remember last location in file, but not for commit messages.
 " see :help last-position-jump
 " Not working well with save -- cursor jumping
-"augroup line_return
-"    au!
-"    au BufReadPost *
-"      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
-"      \   execute 'normal! g`"zvzz' |
-"      \ endif
-"augroup END
+augroup line_return
+    au!
+    au BufReadPost *
+      \ if &filetype !~ '^git\c' && line("'\"") > 0 && line("'\"") <= line("$") |
+      \   execute 'normal! g`"zvzz' |
+      \ endif
+augroup END
 
 " save and delete buffer without closing window (vim-bbye plugin)
 nnoremap <C-@> :update<CR>:Bdelete<CR>
@@ -267,15 +267,15 @@ augroup END
 "set autowriteall
 
 " Remove any trailing whitespace that is in the file
-autocmd BufRead,BufWrite * if ! &bin | silent! %s/\s\+$//ge | endif
+autocmd BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
 "nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
 "nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
-"function! TrimAndWrite()
-"  let l:p = getpos('.')
-"  silent! %s/\s\+$//ge
-"  call setpos('.', l:p)
-"  write
-"endfunction
+function! TrimAndWrite()
+  let l:p = getpos('.')
+  silent! %s/\s\+$//ge
+  call setpos('.', l:p)
+  write
+endfunction
 " }}}
 " == Backup/Undo/Swap files {{{
 " # Common directories for backup, undo and swap
@@ -431,6 +431,7 @@ let g:thematic#themes = {
 \                  'font-size': 20,
 \                  'laststatus': 0,
 \                  'fullscreen': 1,
+\                  'ruler': 1,
 \                  'linespace': 8,
 \                  'typeface': 'Courier Prime',
 \                },
@@ -563,7 +564,7 @@ function! Prose()
 
   " add two lines after the current line
   nmap <leader>o o<cr>
-  
+
   " force top correction on most recent misspelling
   "nnoremap <buffer> <C-s> [s1z=<c-o>
   "inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
@@ -825,7 +826,8 @@ let g:signify_vcs_list = [ 'svn', 'git' ]
 " }}}
 " == Airline {{{
 
-"set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %{PencilMode()}\ %P
+set statusline=%<%f\ %h%m%r%w\ \ %{PencilMode()}\ %=\ col\ %c%V\ \ line\ %l\,%L\ %P
+set rulerformat=%-12.(%l,%c%V%)%{PencilMode()}\ %P
 
 let g:airline#extensions#whitespace#show_message = 0
 let g:airline#extensions#whitespace#checks = [ ]
