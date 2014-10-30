@@ -38,16 +38,19 @@ Plug 'tpope/vim-liquid'
 "Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
+"
+"Plug 'garbas/vim-snipmate'
+"Plug 'honza/vim-snippets'
 
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
 "Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
-"Plug 'mhinz/vim-signify'
+Plug 'mhinz/vim-signify'
 Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
 
-Plug 'tpope/vim-abolish'
+"Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
 "Plug 'junegunn/goyo.vim'
@@ -55,6 +58,7 @@ Plug 'tpope/vim-abolish'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
+Plug 'kshenoy/vim-signature'
 
 " # authored plugins
 Plug 'reedes/vim-litecorrect'
@@ -369,7 +373,7 @@ let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#wrapModeDefault = 'hard'
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -426,14 +430,14 @@ let g:thematic#themes = {
 \                },
 \ 'pencil_lite' :{ 'colorscheme': 'pencil',
 \                  'background': 'light',
-\                  'columns': 80,
+\                  'columns': 84,
 \                  'lines': 24,
 \                  'font-size': 20,
 \                  'laststatus': 0,
 \                  'fullscreen': 1,
 \                  'ruler': 1,
 \                  'linespace': 8,
-\                  'typeface': 'Courier Prime',
+\                  'typeface': 'Cousine',
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
 \                  'background': 'dark',
@@ -571,6 +575,9 @@ function! Prose()
   nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
   "vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
   ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
+
+  ino <buffer> -- –
+  ino <buffer> --- —
   "
   "if exists('*litecorrect#init')
     call litecorrect#init()
