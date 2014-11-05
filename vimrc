@@ -33,11 +33,13 @@ Plug 'milkypostman/vim-togglelist'
 Plug 'moll/vim-bbye'
 Plug 'scrooloose/nerdtree'
 
-Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-liquid'
-"Plug 'gabrielelana/vim-markdown'
+"Plug 'tpope/vim-markdown'
+"Plug 'tpope/vim-liquid'
+Plug 'godlygeek/tabular'
+Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
+Plug 'itspriddle/vim-marked'
 "
 "Plug 'garbas/vim-snipmate'
 "Plug 'honza/vim-snippets'
@@ -45,7 +47,7 @@ Plug 'tpope/vim-liquid'
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
 "Plug 'mattly/vim-markdown-enhancements'
-Plug 'nelstrom/vim-markdown-folding'
+"Plug 'nelstrom/vim-markdown-folding'
 Plug 'mhinz/vim-signify'
 Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
@@ -373,7 +375,7 @@ let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-let g:pencil#wrapModeDefault = 'hard'
+"let g:pencil#wrapModeDefault = 'soft'
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -583,7 +585,7 @@ function! Prose()
     call litecorrect#init()
   "en
   "if exists('*lexical#init')
-    call lexical#init()
+    "call lexical#init()
   "en
   "if exists('*textobj#sentence#init')
     call textobj#sentence#init()

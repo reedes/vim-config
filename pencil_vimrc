@@ -1,65 +1,35 @@
 " File: pencil_vimrc
-" Description: demonstration vimrc for word processing on vim
-" Author: created by reedes on August 29, 2014
-" Updated: continuously
-" URL: https://github.com/reedes/vim-config
-"
-" Key Mappings (consult plugin docs for additional mappings)
-"
-" K            next wordy dictionary
-"
-" Q            format current paragraph (gwip)
-"
-" z1           close all folds but this one
-" <space>      toggle fold
-"
-" <c-n>        next buffer
-" <c-p>        previous buffer
-"
-" For the following, note that leader is '\' key by default
-"
-" <leader>C    replace straight quotes with curly quotes
-" <leader>S    replace curly quotes with straight quotes
-" <leader>q    surround with double curly quotes
-" <leader>Q    surround with single curly quotes
-"
-" <leader>s    spell (normal mode)
-" <leader>t    thesaurus (normal mode)
-" <leader>k    dictionary (normal mode)
-"
-" <leader>F    toggle Fullscreen (gui)
-" <leader>T    select next Theme
-" <leader>G    toggle Goyo
-" <leader>L    toggle Limelight
 
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
+
+syntax on
 
 " core
-Plugin 'gmarik/vundle'
 Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-markdown'
 Plugin 'reedes/vim-pencil'
 
 " non-core
-Plugin 'airblade/vim-gitgutter'
-Plugin 'junegunn/goyo.vim'
-Plugin 'junegunn/limelight.vim'
-Plugin 'kana/vim-operator-user'
-Plugin 'kana/vim-textobj-user'
-Plugin 'mattly/vim-markdown-enhancements'
-Plugin 'nelstrom/vim-markdown-folding'
-Plugin 'reedes/vim-colors-pencil'
-Plugin 'reedes/vim-lexical'
-Plugin 'reedes/vim-litecorrect'
-Plugin 'reedes/vim-textobj-quote'
-Plugin 'reedes/vim-textobj-sentence'
-Plugin 'reedes/vim-thematic'
-Plugin 'reedes/vim-wordy'
-Plugin 'rhysd/vim-operator-surround'
-Plugin 'tpope/vim-fugitive'
+"Plugin 'airblade/vim-gitgutter'
+"Plugin 'junegunn/goyo.vim'
+"Plugin 'junegunn/limelight.vim'
+"Plugin 'kana/vim-operator-user'
+"Plugin 'kana/vim-textobj-user'
+"Plugin 'mattly/vim-markdown-enhancements'
+"Plugin 'nelstrom/vim-markdown-folding'
+"Plugin 'reedes/vim-colors-pencil'
+"Plugin 'reedes/vim-lexical'
+"Plugin 'reedes/vim-litecorrect'
+"Plugin 'reedes/vim-textobj-quote'
+"Plugin 'reedes/vim-textobj-sentence'
+"Plugin 'reedes/vim-thematic'
+"Plugin 'reedes/vim-wordy'
+"Plugin 'rhysd/vim-operator-surround'
+"Plugin 'tpope/vim-fugitive'
 
 call vundle#end()
 
@@ -83,19 +53,19 @@ function! Prose(...)
 
   " calls to initialize plugins for the current buffer
   call pencil#init(l:pencil_args)
-  call litecorrect#init()
-  call lexical#init()
-  call textobj#sentence#init()
-  call textobj#quote#init()
+  "call litecorrect#init()
+  "call lexical#init()
+  "call textobj#sentence#init()
+  "call textobj#quote#init()
 
-  " quote-related
-  map <buffer> <leader>C <Plug>ReplaceWithCurly
-  map <buffer> <leader>S <Plug>ReplaceWithStraight
-  map <buffer> <leader>q <Plug>SurroundWithDouble
-  map <buffer> <leader>Q <Plug>SurroundWithSingle
+  "" quote-related
+  "map <buffer> <leader>C <Plug>ReplaceWithCurly
+  "map <buffer> <leader>S <Plug>ReplaceWithStraight
+  "map <buffer> <leader>q <Plug>SurroundWithDouble
+  "map <buffer> <leader>Q <Plug>SurroundWithSingle
 
-  nnoremap <buffer> <silent> K :NextWordy<cr>
-  nnoremap <buffer> <silent> Q gwip
+  "nnoremap <buffer> <silent> K :NextWordy<cr>
+  "nnoremap <buffer> <silent> Q gwip
 endfunction
 
 " == AUTO SAVE ====
@@ -153,7 +123,7 @@ let g:thematic#themes = {
 \                  'font-size': 12,
 \                },
 \ }
-let g:thematic#theme_name = 'pencil_dark'
+"let g:thematic#theme_name = 'pencil_dark'
 
 if has('fullscreen')
   nmap <leader>F :set invfullscreen<cr>
