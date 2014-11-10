@@ -33,12 +33,14 @@ Plug 'milkypostman/vim-togglelist'
 Plug 'moll/vim-bbye'
 Plug 'scrooloose/nerdtree'
 
-"Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-markdown'
 "Plug 'tpope/vim-liquid'
-Plug 'godlygeek/tabular'
-Plug 'gabrielelana/vim-markdown'
+"Plug 'godlygeek/tabular'
+"Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
+"Plug 'mattly/vim-markdown-enhancements'
+"Plug 'nelstrom/vim-markdown-folding'
 Plug 'itspriddle/vim-marked'
 "
 "Plug 'garbas/vim-snipmate'
@@ -46,8 +48,6 @@ Plug 'itspriddle/vim-marked'
 
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
-"Plug 'mattly/vim-markdown-enhancements'
-"Plug 'nelstrom/vim-markdown-folding'
 Plug 'mhinz/vim-signify'
 Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
@@ -368,14 +368,17 @@ augroup END
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
 
+let g:wheel#map#up   = '<D-k>'
+let g:wheel#map#down = '<D-j>'
 "let g:wheel#map#mouse = -1
+"
 "let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
 let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-"let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#wrapModeDefault = 'soft'
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -514,54 +517,54 @@ let g:thematic#themes = {
 " }}}
 " == Text editing  {{{
 
-function! Foo(direction, mode)
-  " TODO support insert mode
-  " TODO support visual mode
-  " TODO rotate among recent corrections by pressing repeatedly?
-  let l:save_cursor = getcurpos()
-  let l:orig_line = line('.')
-  let l:orig_col = col('.')
-
-  if a:direction < 0
-    sil norm! [s
-  el
-    sil norm! ]s
-  en
-
-  " if not moved, then bail (spelling not enabled?)
-  if l:orig_line ==# line('.') && l:orig_col ==# col('.')
-    retu
-  en
-
-  " if moved, set to end of word that we'll correct
-  sil norm! e
-
-  " correct the misspelling with the first suggested correction
-  " (if available) and jump to the end of the result, which
-  " may be unchanged
-  let l:pre_correct_col = col('.')
-  sil norm! 1z=e
-  let l:post_correct_col = col('.')
-
-  let l:same_line = (line('.') ==# l:orig_line)
-
-  " restore original cursor position
-  call setpos('.', l:save_cursor)
-
-  " if spelling was on same line, adjust cursor position
-  if l:same_line
-    let l:diff = l:pre_correct_col - l:post_correct_col
-    "echom 'pre=' . l:pre_correct_col . ' post=' . l:post_correct_col . ' diff=' . l:diff
-    if l:diff ># 0
-      exe 'sil norm! ' . l:diff . 'h'
-    elsei l:diff <# 0
-      exe 'sil norm! ' . (-1*l:diff) . 'l'
-    en
-  en
-  if a:mode ==# 'i'
-    startinsert
-  en
-endf
+"function! Foo(direction, mode)
+"  " TODO support insert mode
+"  " TODO support visual mode
+"  " TODO rotate among recent corrections by pressing repeatedly?
+"  let l:save_cursor = getcurpos()
+"  let l:orig_line = line('.')
+"  let l:orig_col = col('.')
+"
+"  if a:direction < 0
+"    sil norm! [s
+"  el
+"    sil norm! ]s
+"  en
+"
+"  " if not moved, then bail (spelling not enabled?)
+"  if l:orig_line ==# line('.') && l:orig_col ==# col('.')
+"    retu
+"  en
+"
+"  " if moved, set to end of word that we'll correct
+"  sil norm! e
+"
+"  " correct the misspelling with the first suggested correction
+"  " (if available) and jump to the end of the result, which
+"  " may be unchanged
+"  let l:pre_correct_col = col('.')
+"  sil norm! 1z=e
+"  let l:post_correct_col = col('.')
+"
+"  let l:same_line = (line('.') ==# l:orig_line)
+"
+"  " restore original cursor position
+"  call setpos('.', l:save_cursor)
+"
+"  " if spelling was on same line, adjust cursor position
+"  if l:same_line
+"    let l:diff = l:pre_correct_col - l:post_correct_col
+"    "echom 'pre=' . l:pre_correct_col . ' post=' . l:post_correct_col . ' diff=' . l:diff
+"    if l:diff ># 0
+"      exe 'sil norm! ' . l:diff . 'h'
+"    elsei l:diff <# 0
+"      exe 'sil norm! ' . (-1*l:diff) . 'l'
+"    en
+"  en
+"  if a:mode ==# 'i'
+"    startinsert
+"  en
+"endf
 
 function! Prose()
 
@@ -569,23 +572,27 @@ function! Prose()
   "nnoremap B [s
 
   " add two lines after the current line
-  nmap <leader>o o<cr>
+  "nmap <leader>o o<cr>
 
   " force top correction on most recent misspelling
-  "nnoremap <buffer> <C-s> [s1z=<c-o>
-  "inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
-  nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
-  "vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
-  ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
+  nnoremap <buffer> <C-s> [s1z=<c-o>
+  inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+  "nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
+  ""vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
+  "ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
 
-  ino <buffer> -- –
-  ino <buffer> --- —
+  " Replace common punctuation
+  "iab <buffer> -- –
+  "iab <buffer> --- —
+  "iab <buffer> ... …
+  "iab <buffer> << «
+  "iab <buffer> >> »
   "
   "if exists('*litecorrect#init')
     call litecorrect#init()
   "en
   "if exists('*lexical#init')
-    "call lexical#init()
+    call lexical#init()
   "en
   "if exists('*textobj#sentence#init')
     call textobj#sentence#init()
@@ -918,12 +925,12 @@ endfunction
 " == Multi-cursor {{{
 
   " Default mapping
-let g:multi_cursor_next_key='<D-n>'
-let g:multi_cursor_prev_key='<D-p>'
-let g:multi_cursor_skip_key='<D-x>'
-let g:multi_cursor_quit_key='<Esc>'
-" Map start key separately from next key
-let g:multi_cursor_start_key='<F6>'
+"let g:multi_cursor_next_key='<D-n>'
+"let g:multi_cursor_prev_key='<D-p>'
+"let g:multi_cursor_skip_key='<D-x>'
+"let g:multi_cursor_quit_key='<Esc>'
+"" Map start key separately from next key
+"let g:multi_cursor_start_key='<F6>'
 " }}}
 " == Surround {{{
 
