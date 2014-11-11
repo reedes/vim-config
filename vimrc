@@ -368,8 +368,12 @@ augroup END
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
 
-let g:wheel#map#up   = '<D-k>'
-let g:wheel#map#down = '<D-j>'
+" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+"let g:wheel#map#up   = '<D-k>'
+"let g:wheel#map#down = '<D-j>'
 "let g:wheel#map#mouse = -1
 "
 "let g:lexical#spelllang = ['en_us',]
