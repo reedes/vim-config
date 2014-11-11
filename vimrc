@@ -40,7 +40,7 @@ Plug 'tpope/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
 "Plug 'mattly/vim-markdown-enhancements'
-"Plug 'nelstrom/vim-markdown-folding'
+Plug 'nelstrom/vim-markdown-folding'
 Plug 'itspriddle/vim-marked'
 "
 "Plug 'garbas/vim-snipmate'
@@ -368,11 +368,11 @@ augroup END
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
 
-let g:wheel#map#up   = '<D-k>'
-let g:wheel#map#down = '<D-j>'
+"let g:wheel#map#up   = '<D-k>'
+"let g:wheel#map#down = '<D-j>'
 "let g:wheel#map#mouse = -1
 "
-"let g:lexical#spelllang = ['en_us',]
+let g:lexical#spelllang = ['en_us',]
 let g:lexical#spell_key = '<leader>u'
 let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
