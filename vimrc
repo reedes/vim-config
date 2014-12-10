@@ -33,6 +33,9 @@ Plug 'milkypostman/vim-togglelist'
 Plug 'moll/vim-bbye'
 Plug 'scrooloose/nerdtree'
 
+Plug 'gcavallanti/vim-noscrollbar'
+Plug 'corriander/vim-markdown-indent'
+
 Plug 'tpope/vim-markdown'
 "Plug 'tpope/vim-liquid'
 "Plug 'godlygeek/tabular'
@@ -369,8 +372,8 @@ augroup END
 "let loaded_matchparen = 1
 
 " Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
+vnoremap <D-j> :m '>+1<CR>gv=gv
+vnoremap <D-k> :m '<-2<CR>gv=gv
 
 "let g:wheel#map#up   = '<D-k>'
 "let g:wheel#map#down = '<D-j>'
@@ -857,8 +860,12 @@ let g:airline_right_sep = ''
 let g:airline_linecolumn_prefix = ''
 let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
-let g:airline_section_x = '%{PencilMode()}'
-let g:airline_section_y = "%{strlen(&ft)?&ft:'none'}"
+let g:airline_section_x = "%{strlen(&ft)?&ft:'none'} %{PencilMode()}"
+
+function! Noscrollbar(...)
+    let w:airline_section_y = '%{noscrollbar#statusline(20,"∙","×")}'
+endfunction
+call airline#add_statusline_func('Noscrollbar')
 
 " }}}
 " == Lightline {{{
