@@ -42,6 +42,8 @@ Plug 'tpope/vim-markdown'
 "Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
 Plug 'itspriddle/vim-marked'
+
+Plug 'kristijanhusak/vim-multiple-cursors'
 "
 "Plug 'garbas/vim-snipmate'
 "Plug 'honza/vim-snippets'
@@ -55,8 +57,8 @@ Plug 'bling/vim-airline'
 "Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
-"Plug 'junegunn/goyo.vim'
-"Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
@@ -1001,6 +1003,5 @@ map <silent>sr <Plug>(operator-surround-replace)
 "vnoremap ,r :<C-u>call YouToWe(3, 1, visualmode())<cr>
 "nnoremap ,R :call YouToWe(2, 1, '')<cr>
 "vnoremap ,R :<C-u>call YouToWe(2, 1, visualmode())<cr>
-
 
 " vim:set ft=vim et sw=2:
