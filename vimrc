@@ -11,17 +11,6 @@ set nocompatible
 
 call plug#begin('~/.vim/bundle')
 
-"set rtp+=~/.vim/bundle/Vundle.vim
-
-" TEMPORARY - get rid of this
-"set rtp+=~/.vim/bundle/vundle/
-
-"call vundle#begin()
-"call vundle#rc()
-
-" let vundle manage itself
-"Plug 'gmarik/vundle'
-"Plug 'gmarik/Vundle.vim'
 Plug 'junegunn/vim-plug'
 
 " core
@@ -42,11 +31,12 @@ Plug 'tpope/vim-markdown'
 "Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
-"Plug 'mattly/vim-markdown-enhancements'
+Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
 Plug 'itspriddle/vim-marked'
 
-Plug 'kristijanhusak/vim-multiple-cursors'
+Plug 'jonhiggs/MacDict.vim'
+"Plug 'kristijanhusak/vim-multiple-cursors'
 "
 "Plug 'garbas/vim-snipmate'
 "Plug 'honza/vim-snippets'
@@ -60,8 +50,8 @@ Plug 'bling/vim-airline'
 "Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+"Plug 'junegunn/goyo.vim'
+"Plug 'junegunn/limelight.vim'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
@@ -96,8 +86,21 @@ call plug#end()
 
 set nomodeline                  " disable mode lines as a security measure
 
+" define a group `vimrc` and initialize, for single-line autocmds
+augroup vimrc
+  autocmd!
+augroup END
+
+" register autocmds to group `vimrc`.
+"autocmd vimrc FileType cpp setlocal expandtab
+"autocmd vimrc FileType make setlocal noexpandtab
+
 " override Vim's own definition
 "autocmd BufNewFile,BufRead *.md set filetype=markdown
+"
+
+"set encoding=utf-8    " set in vim-sensible
+scriptencoding utf-8
 
 if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
   let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
@@ -165,7 +168,7 @@ iab mdy <c-r>=strftime("%B %d, %Y")<CR>
 "iab mdyhm <c-r>=strftime("%A %B %d, %Y %I:%M %p")<CR>
 "iab isodate <c-r>=strftime("%FT%T%z")<CR>
 
-let mapleader = ','             " <Leader> key instead of backslash (options '\_,;')
+let g:mapleader = ','             " <Leader> key instead of backslash (options '\_,;')
 
 " select what was just pasted
 "nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
@@ -278,7 +281,7 @@ augroup END
 "set autowriteall
 
 " Remove any trailing whitespace that is in the file
-autocmd BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
+autocmd vimrc BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
 "nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
 "nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
 function! TrimAndWrite()
@@ -366,9 +369,18 @@ augroup prose
   "                            \ setl spell spl=en_us et sw=2 ts=2
   autocmd FileType markdown,mkd call Prose()
   autocmd FileType text         call Prose()
-  autocmd FileType tex          call pencil#init({'wrap': 'hard'})
-  autocmd FileType rst          call Prose()
+  "autocmd FileType tex          call pencil#init({'wrap': 'hard'})
+  "autocmd FileType rst          call Prose()
 augroup END
+
+"augroup pencil
+"  autocmd!
+"  autocmd FileType markdown,mkd,text,asciidoc call pencil#init()
+"                                 \ | call lexical#init()
+"                                 \ | call litecorrect#init()
+"                                 \ | call textobj#quote#init()
+"                                 \ | call textobj#sentence#init()
+"augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
@@ -388,6 +400,8 @@ let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
 let g:pencil#wrapModeDefault = 'soft'
+
+map <F7> "dyiw:call MacDict(@d)<CR>
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -443,6 +457,7 @@ let g:thematic#themes = {
 \                  'typeface': 'Cutive Mono',
 \                },
 \ 'pencil_lite' :{ 'colorscheme': 'pencil',
+\                  'airline-theme': 'pencil',
 \                  'background': 'light',
 \                  'columns': 84,
 \                  'lines': 24,
@@ -833,7 +848,7 @@ let NERDTreeMinimalUI=1
 let NERDTreeShowHidden=1
 
 " quit if nerdtree is the last buffer open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd vimrc bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " }}}
 " == Signify {{{
@@ -864,10 +879,10 @@ let g:airline_fugitive_prefix = '⎇'
 let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = "%{strlen(&ft)?&ft:'none'} %{PencilMode()}"
 
-function! Noscrollbar(...)
-    let w:airline_section_y = '%{noscrollbar#statusline(20,"∙","×")}'
-endfunction
-call airline#add_statusline_func('Noscrollbar')
+"function! Noscrollbar(...)
+"    let w:airline_section_y = '%{noscrollbar#statusline(20,"∙","×")}'
+"endfunction
+"call airline#add_statusline_func('Noscrollbar')
 
 " }}}
 " == Lightline {{{
