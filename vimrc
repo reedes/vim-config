@@ -84,6 +84,8 @@ call plug#end()
 "}}}
 "{{{ == BASIC
 
+filetype indent plugin on
+
 set nomodeline                  " disable mode lines as a security measure
 
 " define a group `vimrc` and initialize, for single-line autocmds
@@ -144,6 +146,8 @@ set visualbell                  " avoid beeping
 if has('unix')
   set shell=/bin/bash\ -i       " make Vim’s :! shell behave like your command prompt
 endif
+
+"set noautochdir     " macvim HEAD was setting autochdir true by default
 
 "nmap <leader>M :delm! | delm A-Z0-9<cr>
 
@@ -268,17 +272,22 @@ inoremap <C-@> <C-C>:update<CR>:Bdelete<CR>
 " save with running vim tests
 "nmap <silent> <leader>v :wall<CR>:Vader<CR>
 
-" aggressively read/write buffers
-let g:auto_save = 1
+" aggressively load buffers
 set autoread
 
-augroup AutoWrite
+" aggressively save buffers
+" - saves on quit, exit, or buffer switch
+" - saves on exiting insert mode, or losing focus
+" - autoexits to normal mode after 15 seconds of inactivity
+set autowriteall
+augroup save_helpers
   autocmd!
-  autocmd FocusLost * :silent! wall
-  autocmd BufLeave * :silent! update
+  autocmd FocusLost * nested silent! wall
+  autocmd BufLeave,InsertLeave * if expand('%') != '' | update | endif
+  autocmd CursorHoldI * stopinsert
+  autocmd InsertEnter * let updaterestore=&updatetime | set updatetime=15000
+  autocmd InsertLeave * let &updatetime=updaterestore
 augroup END
-"set autowrite           " ensure save when <C-^>
-"set autowriteall
 
 " Remove any trailing whitespace that is in the file
 autocmd vimrc BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
@@ -399,9 +408,9 @@ let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#wrapModeDefault = 'hard'
 
-map <F7> "dyiw:call MacDict(@d)<CR>
+"map <F7> "dyiw:call MacDict(@d)<CR>
 
 "let g:online_thesaurus_map_keys = 0
 "nnoremap <leader>r :OnlineThesaurusCurrentWord<CR>
@@ -795,6 +804,8 @@ let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 "if executable('ag')
 "  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
 "  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_user_command = 'mdfind -onlyin %s file'
+
 "
 "  " ag is fast enough that CtrlP doesn't need to cache
 "  let g:ctrlp_use_caching = 0
