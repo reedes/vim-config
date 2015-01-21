@@ -804,7 +804,7 @@ let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 "if executable('ag')
 "  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
 "  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_user_command = 'mdfind -onlyin %s file'
+"let g:ctrlp_user_command = 'mdfind -onlyin %s file'
 
 "
 "  " ag is fast enough that CtrlP doesn't need to cache
