@@ -399,7 +399,7 @@ let g:lexical#thesaurus_key = '<leader>j'
 let g:lexical#dictionary_key = '<leader>k'
 let g:pencil#softDetectSample = 40
 let g:pencil#softDetectThreshold = 100
-let g:pencil#wrapModeDefault = 'soft'
+let g:pencil#wrapModeDefault = 'hard'
 
 map <F7> "dyiw:call MacDict(@d)<CR>
 
