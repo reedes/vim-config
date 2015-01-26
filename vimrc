@@ -22,8 +22,8 @@ Plug 'milkypostman/vim-togglelist'
 Plug 'moll/vim-bbye'
 Plug 'scrooloose/nerdtree'
 
-Plug 'gcavallanti/vim-noscrollbar'
-Plug 'corriander/vim-markdown-indent'
+"Plug 'gcavallanti/vim-noscrollbar'
+"Plug 'corriander/vim-markdown-indent'
 
 Plug 'tpope/vim-markdown'
 "Plug 'tpope/vim-liquid'
@@ -31,11 +31,11 @@ Plug 'tpope/vim-markdown'
 "Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
-Plug 'mattly/vim-markdown-enhancements'
+"Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
-Plug 'itspriddle/vim-marked'
+"Plug 'itspriddle/vim-marked'
 
-Plug 'jonhiggs/MacDict.vim'
+"Plug 'jonhiggs/MacDict.vim'
 "Plug 'kristijanhusak/vim-multiple-cursors'
 "
 "Plug 'garbas/vim-snipmate'
@@ -43,8 +43,8 @@ Plug 'jonhiggs/MacDict.vim'
 
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
-Plug 'mhinz/vim-signify'
-Plug 'bling/vim-airline'
+"Plug 'mhinz/vim-signify'
+"Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
 
 "Plug 'tpope/vim-abolish'
@@ -55,7 +55,7 @@ Plug 'bling/vim-airline'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
-Plug 'kshenoy/vim-signature'
+"Plug 'kshenoy/vim-signature'
 
 " # authored plugins
 Plug 'reedes/vim-litecorrect'
@@ -70,14 +70,14 @@ Plug 'reedes/vim-thematic'
 Plug 'reedes/vim-wheel'
 
 " # color plugins
-Plug 'baskerville/bubblegum'
-Plug 'chriskempson/base16-vim'
-Plug 'endel/vim-github-colorscheme'
-Plug 'hmaarrfk/vim-colors-solarized'
-Plug 'nanotech/jellybeans.vim'
-Plug 'noahfrederick/vim-hemisu'
-Plug 'jonathanfilip/vim-lucius'
-Plug 'morhetz/gruvbox'
+"Plug 'baskerville/bubblegum'
+"Plug 'chriskempson/base16-vim'
+"Plug 'endel/vim-github-colorscheme'
+"Plug 'hmaarrfk/vim-colors-solarized'
+"Plug 'nanotech/jellybeans.vim'
+"Plug 'noahfrederick/vim-hemisu'
+"Plug 'jonathanfilip/vim-lucius'
+"Plug 'morhetz/gruvbox'
 
 call plug#end()
 "call vundle#end()
@@ -136,6 +136,7 @@ set list                        " show invisible characters
 set nowrap                      " don't wrap lines
 set shiftwidth=2                " a tab is two spaces (or set this to 4)
 set shortmess=atI               " suppress PRESS ENTER messages by shortening messages
+set cmdheight=2                 " more room to display messages
 set smartcase                   " ... unless they contain at least one capital letter
 set splitbelow
 set splitright
