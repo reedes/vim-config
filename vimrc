@@ -32,7 +32,7 @@ Plug 'tpope/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
 "Plug 'mattly/vim-markdown-enhancements'
-Plug 'nelstrom/vim-markdown-folding'
+"Plug 'nelstrom/vim-markdown-folding'
 "Plug 'itspriddle/vim-marked'
 
 "Plug 'jonhiggs/MacDict.vim'
@@ -429,10 +429,11 @@ function! <SID>SynStack()
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
-let g:pencil_heading_color = 'green'   " ''=neutral
+"let g:pencil_heading_color = 'green'   " ''=neutral
 let g:pencil_higher_contrast_ui = 0
-let g:pencil_markdown_code_bg = 1
 let g:airline_theme = 'pencil'
+let g:pencil_neutral_code_bg = 0
+let g:pencil_gui_spell_undercurl = 1     " 0=underline (def), 1=undercurl
 
 "nmap <silent> <leader>A :ShiftPencil<cr>
 nmap <leader>y <Plug>ThematicNext
@@ -609,8 +610,8 @@ function! Prose()
   "nmap <leader>o o<cr>
 
   " force top correction on most recent misspelling
-  nnoremap <buffer> <C-s> [s1z=<c-o>
-  inoremap <buffer> <C-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+  nnoremap <buffer> <c-t> [s1z=<c-o>
+  inoremap <buffer> <c-t> <c-g>u<Esc>[s1z=`]A<c-g>u
   "nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
   ""vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
   "ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
