@@ -43,15 +43,15 @@ Plug 'nelstrom/vim-markdown-folding'
 
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
-"Plug 'mhinz/vim-signify'
+Plug 'mhinz/vim-signify'
 "Plug 'bling/vim-airline'
 "Plug 'tpope/vim-fugitive'
 
 "Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
-"Plug 'junegunn/goyo.vim'
-"Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
@@ -809,7 +809,7 @@ let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 
 "
 "  " ag is fast enough that CtrlP doesn't need to cache
-"  let g:ctrlp_use_caching = 0
+let g:ctrlp_use_caching = 1
 "  let g:ackprg = 'ag --smart-case --nogroup --nocolor --column'
 "  set grepprg=ag\ --nogroup\ --nocolor
 "endif
