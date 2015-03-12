@@ -31,8 +31,8 @@ Plug 'tpope/vim-markdown'
 "Plug 'gabrielelana/vim-markdown'
 " has an annoying set foldopen-=search
 "Plug 'plasticboy/vim-markdown'
-"Plug 'mattly/vim-markdown-enhancements'
-"Plug 'nelstrom/vim-markdown-folding'
+Plug 'mattly/vim-markdown-enhancements'
+Plug 'nelstrom/vim-markdown-folding'
 "Plug 'itspriddle/vim-marked'
 
 "Plug 'jonhiggs/MacDict.vim'
@@ -43,15 +43,15 @@ Plug 'tpope/vim-markdown'
 
 "Plug 'kana/vim-operator-user'
 "Plug 'rhysd/vim-operator-surround'
-"Plug 'mhinz/vim-signify'
-"Plug 'bling/vim-airline'
-"Plug 'tpope/vim-fugitive'
+Plug 'mhinz/vim-signify'
+Plug 'bling/vim-airline'
+Plug 'tpope/vim-fugitive'
 
 "Plug 'tpope/vim-abolish'
 
 "Plug '907th/vim-auto-save'
 "Plug 'junegunn/goyo.vim'
-"Plug 'junegunn/limelight.vim'
+Plug 'junegunn/limelight.vim'
 "Plug 'kana/vim-smartword'
 "Plug 'tpope/vim-surround'
 "Plug 'terryma/vim-multiple-cursors'
@@ -70,14 +70,14 @@ Plug 'reedes/vim-thematic'
 Plug 'reedes/vim-wheel'
 
 " # color plugins
-"Plug 'baskerville/bubblegum'
-"Plug 'chriskempson/base16-vim'
-"Plug 'endel/vim-github-colorscheme'
-"Plug 'hmaarrfk/vim-colors-solarized'
-"Plug 'nanotech/jellybeans.vim'
-"Plug 'noahfrederick/vim-hemisu'
-"Plug 'jonathanfilip/vim-lucius'
-"Plug 'morhetz/gruvbox'
+Plug 'baskerville/bubblegum'
+Plug 'chriskempson/base16-vim'
+Plug 'endel/vim-github-colorscheme'
+Plug 'hmaarrfk/vim-colors-solarized'
+Plug 'nanotech/jellybeans.vim'
+Plug 'noahfrederick/vim-hemisu'
+Plug 'jonathanfilip/vim-lucius'
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 "call vundle#end()
@@ -284,14 +284,18 @@ set autowriteall
 augroup save_helpers
   autocmd!
   autocmd FocusLost * nested silent! wall
-  autocmd BufLeave,InsertLeave * if expand('%') != '' | update | endif
+
+  " the following line screws up `[ and '[
+  "autocmd BufLeave,InsertLeave * if expand('%') != '' | update | endif
+
   autocmd CursorHoldI * stopinsert
   autocmd InsertEnter * let updaterestore=&updatetime | set updatetime=15000
   autocmd InsertLeave * let &updatetime=updaterestore
+
+  " Remove any trailing whitespace that is in the file
+  autocmd BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
 augroup END
 
-" Remove any trailing whitespace that is in the file
-autocmd vimrc BufRead,BufWrite * if ! &bin | silent! :call TrimAndWrite()<cr> | endif
 "nnoremap <leader>w mz:%s/\s\+$//e<cr>:let @/=''<cr>`z:w<cr>
 "nnoremap <silent> <leader>w :call TrimAndWrite()<cr>
 function! TrimAndWrite()
@@ -433,7 +437,7 @@ endfunc
 let g:pencil_higher_contrast_ui = 0
 let g:airline_theme = 'pencil'
 let g:pencil_neutral_code_bg = 0
-let g:pencil_gui_spell_undercurl = 1     " 0=underline (def), 1=undercurl
+"let g:pencil_spell_undercurl = 1     " 0=underline (def), 1=undercurl
 
 "nmap <silent> <leader>A :ShiftPencil<cr>
 nmap <leader>y <Plug>ThematicNext
@@ -610,8 +614,8 @@ function! Prose()
   "nmap <leader>o o<cr>
 
   " force top correction on most recent misspelling
-  nnoremap <buffer> <c-t> [s1z=<c-o>
-  inoremap <buffer> <c-t> <c-g>u<Esc>[s1z=`]A<c-g>u
+  nnoremap <buffer> <c-s> [s1z=<c-o>
+  inoremap <buffer> <c-s> <c-g>u<Esc>[s1z=`]A<c-g>u
   "nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
   ""vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
   "ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
