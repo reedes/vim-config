@@ -26,6 +26,12 @@ Plug 'scrooloose/nerdtree'
 "Plug 'corriander/vim-markdown-indent'
 
 Plug 'tpope/vim-markdown'
+
+"Plug 'dagwieers/asciidoc-vim'
+Plug 'dahu/vim-asciidoc'
+Plug 'dahu/vimple'
+Plug 'dahu/Asif'
+
 "Plug 'tpope/vim-liquid'
 "Plug 'godlygeek/tabular'
 "Plug 'gabrielelana/vim-markdown'
@@ -384,27 +390,17 @@ augroup prose
   "autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'}) |
   "                            \ call litecorrect#init() |
   "                            \ setl spell spl=en_us et sw=2 ts=2
-  autocmd FileType markdown,mkd call Prose()
-  autocmd FileType text         call Prose()
+  autocmd FileType markdown,mkd,text,asciidoc call Prose()
   "autocmd FileType tex          call pencil#init({'wrap': 'hard'})
   "autocmd FileType rst          call Prose()
 augroup END
-
-"augroup pencil
-"  autocmd!
-"  autocmd FileType markdown,mkd,text,asciidoc call pencil#init()
-"                                 \ | call lexical#init()
-"                                 \ | call litecorrect#init()
-"                                 \ | call textobj#quote#init()
-"                                 \ | call textobj#sentence#init()
-"augroup END
 
 " Avoid loading of MatchParen, per pi_paren.txt
 "let loaded_matchparen = 1
 
 " Move visual block
-vnoremap <D-j> :m '>+1<CR>gv=gv
-vnoremap <D-k> :m '<-2<CR>gv=gv
+"vnoremap <D-j> :m '>+1<CR>gv=gv
+"vnoremap <D-k> :m '<-2<CR>gv=gv
 
 "let g:wheel#map#up   = '<D-k>'
 "let g:wheel#map#down = '<D-j>'
