@@ -908,9 +908,9 @@ let g:airline#extensions#whitespace#checks = [ ]
 let g:airline_powerline_fonts = 0
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
-let g:airline_linecolumn_prefix = ''
-let g:airline_fugitive_prefix = '⎇'
-let g:airline_paste_symbol = 'ρ'
+"let g:airline_linecolumn_prefix = ''
+"let g:airline_fugitive_prefix = '⎇'
+"let g:airline_paste_symbol = 'ρ'
 let g:airline_section_x = "%{strlen(&ft)?&ft:'none'} %{PencilMode()}"
 
 "function! Noscrollbar(...)
