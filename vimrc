@@ -41,7 +41,7 @@ Plug 'mattly/vim-markdown-enhancements'
 Plug 'nelstrom/vim-markdown-folding'
 "Plug 'itspriddle/vim-marked'
 
-Plug 'FelikZ/ctrlp-py-matcher'
+"Plug 'FelikZ/ctrlp-py-matcher'
 "Plug 'jonhiggs/MacDict.vim'
 "Plug 'kristijanhusak/vim-multiple-cursors'
 "
@@ -823,7 +823,7 @@ let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 "let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 "let g:ctrlp_user_command = 'mdfind -onlyin %s file'
 "
-let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+"let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 
 " The Silver Searcher (Note: not respecting wildignore or ackrc!)
 if executable('ag')
@@ -847,6 +847,29 @@ if executable('ag')
 "  " ag is fast enough that CtrlP doesn't need to cache
    let g:ctrlp_use_caching = 1
 endif
+
+" The Silver Searcher (Note: not respecting wildignore!)
+"if executable('ag')
+""  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+"   let g:ackprg = 'ag --smart-case --nogroup --nocolor --column
+"      \ --ignore .git
+"      \ --ignore .svn
+"      \ --ignore .hg
+"      \ --ignore .DS_Store
+"      \ --ignore "**/*.pyc"
+"      \ '
+"   set grepprg=ag\ --nogroup\ --nocolor
+"   let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
+"      \ --ignore .git
+"      \ --ignore .svn
+"      \ --ignore .hg
+"      \ --ignore .DS_Store
+"      \ --ignore "**/*.pyc"
+"      \ -g ""'
+"
+""  " ag is fast enough that CtrlP doesn't need to cache
+"   let g:ctrlp_use_caching = 1
+"endif
 
 func! MyCtrlPMappings()
     nnoremap <buffer> <silent> <c-@> :call <sid>DeleteBuffer()<cr>
