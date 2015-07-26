@@ -96,7 +96,7 @@ call plug#end()
 
 filetype indent plugin on
 
-set nomodeline                  " disable mode lines as a security measure
+"set nomodeline                  " disable mode lines as a security measure
 
 " define a group `vimrc` and initialize, for single-line autocmds
 augroup vimrc
@@ -205,6 +205,9 @@ noremap Y y$
 " 'q'). Now, to play back the recording you just type Q.
 "nnoremap Q @q
 "noremap <Space> @q
+" or
+"nnoremap Q @@
+"xnoremap Q :normal @@<CR>
 
 " # Quick Editing - edit vimrc file and others
 " NOTE pointing to all files in vim dir so that can easily
@@ -443,6 +446,7 @@ let g:pencil_neutral_code_bg = 0
 nmap <leader>y <Plug>ThematicNext
 nmap <leader>Y <Plug>ThematicRandom
 nmap <leader>I :Thematic pencil_lite<CR>
+nmap <leader>i :Thematic pencil_dark<CR>
 
 set background=dark
 colorscheme pencil
@@ -451,7 +455,7 @@ colorscheme pencil
 " use jellybeans as default airline theme as it maps from
 " existing colors
 let g:thematic#defaults = {
-\ 'airline-theme': 'jellybeans',
+\ 'airline-theme': 'pencil',
 \ 'fullscreen-background-color-fix': 1,
 \ 'sign-column-color-fix': 1,
 \ 'laststatus': 0,
@@ -485,11 +489,13 @@ let g:thematic#themes = {
 \                },
 \ 'pencil_dark': { 'colorscheme': 'pencil',
 \                  'background': 'dark',
+\                  'columns': 84,
+\                  'lines': 24,
 \                  'font-size': 20,
 \                  'laststatus': 0,
 \                  'linespace': 8,
 \                  'airline-theme': 'pencil',
-\                  'typeface': 'Menlo',
+\                  'typeface': 'Cousine',
 \                },
 \ 'latin':       { 'colorscheme': 'lucius',
 \                  'background': 'light',
@@ -616,6 +622,13 @@ function! Prose()
   " force top correction on most recent misspelling
   nnoremap <buffer> <c-s> [s1z=<c-o>
   inoremap <buffer> <c-s> <c-g>u<Esc>[s1z=`]A<c-g>u
+
+  noremap <buffer> <silent> <F7> :<C-u>PFormatToggle<cr>
+  inoremap <buffer> <silent> <F7> <C-o>:PFormatToggle<cr>
+
+  let g:pencil#mode_indicators = {'hard': '␍', 'auto': '↵', 'soft': '⤸', 'off': '',}
+
+
   "nn  <buffer> <c-s> :call Foo(-1, 'n')<cr>
   ""vn  <buffer> <c-s> :<C-u>call foo(-1, visualmode())<cr>
   "ino <buffer> <c-s> <c-g>u<Esc><C-o>:call Foo(-1, 'i')<cr><c-g>u
@@ -652,6 +665,9 @@ function! Prose()
     noremap <silent> <F8> :<C-u>NextWordy<cr>
     inoremap <silent> <F8> <C-o>:NextWordy<cr>
   "en
+
+  if !&wildcharm | set wildcharm=<C-z> | endif
+  execute 'nnoremap <leader>w :Wordy<space>'.nr2char(&wildcharm)
 
   "LimeLight0.7
 
@@ -809,7 +825,7 @@ let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
 "
 let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 
-" The Silver Searcher (Note: not respecting wildignore!)
+" The Silver Searcher (Note: not respecting wildignore or ackrc!)
 if executable('ag')
 "  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
    let g:ackprg = 'ag --smart-case --nogroup --nocolor --column
@@ -845,6 +861,7 @@ func! s:DeleteBuffer()
 endfunc
 
 " }}}
+" u
 " == NERDTree {{{
 
 " restore columns when disabling NERDTree; expand when enabling
